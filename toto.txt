@@ -1,0 +1,19 @@
+Smartadmin integration
+Unit and integration tests
+	- Repositories
+	- Services
+	- Controllers
+	- Embedded DB for repositories and integrationt tests?
+	- Testing methodology for all
+Logging
+	- log rolling
+Quartz integration
+Paging and sorting via ajax
+Security
+	- app
+	- actuator
+Docker
+Jenkins
+Https only configuration with keystore
+Google Analytics
+Thymeleaf templates
