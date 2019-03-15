@@ -1,12 +1,17 @@
 spring:
+  application:    name: @project.name@
+    
   main:
     banner-mode: 'off'
   resources:
     cache:
       cachecontrol:
         max-age: 3600
-      
+             
 server:  compression:    enabled: true
+    
+app:
+  version: @project.version@
     
 ---
 spring:  profiles: local

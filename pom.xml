@@ -11,7 +11,7 @@
 	<groupId>edu.duke.rs</groupId>
 	<artifactId>baseProject</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>baseProject</name>
+	<name>Base Project</name>
 	<description>Base Thymeleaf, JPA project</description>
 
 	<properties>
@@ -47,6 +47,11 @@
 			<groupId>org.thymeleaf.extras</groupId>
 			<artifactId>thymeleaf-extras-java8time</artifactId>
 		</dependency>
+		<dependency>
+		    <groupId>nz.net.ultraq.thymeleaf</groupId>
+		    <artifactId>thymeleaf-layout-dialect</artifactId>
+		</dependency>
+		
 		<dependency>
 		    <groupId>com.h2database</groupId>
 		    <artifactId>h2</artifactId>

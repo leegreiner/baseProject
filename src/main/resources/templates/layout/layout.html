@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Base Project</title>
+		
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+		
+		<link rel="stylesheet" type="text/css" media="screen" href="css/bootstrap.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="css/font-awesome.min.css">
+		
+		<link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-production-plugins.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-production.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-skins.min.css">
+		<link rel="stylesheet" type="text/css" media="screen" href="css/smartadmin-rtl.min.css">
+		
+		<link rel="shortcut icon" href="img/favicon/favicon.ico" type="image/x-icon">
+		<link rel="icon" href="img/favicon/favicon.ico" type="image/x-icon">
+		
+		<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,300,400,700">
+	</head>
+	
+	<body>
+		<section layout:fragment="content">
+    		<p>Page content goes here</p>
+  		</section>
+  		
+  		<footer id="footer" class="footer">
+			<p th:text="|${@environment.getProperty('spring.application.name')} - ${@environment.getProperty('app.version')}|">Application Name - Application Version</p>
+		</footer>
+  		
+  		<script src="js/libs/jquery-3.2.1.min.js"></script>
+		<script src="js/libs/jquery-ui.min.js"></script>
+		
+		<script src="js/app.config.js"></script>
+		
+		<script src="js/bootstrap/bootstrap.min.js"></script>
+		<script src="js/notification/SmartNotification.min.js"></script>
+		<script src="js/smartwidgets/jarvis.widget.min.js"></script>
+		<script src="js/plugin/jquery-validate/jquery.validate.min.js"></script>
+		<script src="js/plugin/masked-input/jquery.maskedinput.min.js"></script>
+		<script src="js/plugin/select2/select2.min.js"></script>
+		<script src="js/plugin/msie-fix/jquery.mb.browser.min.js"></script>
+		
+		<script src="js/app.js"></script>
+		
+		<script src="js/plugin/moment/moment.min.js"></script>
+		<script src="js/plugin/fullcalendar/fullcalendar.min.js"></script>
+		
+		<div layout:fragment="customJs" th:remove="tag"></div>
+		
+		<script>
+			$(document).ready(function() {
+				pageSetUp();
+			}
+		</script>
+	</body>
+</html>
