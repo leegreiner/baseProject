@@ -7,6 +7,8 @@ spring:
     cache:
       cachecontrol:
         max-age: 3600
+        
+  messages:    basename: i18n/messages
              
 server:  compression:    enabled: true
     
