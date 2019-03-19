@@ -1,0 +1,20 @@
+#header {
+	background: #454545
+	url(../img/custom/readingCenter.gif) no-repeat top left!important;
+}
+
+#left-panel {
+	background: #0A589B
+}
+
+#left-panel nav>ul>li>a {
+	color: #ffffff
+}
+
+#logo {
+    margin-top: 10px;
+}
+
+.page-footer {
+    background-color: #454545;
+}

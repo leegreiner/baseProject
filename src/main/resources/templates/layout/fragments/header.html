@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<body>
+	<header th:fragment="header" id="header">
+		<div id="logo-group">
+			<span id="logo"><img th:src="@{/img/custom/logo.png}"
+				th:alt="${@environment.getProperty('spring.application.name')}" /></span>
+		</div>
+
+		<div class="pull-right">
+			<sec:authorize access="isAuthenticated()">
+				<div id="hide-menu" class="btn-header pull-right">
+					<span><a href="#" data-action="toggleMenu"
+						title="Collapse Menu"><i class="fa fa-reorder"></i></a></span>
+				</div>
+
+				<div id="logoff" class="btn-header pull-right">
+					<span><a href="#" th:href="@{/logout}"
+						th:title="#{menu.logout}" th:inline="text"><i
+							class="fa fa-sign-out"></i></a></span>
+				</div>
+			</sec:authorize>
+		</div>
+	</header>
+</body>
+</html>

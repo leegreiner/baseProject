@@ -9,7 +9,7 @@
 	</head>
 	
 	<body th:classappend="${#authorization.expression('isAuthenticated()')} ? 'menu-on-top' : 'hidden-menu'">
-		<header id="header"></header>
+		<div th:replace="layout/fragments/header :: header" th:remove="tag">Header goes here</div>
 		
 		<div th:if="${#authorization.expression('isAuthenticated()')}" th:replace="layout/fragments/navigation :: navigation" th:remove="tag">Navigation goes here</div>
 		
@@ -28,7 +28,7 @@
 		<script>
 			$(document).ready(function() {
 				pageSetUp();
-			}
+			})
 		</script>
 	</body>
 </html>
