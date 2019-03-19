@@ -7,13 +7,17 @@ Unit and integration tests
 	- Testing methodology for all
 Logging
 	- log rolling
-Quartz integration
+H2
+Quartz integration with sample job
 Paging and sorting via ajax
+Encryption
 Security
 	- app
 	- actuator
+	- change password
+	- forgotten password
+	- edit profile
 Docker
-Jenkins
+Kubernetes
 Https only configuration with keystore
 Google Analytics
-Thymeleaf templates
