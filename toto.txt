@@ -5,8 +5,6 @@ Unit and integration tests
 	- Controllers
 	- Embedded DB for repositories and integrationt tests?
 	- Testing methodology for all
-Logging
-	- log rolling
 H2
 Quartz integration with sample job
 Paging and sorting via ajax

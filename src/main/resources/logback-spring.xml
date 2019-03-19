@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="true">
+  <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+  <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <charset>UTF-8</charset>
+      <Pattern>${FILE_LOG_PATTERN}</Pattern>
+    </encoder>
+  </appender>
+ 
+  <appender name="ROLLIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>/opt/apps/baseProject/logs/baseProject.log</file>
+    <encoder>
+      <pattern>${FILE_LOG_PATTERN}</pattern>
+    </encoder>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>/opt/apps/baseProject/logs/baseProject.%d{yyyy-MM-dd}.%i.log.gz
+      </fileNamePattern>
+      <maxHistory>365</maxHistory>
+      <cleanHistoryOnStart>true</cleanHistoryOnStart>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>100MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+  </appender>
+
+  <appender name="APPLICATION" class="ch.qos.logback.core.rolling.RollingFileAppender">
+    <file>/opt/apps/baseProject/logs/application.log</file>
+    <encoder>
+      <pattern>${FILE_LOG_PATTERN}</pattern>
+    </encoder>
+
+    <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+      <fileNamePattern>/opt/apps/baseProject/logs/application.%d{yyyy-MM-dd}.%i.log.gz
+      </fileNamePattern>
+      <maxHistory>365</maxHistory>
+      <cleanHistoryOnStart>true</cleanHistoryOnStart>
+      <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+        <maxFileSize>100MB</maxFileSize>
+      </timeBasedFileNamingAndTriggeringPolicy>
+    </rollingPolicy>
+  </appender>
+
+  <root level="INFO">
+    <appender-ref ref="ROLLIN" />
+    <springProfile name="local">
+      <appender-ref ref="CONSOLE" />
+    </springProfile>
+  </root>
+
+  <springProfile name="local, dev, val">
+    <logger name="edu.duke.rs.baseProject" level="DEBUG" additivity="false">
+      <appender-ref ref="APPLICATION" />
+    </logger>
+    <!--
+    <logger name="org.springframework.security.saml" level="ERROR" additivity="false">
+      <appender-ref ref="APPLICATION" />
+    </logger>
+    <logger name="org.opensaml" level="ERROR" additivity="false">
+      <appender-ref ref="APPLICATION" />
+    </logger>
+    <logger name="PROTOCOL_MESSAGE" level="ERROR" additivity="false">
+      <appender-ref ref="APPLICATION" />
+    </logger>
+    -->
+  </springProfile>
+
+  <springProfile name="unittest, integrationtest, prod">
+    <logger name="edu.duke.rs.baseProject" level="INFO" additivity="false">
+      <appender-ref ref="APPLICATION" />
+    </logger>
+  </springProfile>
+</configuration>
