@@ -1,10 +1,9 @@
 Unit and integration tests
 *	- Repositories
-	- Services
+*	- Services
 	- Controllers
-	- Embedded DB for repositories and integrationt tests?
-	- Testing methodology for all
-H2
+*	- Embedded(H2) DB for repositories and integration tests?
+
 Quartz integration with sample job
 Paging and sorting via ajax
 Encryption
@@ -16,6 +15,6 @@ Security
 	- edit profile
 Docker
 Kubernetes
-Https only configuration with keystore
+* Https only configuration with keystore
 Google Analytics
 Auditing
