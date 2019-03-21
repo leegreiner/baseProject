@@ -1,6 +1,5 @@
-Smartadmin integration
 Unit and integration tests
-	- Repositories
+*	- Repositories
 	- Services
 	- Controllers
 	- Embedded DB for repositories and integrationt tests?
@@ -19,3 +18,4 @@ Docker
 Kubernetes
 Https only configuration with keystore
 Google Analytics
+Auditing

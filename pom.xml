@@ -82,6 +82,13 @@
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- commented out until full blown application runs against something other than h2 embedded. keep for testing.
+		<dependency>
+	    <groupId>com.h2database</groupId>
+	    <artifactId>h2</artifactId>
+	    <scope>test</scope>
+		</dependency>
+		-->
 	</dependencies>
 
 	<build>
