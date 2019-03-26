@@ -4,11 +4,12 @@ Unit and integration tests
 	- Controllers
 *	- Embedded(H2) DB for repositories and integration tests?
 
+Client side form validation
 Quartz integration with sample job
 Paging and sorting via ajax
 Encryption
 Security
-	- app
+*	- app
 	- actuator
 	- change password
 	- forgotten password

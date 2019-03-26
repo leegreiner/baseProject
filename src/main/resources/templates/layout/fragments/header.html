@@ -9,18 +9,16 @@
 		</div>
 
 		<div class="pull-right">
-			<sec:authorize access="isAuthenticated()">
-				<div id="hide-menu" class="btn-header pull-right">
-					<span><a href="#" data-action="toggleMenu"
-						title="Collapse Menu"><i class="fa fa-reorder"></i></a></span>
-				</div>
-
-				<div id="logoff" class="btn-header pull-right">
-					<span><a href="#" th:href="@{/logout}"
-						th:title="#{menu.logout}" th:inline="text"><i
-							class="fa fa-sign-out"></i></a></span>
-				</div>
-			</sec:authorize>
+			<div sec:authorize="isAuthenticated()" id="logoff" class="btn-header pull-right">
+				<span><a href="#" th:href="@{/logout}"
+					th:title="#{menu.logout}" th:inline="text"><i
+						class="fa fa-sign-out"></i></a></span>
+			</div>
+				
+			<div sec:authorize="!isAuthenticated()" id="login" class="btn-header pull-right">
+				<span><a href="/home"
+					th:title="#{menu.login}" th:inline="text"><i class="fa fa-sign-in"></i></a></span>
+			</div>
 		</div>
 	</header>
 </body>

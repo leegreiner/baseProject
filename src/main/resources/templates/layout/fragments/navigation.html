@@ -1,18 +1,19 @@
 <!DOCTYPE html>
 <html
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 	<body>
-		<aside th:fragment="navigation" id="left-panel">
+		<aside sec:authorize="isAuthenticated()" th:fragment="navigation" id="left-panel">
 			<nav>
-            	<ul>
-	                <li>
-	                    <a href="#" th:href="@{/}" th:title="#{menu.home}" th:inline="text"><i class="fa fa-lg fa-fw fa-home"></i><span class="menu-item-parent">[[#{menu.home}]]</span></a>
-	                </li>
-	                <li>
-	                    <a href="#" th:href="@{/user}" th:title="#{menu.users}" th:inline="text"><i class="fa fa-fw fa-user"></i><span class="menu-item-parent">[[#{menu.users}]]</span></a>
-	                </li>
-             	</ul>
-          	</nav>
+				<ul>
+				    <li>
+				        <a href="#" th:href="@{/home}" th:title="#{menu.home}" th:inline="text"><i class="fa fa-lg fa-fw fa-home"></i><span class="menu-item-parent">[[#{menu.home}]]</span></a>
+				    </li>
+				    <li>
+				        <a href="#" th:href="@{/users}" th:title="#{menu.users}" th:inline="text"><i class="fa fa-fw fa-user"></i><span class="menu-item-parent">[[#{menu.users}]]</span></a>
+				    </li>
+				</ul>
+       </nav>
 		</aside>
 	</body>
 </html>

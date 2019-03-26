@@ -1,0 +1,60 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org"
+	layout:decorate="~{layout/layout.html}">
+<head>
+<title th:text="#{title.login}">AAAA</title>
+</head>
+<body>
+	<div layout:fragment="content">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<div class="well no-padding">
+					<form th:action="@{/login}" method="post" id="login-form" class="smart-form client-form">
+						<header th:text="#{login}">Sign In</header>
+						
+						<div th:if="${param.error}">
+							<div class="alert alert-danger fade in">
+								<button class="close" data-dismiss="alert">&#120;</button>
+								<i class="fa-fw fa fa-times"></i>
+								<strong th:text="#{error}">E!</strong>
+								<span th:text="#{invalidUserNamePassword}">Failure</span>
+							</div>
+            </div>
+            
+						<fieldset>
+							<section>
+								<label th:text="#{userName}" class="label">Username</label> <label class="input">
+									<i class="icon-append fa fa-user"></i>
+									<input type="text" id="username" name="username">
+										<b th:text="#{pleaseEnterYourUserName}" class="tooltip tooltip-top-right">
+											<i class="fa fa-user txt-color-teal"></i>
+											Enter user name
+										</b>
+								</label>
+							</section>
+
+							<section>
+								<label th:text="#{password}" class="label">Pwd</label>
+								<label class="input">
+									<i class="icon-append fa fa-lock"></i>
+									<input type="password" id="password" name="password">
+										<b th:text="#{enterYourPassword}" class="tooltip tooltip-top-right">
+											<i class="fa fa-lock txt-color-teal"></i>
+											Enter pwd
+									</b>
+								</label>
+								<div class="note">
+									<a th:text="#{forgotYourPassword}"href="#">Forgot password?</a>
+								</div>
+							</section>
+						</fieldset>
+						<footer>
+							<button th:text="#{login}" type="submit" class="btn btn-primary">AAA</button>
+						</footer>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+</html>

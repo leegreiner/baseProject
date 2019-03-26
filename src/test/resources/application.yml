@@ -1,0 +1,26 @@
+spring:  
+  main:
+    banner-mode: 'off'
+  resources:
+    cache:
+      cachecontrol:
+        max-age: 3600
+        
+  messages:    basename: i18n/messages
+             
+server:  compression:    enabled: true
+  port: 8443
+  ssl:
+    ciphers: TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA
+    enabled-protocols: TLSv1.2
+    enabled: true
+    key-store: classpath:keystore.p12
+    key-store-password: changeit
+    key-store-type: PKCS12
+    key-alias: tomcat
+    protocol: TLS
+    
+logging:
+  level:
+    org.springframework: OFF
+    root: OFF
