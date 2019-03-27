@@ -1,3 +1,7 @@
+var targetPageSetUp = function() {
+	$("#login").remove();
+}
+
 var $loginForm = $("#loginForm").validate({
 	errorClass		: 'invalid',
 	errorElement	: 'em',

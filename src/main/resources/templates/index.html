@@ -8,26 +8,18 @@
 		
 		<link rel="stylesheet" type="text/css" media="screen" href="css/app/index.css"/>
 	</head>
-	
+
 	<body>
 		<div layout:fragment="content">
 			<div class="row">
 				<div class="homepagedefs">
-					<div th:text="welcome" class="welcometext"></div>
+					<div th:text="#{welcome}" class="welcometext"></div>
 					
 					<div class="bar">
 						<div class="imagerow"></div>
 					</div>
 				</div>
 			</div>
-		</div>
-		
-		<div layout:fragment="customJs">
-			<script>
-				$(document).ready(function() {
-					pageSetUp();
-				})
-			</script>
 		</div>
 	</body>
 </html>
