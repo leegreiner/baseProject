@@ -1,0 +1,30 @@
+#main {
+	background-color:#ffffff
+}
+
+.menu-on-top #main {
+	margin-top: 0px!important;
+}
+
+#content {
+	padding:0px 14px 0px 0px;
+}
+
+.welcometext {
+	font-size: 1.7em;
+	color: #5e83a4;
+	position: absolute;
+	top: 55px;
+	left: 24px;
+}
+
+.bar {
+	height: 400px;
+	width: 100%;
+	background: transparent url(/img/custom/homebar.png) repeat-x top left;
+}
+
+.imagerow {
+	height: 400px;
+	background: transparent url(/img/custom/homebanner.png) no-repeat top right;
+}

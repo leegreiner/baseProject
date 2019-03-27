@@ -5,10 +5,22 @@
 	layout:decorate="~{layout/layout.html}">
 	<head>
 		<title th:text="#{title.index}">AAAA</title>
+		
+		<link rel="stylesheet" type="text/css" media="screen" href="css/app/index.css"/>
 	</head>
+	
 	<body>
 		<div layout:fragment="content">
-			<h1 th:text="#{index}">AAAA</h1>
+			<div class="row">
+				<div class="homepagedefs">
+					<div class="welcometext">
+						Welcome
+					</div>
+					<div class="bar">
+						<div class="imagerow"></div>
+					</div>
+				</div>
+			</div>
 		</div>
 		
 		<div layout:fragment="customJs">

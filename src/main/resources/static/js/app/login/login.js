@@ -1,4 +1,4 @@
-var $loginForm = $("#login-form").validate({
+var $loginForm = $("#loginForm").validate({
 	errorClass		: 'invalid',
 	errorElement	: 'em',
 	highlight: function(element) {
@@ -12,23 +12,23 @@ var $loginForm = $("#login-form").validate({
 	
 	rules : {
 		username : {
-			required : true
+			required: true
 		},
 		password : {
-			required : true
+			required: true
 		}
 	},
 	
 	messages : {
-		username : {
-			required : 'Please enter your user name'
+		username: {
+			required: 'Please enter your user name'
 		},
-		password : {
-			required : 'Please enter your password'
+		password: {
+			required: 'Please enter your password'
 		}
 	},
 
-	errorPlacement : function(error, element) {
+	errorPlacement: function(error, element) {
 		error.insertAfter(element.parent());
 	}
 });
