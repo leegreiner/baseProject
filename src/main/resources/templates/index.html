@@ -10,5 +10,13 @@
 		<div layout:fragment="content">
 			<h1 th:text="#{index}">AAAA</h1>
 		</div>
+		
+		<div layout:fragment="customJs">
+			<script>
+				$(document).ready(function() {
+					pageSetUp();
+				})
+			</script>
+		</div>
 	</body>
 </html>

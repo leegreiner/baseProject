@@ -8,29 +8,23 @@
 		<meta th:replace="layout/fragments/head :: head" th:remove="tag"/>
 	</head>
 	
-	<body th:classappend="${#authorization.expression('isAuthenticated()')} ? 'menu-on-top' : 'hidden-menu'">
+	<body class="menu-on-top">
 		<div th:replace="layout/fragments/header :: header" th:remove="tag">Header goes here</div>
 		
 		<div th:if="${#authorization.expression('isAuthenticated()')}" th:replace="layout/fragments/navigation :: navigation" th:remove="tag">Navigation goes here</div>
 		
 		<div id="main" role="main">
-			<div id="content" class="container">
+			<div id="content" class="container-fluid">
 				<section layout:fragment="content">
     			<p>Page content goes here</p>
   			</section>
 			</div>
 		</div>
 		
-  		<div th:replace="layout/fragments/footer :: footer" th:remove="tag">Footer goes here</div>
-  		
-  		<div th:replace="layout/fragments/js :: js" th:remove="tag">Javascript goes here</div>
+ 		<div th:replace="layout/fragments/footer :: footer" th:remove="tag">Footer goes here</div>
+ 		
+ 		<div th:replace="layout/fragments/js :: js" th:remove="tag">Javascript goes here</div>
 		
-		<div layout:fragment="customJs" th:remove="tag"></div>
-		
-		<script>
-			$(document).ready(function() {
-				pageSetUp();
-			})
-		</script>
+		<div layout:fragment="customJs" th:remove="tag"></div>			
 	</body>
 </html>
