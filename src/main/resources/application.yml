@@ -23,8 +23,19 @@ server:  compression:    enabled: true
     key-alias: tomcat
     protocol: TLS
     
+management:
+  endpoints:    web:      exposure:        include: '*'
+    
+info:
+  app:
+    name: @project.name@
+    description: Base Project description
+    version: @project.version@
+    
 app:
-  version: @project.version@
+  management:
+    userName: mgmt_user
+    password: '{cipher}8595c9f67620ea4ed95370dca6c87ad9317f8bc4b035e9971b71d47a1632bd73'
     
 ---
 spring:  profiles: local

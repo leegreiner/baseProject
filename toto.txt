@@ -7,13 +7,13 @@ Unit and integration tests
 Client side form validation
 Quartz integration with sample job
 Paging and sorting via ajax
-Encryption
 Security
 *	- app
-	- actuator
+*	- actuator
 	- change password
 	- forgotten password
 	- edit profile
+Figure out why actuator present login page when invalid credentials
 Docker
 Kubernetes
 * Https only configuration with keystore

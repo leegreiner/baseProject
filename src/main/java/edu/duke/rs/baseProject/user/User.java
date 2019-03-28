@@ -14,9 +14,13 @@ import javax.validation.constraints.Size;
 import edu.duke.rs.baseProject.model.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Entity
 public class User extends BaseEntity implements Serializable {
