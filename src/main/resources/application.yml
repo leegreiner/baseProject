@@ -17,7 +17,8 @@ server:  compression:    enabled: true
     enabled-protocols: TLSv1.2
     enabled: true
     key-store: classpath:keystore.p12
-    key-store-password: changeit
+#   encrypt_key abc123    
+    key-store-password: '{cipher}f04a152e702ddaa5039a13cfa98fc11437803467e704a72d9edd7a7eb24b09f3'
     key-store-type: PKCS12
     key-alias: tomcat
     protocol: TLS
