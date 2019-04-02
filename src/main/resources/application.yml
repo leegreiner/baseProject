@@ -10,7 +10,8 @@ spring:
         
   messages:    basename: i18n/messages
              
-server:  compression:    enabled: true
+server:
+  error:    whitelabel:      enabled: false  compression:    enabled: true
   port: 8443
   ssl:
     ciphers: TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA
@@ -40,3 +41,4 @@ app:
 ---
 spring:  profiles: local
   resources:    cache:      cachecontrol:        no-cache: true
+  jpa:    show-sql: true

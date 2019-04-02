@@ -2,6 +2,7 @@ package edu.duke.rs.baseProject.user;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -9,4 +10,6 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User, Long> {
 	Page<UserListItem> findByUserNameStartingWithIgnoreCase(String userName, Pageable pageable);
 	Page<UserListItem> findAllBy(Pageable pageable);
+	@EntityGraph("user.userAndRoles")
+	User findByUserNameIgnoreCase(String userName);
 }

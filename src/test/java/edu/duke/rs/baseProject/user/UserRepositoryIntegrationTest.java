@@ -1,10 +1,13 @@
 package edu.duke.rs.baseProject.user;
 
-import static org.hamcrest.MatcherAssert.*;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +18,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import edu.duke.rs.baseProject.role.Role;
+import edu.duke.rs.baseProject.role.RoleName;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
@@ -37,11 +43,15 @@ public class UserRepositoryIntegrationTest {
 	
 	@Test
 	public void whenFindByUserNameStartingWithIgnoreCaseUsers_thenReturnUsers() {
-		User user1 = new User("jimmystevens");
+		final Role role = entityManager.persist(new Role(RoleName.USER));
+		final Set<Role> roles = new HashSet<Role>();
+		roles.add(role);
+		
+		User user1 = new User("jimmystevens", "password", roles);
 		user1 = entityManager.persist(user1);
-		User user2 = new User("jimmyjohnson");
+		User user2 = new User("jimmyjohnson", "password", roles);
 		user2 = entityManager.persist(user2);
-		User user3 = new User("simmyjohnson");
+		User user3 = new User("simmyjohnson", "password", roles);
 		user3 = entityManager.persistAndFlush(user3);
 		
 		final Page<UserListItem> page = userRepository.findByUserNameStartingWithIgnoreCase(
