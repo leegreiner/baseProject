@@ -28,30 +28,11 @@ import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import edu.duke.rs.baseProject.role.RoleName;
+
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
-	private static String MGMT_USER_NAME;
-	private static String MGMT_PASSWORD;
-	
-	@Value("${app.management.userName}")
-    public void setManagementUserName(final String mgmtUserName) {
-    	MGMT_USER_NAME = mgmtUserName;
-    }
-    
-    @Value("${app.management.password}")
-    public void setManagementPassword(final String mgmtPassword) {
-    	MGMT_PASSWORD = mgmtPassword;
-    }
-
-    public static UserDetailsService managementUserDetailsService() throws Exception {
-        final InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-        
-        manager.createUser(User.withUsername(MGMT_USER_NAME).password(passwordEncoder().encode(MGMT_PASSWORD)).roles("MANAGEMENT").build());
-        
-        return manager;
-    }
-	
 	@Bean
     public static PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -59,11 +40,22 @@ public class WebSecurityConfig {
 	
 	@Configuration
 	@Order(1)
-	public static class ManagementConfigurationAdapter extends WebSecurityConfigurerAdapter {		
+	public static class ManagementConfigurationAdapter extends WebSecurityConfigurerAdapter {
+		@Value("${app.management.userName}")
+		private String managementUserName;
+		@Value("${app.management.password}")
+		private String managementPassword;
+		
 		@Override
 		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+			final InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
+	        
+	        manager.createUser(User.withUsername(managementUserName)
+	        		.password(passwordEncoder().encode(managementPassword))
+	        		.authorities("MANAGEMENT").build());
+	        
 			 auth
-			 	.userDetailsService(managementUserDetailsService())
+			 	.userDetailsService(manager)
 	        	.passwordEncoder(passwordEncoder());
 		}
 		
@@ -74,7 +66,7 @@ public class WebSecurityConfig {
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 				.and()
 					.csrf().disable()
-					.authorizeRequests().anyRequest().hasRole("MANAGEMENT")
+					.authorizeRequests().anyRequest().hasAuthority("MANAGEMENT")
 				.and()
 					.httpBasic()
 						.authenticationEntryPoint(authenticationEntryPoint())
@@ -103,7 +95,7 @@ public class WebSecurityConfig {
 				.authorizeRequests()
 					.antMatchers("/css/**", "/fonts/**", "/img/**", "/js/**").permitAll()
 					.antMatchers("/", "/error/**").permitAll()		
-					.anyRequest().hasRole("USER")
+					.anyRequest().hasAuthority(RoleName.USER.name())
 					.and()
 				.formLogin()
 						.loginPage("/loginPage").permitAll()

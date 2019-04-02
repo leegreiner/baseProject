@@ -40,7 +40,7 @@ public class UserControllerUnitTest extends BaseWebTest {
 	}
 	
 	@Test
-	@WithMockUser(username = "test")
+	@WithMockUser(username = "test", authorities = {"USER"})
 	public void whenAuthenticated_thenUsersReturned() throws Exception {
 		this.mockMvc.perform(get(UserController.USERS_MAPPING))
 			.andDo(print())

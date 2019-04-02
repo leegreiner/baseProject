@@ -33,7 +33,7 @@ public class HomeControllerUnitTest extends BaseWebTest {
 	}
 	
 	@Test
-	@WithMockUser(username = "test")
+	@WithMockUser(username = "test", authorities = {"USER"})
 	public void whenAuthenticated_thenHomeReturned() throws Exception {
 		this.mockMvc.perform(get(HomeController.HOME_MAPPING))
 			.andDo(print())

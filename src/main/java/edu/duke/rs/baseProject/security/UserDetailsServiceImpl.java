@@ -33,20 +33,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		
 		user.setLastLoggedIn(LocalDateTime.now());
 		
-		final String[] roleNames = user.getRoles().stream()
-				.map( role -> {
-					return role.getName().name();
-				})
-				.toArray(String[]::new);
-		
-		return org.springframework.security.core.userdetails.User.builder()
-				.accountExpired(false)
-				.accountLocked(false)
-				.password(user.getPassword())
-				.credentialsExpired(false)
-				.disabled(false)
-				.roles(roleNames)
-				.username(user.getUserName())
-				.build();
+		return new AppPrincipal(user);
 	}
 }

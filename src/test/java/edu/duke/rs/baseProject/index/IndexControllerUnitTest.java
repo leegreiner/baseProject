@@ -33,7 +33,7 @@ public class IndexControllerUnitTest extends BaseWebTest {
 	}
 	
 	@Test
-	@WithMockUser(username = "test")
+	@WithMockUser(username = "test", authorities = {"USER"})
 	public void whenAuthenticated_thenHomeDisplayed() throws Exception {
 		this.mockMvc.perform(get(IndexController.INDEX_MAPPING))
 			.andDo(print())

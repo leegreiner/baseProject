@@ -13,9 +13,10 @@ Security
 	- change password
 	- forgotten password
 	- edit profile
-Figure out why actuator present login page when invalid credentials
+	- name on header
 Docker
 Kubernetes
 * Https only configuration with keystore
 Google Analytics
 Auditing
+Figure out why actuator present error page (thymeleaf error) when invalid credentials
