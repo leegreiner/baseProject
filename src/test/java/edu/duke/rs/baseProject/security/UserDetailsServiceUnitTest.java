@@ -11,6 +11,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 import org.junit.Before;
@@ -40,7 +41,7 @@ public class UserDetailsServiceUnitTest {
 	@Test(expected = UsernameNotFoundException.class)
 	public void whenUserNotFound_thenUsernameNotFoundExceptionThrown() {
 		when(userRepository.findByUserNameIgnoreCase(any(String.class)))
-			.thenReturn(null);
+			.thenReturn(Optional.empty());
 		
 		userDetailsService.loadUserByUsername("abc");
 	}
@@ -52,7 +53,7 @@ public class UserDetailsServiceUnitTest {
 		roles.add(role);
 		final User user = new User("johnsmith", "johnspassword", roles);
 		when(userRepository.findByUserNameIgnoreCase(user.getUserName()))
-			.thenReturn(user);
+			.thenReturn(Optional.of(user));
 		
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUserName());
 		

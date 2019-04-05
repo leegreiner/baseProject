@@ -25,12 +25,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Transactional
 	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
 		log.debug("Logging in user " + userName);
-		final User user = this.userRepository.findByUserNameIgnoreCase(userName);
-		
-		if (user == null) {
-			throw new UsernameNotFoundException("User " + userName + " not found");
-		}
-		
+		final User user = this.userRepository.findByUserNameIgnoreCase(userName)
+				.orElseThrow(() -> new UsernameNotFoundException("User " + userName + " not found"));
+
 		user.setLastLoggedIn(LocalDateTime.now());
 		
 		return new AppPrincipal(user);

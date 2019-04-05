@@ -1,5 +1,7 @@
 package edu.duke.rs.baseProject.user;
 
+import java.util.Optional;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
@@ -11,5 +13,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Page<UserListItem> findByUserNameStartingWithIgnoreCase(String userName, Pageable pageable);
 	Page<UserListItem> findAllBy(Pageable pageable);
 	@EntityGraph("user.userAndRoles")
-	User findByUserNameIgnoreCase(String userName);
+	Optional<User> findByUserNameIgnoreCase(String userName);
 }

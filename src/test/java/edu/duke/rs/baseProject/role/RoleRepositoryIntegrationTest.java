@@ -1,8 +1,9 @@
 package edu.duke.rs.baseProject.role;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.notNullValue;
+import static com.github.npathai.hamcrestopt.OptionalMatchers.isPresentAndIs;
+
+import java.util.Optional;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,9 +23,8 @@ public class RoleRepositoryIntegrationTest {
 	@Test
 	public void whenFindByNameFindsRole_thenRoleReturned() {
 		final Role expectedRole = entityManager.persistAndFlush(new Role(RoleName.USER));
-		final Role role = roleRepository.findByName(RoleName.USER);
+		final Optional<Role> role = roleRepository.findByName(RoleName.USER);
 		
-		assertThat(role, notNullValue());
-		assertThat(role, equalTo(expectedRole));
+		assertThat(role, isPresentAndIs(expectedRole));
 	}
 }
