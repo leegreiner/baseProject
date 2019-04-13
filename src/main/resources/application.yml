@@ -6,8 +6,7 @@ spring:
   resources:
     cache:
       cachecontrol:
-        max-age: 3600
-        
+        max-age: 3600     
   messages:    basename: i18n/messages
              
 server:
@@ -33,6 +32,8 @@ info:
     description: Base Project description
     version: @project.version@
     
+logging:  level:    edu.duke.rs: info
+    
 app:
   management:
     userName: mgmt_user
@@ -43,3 +44,7 @@ app:
 spring:  profiles: local
   resources:    cache:      cachecontrol:        no-cache: true
   jpa:    show-sql: true
+    
+logging:
+  level:
+    edu.duke.rs: debug
