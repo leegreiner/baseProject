@@ -28,8 +28,8 @@ public class Role extends BaseEntity implements Serializable {
 	
 	@Column(name = "role_id")
 	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
-    @SequenceGenerator(name="role_seq", sequenceName = "ROLE_SEQ", allocationSize = 100)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
+  @SequenceGenerator(name="role_seq", sequenceName = "ROLE_SEQ", allocationSize = 1)
 	private Long id;
 	
 	@Column(name = "name", length = 20, nullable = false)

@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
+import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -93,8 +94,9 @@ public class WebSecurityConfig {
 		protected void configure(HttpSecurity http) throws Exception {
 			http
 				.authorizeRequests()
-					.antMatchers("/css/**", "/fonts/**", "/img/**", "/js/**").permitAll()
-					.antMatchers("/", "/error/**").permitAll()		
+				  .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+					.antMatchers("/", "/error/**", "/fonts/**", "/img/**").permitAll()
+					.antMatchers("/h2-console/**").permitAll() // testing only!!!
 					.anyRequest().hasAuthority(RoleName.USER.name())
 					.and()
 				.formLogin()

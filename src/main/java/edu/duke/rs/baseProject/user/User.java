@@ -43,8 +43,8 @@ public class User extends BaseEntity implements Serializable {
 
 	@Column(name = "user_id")
 	@Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-    @SequenceGenerator(name = "user_seq", sequenceName = "USER_SEQ", allocationSize = 100)
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
+  @SequenceGenerator(name = "user_seq", sequenceName = "USER_SEQ", allocationSize = 1)
 	private Long id;
 	
 	@Column(name = "user_name", length = 30, nullable = false)

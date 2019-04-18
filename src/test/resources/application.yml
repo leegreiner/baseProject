@@ -1,6 +1,15 @@
 spring:
   application:
     name: Project
+  datasource:
+    platform: h2
+    url: jdbc:h2:mem:baseapp;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=create schema if not exists baseapp
+    username: sa
+    password: 
+  jpa:
+    properties:
+      hibernate:
+        default_schema: baseapp
     
   main:
     banner-mode: 'off'
@@ -11,6 +20,8 @@ spring:
         
   messages:
     basename: i18n/messages
+  session:
+    store-type: jdbc
              
 server:
   compression:
