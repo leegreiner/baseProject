@@ -3,7 +3,7 @@ spring:
   datasource:
     initialization-mode: never
     platform: postgresql
-    url: jdbc:postgresql://localhost:5432/baseapp
+    url: jdbc:postgresql://localhost:5432/baseapp?currentSchema=baseapp
     username: lmg
     password: 'tta&cno2'
   jpa:
