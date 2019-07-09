@@ -3,10 +3,9 @@ package edu.duke.rs.baseProject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,7 +33,6 @@ public class UserControllerUnitTest extends BaseWebTest {
 		assertThat(this.userService, notNullValue());
 		
 		this.mockMvc.perform(get(UserController.USERS_MAPPING))
-			.andDo(print())
 			.andExpect(status().isFound())
 			.andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));
 	}
@@ -43,7 +41,6 @@ public class UserControllerUnitTest extends BaseWebTest {
 	@WithMockUser(username = "test", authorities = {"USER"})
 	public void whenAuthenticated_thenUsersReturned() throws Exception {
 		this.mockMvc.perform(get(UserController.USERS_MAPPING))
-			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(view().name(UserController.USERS_VIEW));
 	}

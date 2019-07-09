@@ -3,10 +3,14 @@ spring:
   datasource:
     initialization-mode: never
     platform: postgresql
-    url: jdbc:postgresql://localhost:5432/baseapp?currentSchema=baseapp
+    url: jdbc:postgresql://localhost:5432/devdb?currentSchema=baseapp
     username: lmg
     password: 'tta&cno2'
   jpa:
+    jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
     properties:      hibernate:
         dialect: org.hibernate.dialect.PostgreSQL94Dialect
         default_schema: baseapp
@@ -68,23 +72,24 @@ logging:
   level:
     edu.duke.rs: debug
     
-    
 ---
 
 spring:
   profiles: test
+  autoconfigure.exclude: org.springframework.boot.autoconfigure.session.SessionAutoConfiguration
   datasource:
-    initialization-mode: never
     platform: h2
-    url: jdbc:h2:mem:baseapp;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=create schema if not exists baseapp\\;SET SCHEMA baseapp;
+    url: jdbc:h2:mem:test
     username: sa
     password: 
     
   jpa:
+    hibernate:
+      ddl-auto: create-drop
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.H2
-        default_schema: baseapp
+        dialect: org.hibernate.dialect.H2Dialect
+        default_schema:
     
 logging:
   level:
@@ -93,4 +98,10 @@ logging:
 server:
   port:
   ssl:
-    enabled: false
+    enabled: false   
+    key-store-password:
+    
+app:
+  management:
+    userName: mgmt_user
+    password: changeMe1

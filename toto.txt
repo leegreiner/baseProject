@@ -21,3 +21,5 @@ Kubernetes
 Google Analytics
 Auditing
 Figure out why actuator present error page (thymeleaf error) when invalid credentials
+Code coverage
+Auth entry point both ajax and non-ajax

@@ -1,7 +1,6 @@
 package edu.duke.rs.baseProject.index;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import org.junit.Test;
@@ -24,7 +23,6 @@ public class IndexControllerIntegrationTest extends BaseWebTest {
 	@Test
 	public void whenNotAuthenticated_thenIndexReturned() throws Exception {
 		this.mockMvc.perform(get(IndexController.INDEX_MAPPING))
-		.andDo(print())
 		.andExpect(status().isOk());
 	}
 }

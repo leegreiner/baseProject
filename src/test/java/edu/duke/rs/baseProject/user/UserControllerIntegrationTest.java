@@ -26,7 +26,6 @@ public class UserControllerIntegrationTest extends BaseWebTest {
 	@Test
 	public void whenNotAuthenticated_thenUnauthorizedErrorReturned() throws Exception {
 		this.mockMvc.perform(get(UserController.USERS_MAPPING))
-		.andDo(print())
 		.andExpect(status().isFound())
 		.andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));
 	}

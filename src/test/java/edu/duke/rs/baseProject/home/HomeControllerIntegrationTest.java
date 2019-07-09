@@ -1,7 +1,6 @@
 package edu.duke.rs.baseProject.home;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -26,7 +25,6 @@ public class HomeControllerIntegrationTest extends BaseWebTest {
 	@Test
 	public void whenNotAuthenticated_thenLoginPageReturned() throws Exception {
 		this.mockMvc.perform(get(HomeController.HOME_MAPPING))
-		.andDo(print())
 		.andExpect(status().isFound())
 		.andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));
 	}

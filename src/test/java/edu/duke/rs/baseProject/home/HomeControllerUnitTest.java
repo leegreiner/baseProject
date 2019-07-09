@@ -1,7 +1,6 @@
 package edu.duke.rs.baseProject.home;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -22,12 +21,11 @@ import edu.duke.rs.baseProject.login.LoginController;
 @WebMvcTest(HomeController.class)
 public class HomeControllerUnitTest extends BaseWebTest {
 	@Autowired
-    private MockMvc mockMvc;
+  private MockMvc mockMvc;
 	
 	@Test
 	public void whenNotAuthenticated_thenRedirectToLogin() throws Exception {
 		this.mockMvc.perform(get(HomeController.HOME_MAPPING))
-			.andDo(print())
 			.andExpect(status().isFound())
 			.andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));
 	}
@@ -36,7 +34,6 @@ public class HomeControllerUnitTest extends BaseWebTest {
 	@WithMockUser(username = "test", authorities = {"USER"})
 	public void whenAuthenticated_thenHomeReturned() throws Exception {
 		this.mockMvc.perform(get(HomeController.HOME_MAPPING))
-			.andDo(print())
 			.andExpect(status().isOk())
 			.andExpect(view().name(HomeController.HOME_VIEW));
 	}

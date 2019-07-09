@@ -1,7 +1,6 @@
 package edu.duke.rs.baseProject.index;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
@@ -27,7 +26,6 @@ public class IndexControllerUnitTest extends BaseWebTest {
 	@Test
 	public void whenNotAuthenticated_thenIndexDisplayed() throws Exception {
 		this.mockMvc.perform(get(IndexController.INDEX_MAPPING))
-		.andDo(print())
 		.andExpect(status().isOk())
 		.andExpect(view().name(IndexController.INDEX_VIEW));
 	}
@@ -36,7 +34,6 @@ public class IndexControllerUnitTest extends BaseWebTest {
 	@WithMockUser(username = "test", authorities = {"USER"})
 	public void whenAuthenticated_thenHomeDisplayed() throws Exception {
 		this.mockMvc.perform(get(IndexController.INDEX_MAPPING))
-			.andDo(print())
 			.andExpect(status().isFound())
 			.andExpect(redirectedUrl(HomeController.HOME_MAPPING));
 	}
