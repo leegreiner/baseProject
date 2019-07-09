@@ -58,4 +58,8 @@ public class AppPrincipal implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+	
+	public String getDisplayName() {
+	  return user.getDisplayName();
+	}
 }

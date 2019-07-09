@@ -26,9 +26,11 @@ import org.springframework.data.projection.ProjectionFactory;
 import org.springframework.data.projection.SpelAwareProxyProjectionFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import edu.duke.rs.baseProject.BaseTest;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class UserServiceUnitTest {
+public class UserServiceUnitTest extends BaseTest {
 	final static ProjectionFactory PROJECTION_FACTORY = new SpelAwareProxyProjectionFactory();
 	@Mock
 	private UserRepository userRepository;

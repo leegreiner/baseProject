@@ -16,12 +16,14 @@ import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedEntityGraphs;
 import javax.persistence.SequenceGenerator;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
 import edu.duke.rs.baseProject.model.BaseEntity;
 import edu.duke.rs.baseProject.role.Role;
+import io.micrometer.core.instrument.util.StringUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -59,6 +61,22 @@ public class User extends BaseEntity implements Serializable {
 	@Size(min = 8, max = 200)
 	private String password;
 	
+	@Column(name = "first_name", length = 30, nullable = false)
+	@NonNull
+	@NotBlank
+	@Size(max = 30)
+	private String firstName;
+	
+	@Column(name = "middle_initial", length = 1)
+  @Size(max = 1)
+	private String middleInitial;
+	
+	@Column(name = "last_name", length = 30, nullable = false)
+  @NonNull
+  @NotBlank
+  @Size(max = 30)
+	private String lastName;
+	
 	@Column(name = "last_logged_in")
 	private LocalDateTime lastLoggedIn;
 	
@@ -70,4 +88,22 @@ public class User extends BaseEntity implements Serializable {
 	@NonNull
 	@NotEmpty
 	private Set<Role> roles;
+	
+	public String getDisplayName() {
+	  final StringBuffer buf = new StringBuffer();
+	  
+	  if (StringUtils.isNotBlank(firstName)) {
+	    buf.append(firstName + " ");
+	  }
+	  
+	  if (StringUtils.isNotBlank(middleInitial)) {
+      buf.append(middleInitial + " ");
+    }
+	  
+	  if (StringUtils.isNotBlank(lastName)) {
+      buf.append(lastName);
+    }
+	  
+	  return buf.toString();
+	}
 }

@@ -67,3 +67,30 @@ app:
 logging:
   level:
     edu.duke.rs: debug
+    
+    
+---
+
+spring:
+  profiles: test
+  datasource:
+    initialization-mode: never
+    platform: h2
+    url: jdbc:h2:mem:baseapp;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;INIT=create schema if not exists baseapp\\;SET SCHEMA baseapp;
+    username: sa
+    password: 
+    
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2
+        default_schema: baseapp
+    
+logging:
+  level:
+    edu.duke.rs: info
+    
+server:
+  port:
+  ssl:
+    enabled: false

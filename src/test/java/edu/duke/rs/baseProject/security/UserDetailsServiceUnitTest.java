@@ -22,12 +22,13 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
+import edu.duke.rs.baseProject.BaseTest;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
 
-public class UserDetailsServiceUnitTest {
+public class UserDetailsServiceUnitTest extends BaseTest {
 	@Mock
 	private UserRepository userRepository;
 	@InjectMocks
@@ -51,7 +52,7 @@ public class UserDetailsServiceUnitTest {
 		final Role role = new Role(RoleName.USER);
 		final Set<Role> roles = new HashSet<Role>();
 		roles.add(role);
-		final User user = new User("johnsmith", "johnspassword", roles);
+		final User user = new User("johnsmith", "johnspassword", "John", "Smith", roles);
 		when(userRepository.findByUserNameIgnoreCase(user.getUserName()))
 			.thenReturn(Optional.of(user));
 		

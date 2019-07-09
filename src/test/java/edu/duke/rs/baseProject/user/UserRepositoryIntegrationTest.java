@@ -19,12 +19,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import edu.duke.rs.baseProject.BaseTest;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class UserRepositoryIntegrationTest {
+public class UserRepositoryIntegrationTest extends BaseTest {
 	@Autowired
 	private TestEntityManager entityManager;
 	@Autowired
@@ -47,11 +48,11 @@ public class UserRepositoryIntegrationTest {
 		final Set<Role> roles = new HashSet<Role>();
 		roles.add(role);
 		
-		User user1 = new User("jimmystevens", "password", roles);
+		User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens", roles);
 		user1 = entityManager.persist(user1);
-		User user2 = new User("jimmyjohnson", "password", roles);
+		User user2 = new User("jimmyjohnson", "password", "Jimmy", "Johnson", roles);
 		user2 = entityManager.persist(user2);
-		User user3 = new User("simmyjohnson", "password", roles);
+		User user3 = new User("simmyjohnson", "password", "Simmy", "Johnson", roles);
 		user3 = entityManager.persistAndFlush(user3);
 		
 		final Page<UserListItem> page = userRepository.findByUserNameStartingWithIgnoreCase(

@@ -1,7 +1,7 @@
 package edu.duke.rs.baseProject.role;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static com.github.npathai.hamcrestopt.OptionalMatchers.isPresentAndIs;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.Optional;
 
@@ -12,9 +12,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import edu.duke.rs.baseProject.BaseTest;
+
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class RoleRepositoryIntegrationTest {
+public class RoleRepositoryIntegrationTest extends BaseTest {
 	@Autowired
 	private TestEntityManager entityManager;
 	@Autowired
