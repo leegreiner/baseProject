@@ -17,6 +17,14 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+  quartz:    job-store-type: jdbc
+    properties:      org:
+        quartz:
+          jobStore:
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            isClustered: true
+          scheduler:
+            instanceID: AUTO
     
   main:
     banner-mode: 'off'
