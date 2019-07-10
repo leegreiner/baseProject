@@ -25,3 +25,4 @@ Code coverage
 SAML integration
 GitLab CI
 New Smartadmin
+Logback formatting and log rolling

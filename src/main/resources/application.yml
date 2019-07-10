@@ -44,6 +44,12 @@ server:  compression:    enabled: true
     key-store-type: PKCS12
     key-alias: tomcat
     protocol: TLS
+  tomcat:
+    basedir: /opt/apps/baseProject    accesslog:
+      directory: logs      enabled: true
+      request-attributes-enabled: true
+      rotate: true
+      suffix: .log
     
 management:
   endpoints:    web:      exposure:        include: '*'
