@@ -19,13 +19,13 @@ import edu.duke.rs.baseProject.login.LoginController;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class HomeControllerIntegrationTest extends BaseWebTest {
-	@Autowired
-    private MockMvc mockMvc;
-	
-	@Test
-	public void whenNotAuthenticated_thenLoginPageReturned() throws Exception {
-		this.mockMvc.perform(get(HomeController.HOME_MAPPING))
-		.andExpect(status().isFound())
-		.andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));
-	}
+  @Autowired
+  private MockMvc mockMvc;
+
+  @Test
+  public void whenNotAuthenticated_thenLoginPageReturned() throws Exception {
+    this.mockMvc.perform(get(HomeController.HOME_MAPPING))
+      .andExpect(status().isFound())
+      .andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));
+  }
 }

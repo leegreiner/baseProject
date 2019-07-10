@@ -7,14 +7,14 @@
   <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
     <encoder>
       <charset>UTF-8</charset>
-      <Pattern>${FILE_LOG_PATTERN}</Pattern>
+      <Pattern>-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger:%line{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}</Pattern>
     </encoder>
   </appender>
  
   <appender name="ROLLIN" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>/opt/apps/baseProject/logs/baseProject.log</file>
     <encoder>
-      <pattern>${FILE_LOG_PATTERN}</pattern>
+      <pattern>-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger:%line{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}</pattern>
     </encoder>
 
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -31,7 +31,7 @@
   <appender name="APPLICATION" class="ch.qos.logback.core.rolling.RollingFileAppender">
     <file>/opt/apps/baseProject/logs/application.log</file>
     <encoder>
-      <pattern>${FILE_LOG_PATTERN}</pattern>
+      <pattern>-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger:%line{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}</pattern>
     </encoder>
 
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">

@@ -19,29 +19,28 @@ import org.springframework.test.web.servlet.MockMvc;
 import edu.duke.rs.baseProject.BaseWebTest;
 import edu.duke.rs.baseProject.login.LoginController;
 
-
 @RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
 public class UserControllerUnitTest extends BaseWebTest {
-	@Autowired
-    private MockMvc mockMvc;
-	@MockBean
-	private UserService userService;
-	
-	@Test
-	public void whenNotAuthenticated_thenRedirectToLogin() throws Exception {
-		assertThat(this.userService, notNullValue());
-		
-		this.mockMvc.perform(get(UserController.USERS_MAPPING))
-			.andExpect(status().isFound())
-			.andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));
-	}
-	
-	@Test
-	@WithMockUser(username = "test", authorities = {"USER"})
-	public void whenAuthenticated_thenUsersReturned() throws Exception {
-		this.mockMvc.perform(get(UserController.USERS_MAPPING))
-			.andExpect(status().isOk())
-			.andExpect(view().name(UserController.USERS_VIEW));
-	}
+  @Autowired
+  private MockMvc mockMvc;
+  @MockBean
+  private UserService userService;
+
+  @Test
+  public void whenNotAuthenticated_thenRedirectToLogin() throws Exception {
+    assertThat(this.userService, notNullValue());
+
+    this.mockMvc.perform(get(UserController.USERS_MAPPING))
+      .andExpect(status().isFound())
+      .andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));
+  }
+
+  @Test
+  @WithMockUser(username = "test", authorities = { "USER" })
+  public void whenAuthenticated_thenUsersReturned() throws Exception {
+    this.mockMvc.perform(get(UserController.USERS_MAPPING))
+      .andExpect(status().isOk())
+      .andExpect(view().name(UserController.USERS_VIEW));
+  }
 }

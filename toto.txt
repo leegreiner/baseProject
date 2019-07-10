@@ -21,8 +21,8 @@ Kubernetes
 Google Analytics
 Auditing
 Figure out why actuator present error page (thymeleaf error) when invalid credentials
-Code coverage
+* Code coverage
 SAML integration
 GitLab CI
 New Smartadmin
-Logback formatting and log rolling
+* Logback formatting and log rolling

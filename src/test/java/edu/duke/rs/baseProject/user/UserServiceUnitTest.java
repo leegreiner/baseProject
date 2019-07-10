@@ -1,6 +1,7 @@
 package edu.duke.rs.baseProject.user;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -15,9 +16,9 @@ import javax.validation.ConstraintViolationException;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,16 +33,17 @@ import edu.duke.rs.baseProject.BaseTest;
 @SpringBootTest
 public class UserServiceUnitTest extends BaseTest {
 	final static ProjectionFactory PROJECTION_FACTORY = new SpelAwareProxyProjectionFactory();
-	@Mock
+	@MockBean
 	private UserRepository userRepository;
 	@Autowired
 	private UserService userService;
-	
+
 	@Test(expected = ConstraintViolationException.class)
 	public void whenNullPageablePassedToSearch_thenExceptionThrown() {
 		userService.search(null, null);
 	}
 	
+	@Test
 	public void whenNoTermPassedToSearch_thenAllUsersReturned() {
 		final List<UserListItem> expectedResult = createUserListItems();
 		
@@ -53,6 +55,7 @@ public class UserServiceUnitTest extends BaseTest {
 		verifyNoMoreInteractions(userRepository);
 	}
 	
+	@Test
 	public void whenTermPassedToSearch_thenFindByUserNameStartingWithIgnoreCaseReturned() {
 		final String term = "j";
 		
@@ -61,7 +64,7 @@ public class UserServiceUnitTest extends BaseTest {
 		
 		userService.search(term, PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "userName")));
 		
-		verify(userRepository, times(1)).findByUserNameStartingWithIgnoreCase(term, any(Pageable.class));
+		verify(userRepository, times(1)).findByUserNameStartingWithIgnoreCase(eq(term), any(Pageable.class));
 		verifyNoMoreInteractions(userRepository);
 	}
 	

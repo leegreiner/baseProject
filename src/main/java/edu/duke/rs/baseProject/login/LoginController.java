@@ -4,6 +4,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import edu.duke.rs.baseProject.BaseWebController;
+import edu.duke.rs.baseProject.home.HomeController;
+import edu.duke.rs.baseProject.security.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -15,6 +17,6 @@ public class LoginController extends BaseWebController {
 	@GetMapping(LOGIN_MAPPING)
 	public String loginPage() {
 		log.debug("In login()");
-		return LOGIN_VIEW;
+		return SecurityUtils.userIsAuthenticated() ? this.createRedirectViewPath(HomeController.HOME_MAPPING) : LOGIN_VIEW;
 	}
 }

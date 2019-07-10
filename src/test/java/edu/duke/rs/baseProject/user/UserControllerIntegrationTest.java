@@ -1,7 +1,6 @@
 package edu.duke.rs.baseProject.user;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -20,13 +19,12 @@ import edu.duke.rs.baseProject.login.LoginController;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class UserControllerIntegrationTest extends BaseWebTest {
-	@Autowired
-    private MockMvc mockMvc;
-	
-	@Test
-	public void whenNotAuthenticated_thenUnauthorizedErrorReturned() throws Exception {
-		this.mockMvc.perform(get(UserController.USERS_MAPPING))
-		.andExpect(status().isFound())
-		.andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));
-	}
+  @Autowired
+  private MockMvc mockMvc;
+
+  @Test
+  public void whenNotAuthenticated_thenUnauthorizedErrorReturned() throws Exception {
+    this.mockMvc.perform(get(UserController.USERS_MAPPING)).andExpect(status().isFound())
+        .andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));
+  }
 }

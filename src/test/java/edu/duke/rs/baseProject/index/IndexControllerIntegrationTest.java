@@ -17,12 +17,12 @@ import edu.duke.rs.baseProject.BaseWebTest;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @AutoConfigureMockMvc
 public class IndexControllerIntegrationTest extends BaseWebTest {
-	@Autowired
-    private MockMvc mockMvc;
-	
-	@Test
-	public void whenNotAuthenticated_thenIndexReturned() throws Exception {
-		this.mockMvc.perform(get(IndexController.INDEX_MAPPING))
-		.andExpect(status().isOk());
-	}
+  @Autowired
+  private MockMvc mockMvc;
+
+  @Test
+  public void whenNotAuthenticated_thenIndexReturned() throws Exception {
+    this.mockMvc.perform(get(IndexController.INDEX_MAPPING))
+      .andExpect(status().isOk());
+  }
 }
