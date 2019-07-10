@@ -30,7 +30,7 @@ public class BaseProjectApplication {
 		return (args) -> {
 			final Set<Role> roles = new HashSet<Role>();
 			roles.add(roleRepository.save(new Role(RoleName.USER)));
-			userRepository.save(new User("username", passwordEncoder.encode("password"), "Defautlt", "User", roles));
+			userRepository.save(new User("username", passwordEncoder.encode("password"), "Default", "User", roles));
 		};
 	}
 }

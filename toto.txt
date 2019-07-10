@@ -1,7 +1,7 @@
 Unit and integration tests
 *	- Repositories
 *	- Services
-	- Controllers
+*	- Controllers
 *	- Embedded(H2) DB for repositories and integration tests?
 
 Client side form validation
@@ -17,9 +17,11 @@ Security
 Docker
 Kubernetes
 * Https only configuration with keystore
-* Sprign Session
+* Spring Session
 Google Analytics
 Auditing
 Figure out why actuator present error page (thymeleaf error) when invalid credentials
 Code coverage
-Auth entry point both ajax and non-ajax
+SAML integration
+GitLab CI
+New Smartadmin

@@ -16,7 +16,7 @@ import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedEntityGraphs;
 import javax.persistence.SequenceGenerator;
-import javax.persistence.Transient;
+import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
@@ -26,6 +26,7 @@ import edu.duke.rs.baseProject.role.Role;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.EqualsAndHashCode.Include;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +36,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Entity
+@Table(name = "users")
 @NamedEntityGraphs({
 	@NamedEntityGraph(name = "user.userAndRoles", attributeNodes = {
 			@NamedAttributeNode("roles")
@@ -53,6 +55,7 @@ public class User extends BaseEntity implements Serializable {
 	@NonNull
 	@NotBlank
 	@Size(min = 8, max = 30)
+	@Include
 	private String userName;
 	
 	@Column(name = "password", length = 200, nullable = false)

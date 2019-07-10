@@ -35,9 +35,9 @@ import edu.duke.rs.baseProject.role.RoleName;
 @EnableWebSecurity
 public class WebSecurityConfig {
 	@Bean
-    public static PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+  public static PasswordEncoder passwordEncoder() {
+      return new BCryptPasswordEncoder();
+  }
 	
 	@Configuration
 	@Order(1)
@@ -61,10 +61,10 @@ public class WebSecurityConfig {
 		}
 		
 		@Override
-        protected void configure(final HttpSecurity http) throws Exception {
+    protected void configure(final HttpSecurity http) throws Exception {
 			http
 				.requestMatcher(EndpointRequest.toAnyEndpoint())
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
 				.and()
 					.csrf().disable()
 					.authorizeRequests().anyRequest().hasAuthority("MANAGEMENT")
@@ -96,7 +96,6 @@ public class WebSecurityConfig {
 				.authorizeRequests()
 				  .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
 					.antMatchers("/", "/error/**", "/fonts/**", "/img/**").permitAll()
-					.antMatchers("/h2-console/**").permitAll() // testing only!!!
 					.anyRequest().hasAuthority(RoleName.USER.name())
 					.and()
 				.formLogin()

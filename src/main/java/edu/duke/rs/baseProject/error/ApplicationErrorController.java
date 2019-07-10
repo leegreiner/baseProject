@@ -21,7 +21,7 @@ public class ApplicationErrorController implements ErrorController {
 		if (status != null) {
 	        final Integer statusCode = Integer.valueOf(status.toString());
 	     
-	        if(statusCode == HttpStatus.BAD_REQUEST.value()) {
+	        if (statusCode == HttpStatus.BAD_REQUEST.value()) {
 	            result = "/400";
 	        } else if (statusCode == HttpStatus.UNAUTHORIZED.value()) {
 	        	result = "/401";

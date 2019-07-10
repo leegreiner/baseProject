@@ -19,15 +19,15 @@ import lombok.Data;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
-	@Column(name = "created_date", nullable = false, updatable = false)
-	@CreatedDate
-	@JsonIgnore
-	private LocalDateTime createdDate = LocalDateTime.now();
-	
-	@Column(name = "modified_date")
-	@LastModifiedDate
-	@JsonIgnore
-	private LocalDateTime lastModifiedDate;
-	@Version
-    private Long version;
+  @Column(name = "created_date", nullable = false, updatable = false)
+  @CreatedDate
+  @JsonIgnore
+  private LocalDateTime createdDate = LocalDateTime.now();
+
+  @Column(name = "modified_date")
+  @LastModifiedDate
+  @JsonIgnore
+  private LocalDateTime lastModifiedDate;
+  @Version
+  private Long version;
 }

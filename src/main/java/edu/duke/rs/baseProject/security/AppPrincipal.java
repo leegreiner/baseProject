@@ -23,10 +23,9 @@ public class AppPrincipal implements UserDetails {
 			authorities.add(new SimpleGrantedAuthority(role.getName().name()));
 		}
 	}
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities;
+	
+	public Long getUserId() {
+	  return this.user.getId();
 	}
 
 	@Override
@@ -58,6 +57,11 @@ public class AppPrincipal implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+	
+	@Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return authorities;
+  }
 	
 	public String getDisplayName() {
 	  return user.getDisplayName();

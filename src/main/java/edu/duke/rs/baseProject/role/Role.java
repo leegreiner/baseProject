@@ -14,6 +14,7 @@ import javax.persistence.SequenceGenerator;
 import edu.duke.rs.baseProject.model.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.EqualsAndHashCode.Include;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -35,5 +36,6 @@ public class Role extends BaseEntity implements Serializable {
 	@Column(name = "name", length = 20, nullable = false)
 	@NonNull
 	@Enumerated(EnumType.STRING)
+	@Include
 	private RoleName name;
 }

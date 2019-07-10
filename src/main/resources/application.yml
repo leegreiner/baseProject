@@ -67,6 +67,8 @@ app:
   resources:    cache:      cachecontrol:        no-cache: true
   jpa:    show-sql: true
     hibernate:      ddl-auto: create-drop
+    properties:      hibernate:
+        format_sql: true
     
 logging:
   level:
