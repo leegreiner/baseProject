@@ -18,9 +18,13 @@ spring:
           lob:
             non_contextual_creation: true
   quartz:    job-store-type: jdbc
+    overwrite-existing-jobs: true
+    scheduler-name: baseProjectScheduler
+    startup-delay: 20
     properties:      org:
         quartz:
           jobStore:
+            clusterCheckinInterval: 20000
             driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
             isClustered: true
           scheduler:
