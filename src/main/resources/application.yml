@@ -92,6 +92,10 @@ logging:
   level:
     edu.duke.rs: debug
     
+app:
+  google:
+    analysicsTrackingId: UA-143586895-1
+    
 ---
 
 spring:

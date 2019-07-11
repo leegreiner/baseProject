@@ -8,8 +8,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import edu.duke.rs.baseProject.BaseWebController;
+
 @Controller
-public class ApplicationErrorController implements ErrorController {
+public class ApplicationErrorController extends BaseWebController implements ErrorController {
 	public static final String ERROR_PATH = "/error";
 	public static final String BASE_ERROR_VIEW = "error";
 
