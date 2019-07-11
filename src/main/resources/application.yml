@@ -75,6 +75,8 @@ info:
 logging:  level:    edu.duke.rs: info
     
 app:
+  google:
+    analysicsTrackingId: None	
   management:
     userName: mgmt_user
 # changeMe1
@@ -129,3 +131,5 @@ app:
   management:
     userName: mgmt_user
     password: changeMe1
+  google:
+    analysicsTrackingId: None

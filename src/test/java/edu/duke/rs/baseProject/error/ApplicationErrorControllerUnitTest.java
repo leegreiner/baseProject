@@ -14,12 +14,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import edu.duke.rs.baseProject.BaseWebTest;
+import edu.duke.rs.baseProject.BaseWebMvcTest;
 
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(ApplicationErrorController.class)
-public class ApplicationErrorControllerUnitTest extends BaseWebTest {
+public class ApplicationErrorControllerUnitTest extends BaseWebMvcTest {
 	@Autowired
   private MockMvc mockMvc;
 	

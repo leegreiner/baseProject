@@ -13,12 +13,12 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-import edu.duke.rs.baseProject.BaseWebTest;
+import edu.duke.rs.baseProject.BaseWebMvcTest;
 import edu.duke.rs.baseProject.home.HomeController;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(LoginController.class)
-public class LoginControllerUnitTest extends BaseWebTest {
+public class LoginControllerUnitTest extends BaseWebMvcTest {
   @Autowired
   private MockMvc mockMvc;
 

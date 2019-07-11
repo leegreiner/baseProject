@@ -1,14 +1,14 @@
 package edu.duke.rs.baseProject.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-@Component
+@Configuration
 @ConfigurationProperties(prefix = "app.google")
 public class GoogleProperties {
   private String analysicsTrackingId;
