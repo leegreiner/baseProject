@@ -22,3 +22,13 @@
 .jarviswidget-color-blueDark>header {
   background: #27547A !important;
 }
+
+.headerUserName {
+  display: flex !important;
+  align-items: center;
+  margin-right:10px;
+}
+
+.headerUserName>span {
+  color: white;
+}
