@@ -17,7 +17,7 @@ public class IndexController extends BaseWebController {
 	
 	@GetMapping(INDEX_MAPPING)
 	public String index(Principal principal) {
-		log.debug("In index()");
+		log.trace("In index()");
 		
 		if (principal == null) {
 			return INDEX_VIEW;

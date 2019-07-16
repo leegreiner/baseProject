@@ -5,6 +5,8 @@
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 	<head>
 		<title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE">Base Project</title>
+    <meta name="_csrf" th:content="${_csrf.token}"/>
+    <meta name="_csrf_header" th:content="${_csrf.headerName}"/>
 		<meta th:replace="layout/fragments/head :: head" th:remove="tag"/>
 	</head>
 	

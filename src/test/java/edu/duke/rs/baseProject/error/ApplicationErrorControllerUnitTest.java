@@ -6,23 +6,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import javax.servlet.RequestDispatcher;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import edu.duke.rs.baseProject.BaseWebMvcTest;
+import edu.duke.rs.baseProject.AbstractWebUnitTest;
 
-
-@RunWith(SpringRunner.class)
 @WebMvcTest(ApplicationErrorController.class)
-public class ApplicationErrorControllerUnitTest extends BaseWebMvcTest {
-	@Autowired
-  private MockMvc mockMvc;
-	
+public class ApplicationErrorControllerUnitTest extends AbstractWebUnitTest {
 	@Test
 	public void whenBadRequest_thenForwardToBadRequestView() throws Exception {
 	  final MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get(ApplicationErrorController.ERROR_PATH)

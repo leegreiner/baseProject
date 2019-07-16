@@ -14,7 +14,7 @@ public class HomeController extends BaseWebController {
 	
 	@GetMapping(HOME_MAPPING)
 	public String home() {
-		log.debug("In home()");
+		log.trace("In home()");
 		return HOME_VIEW;
 	}
 }

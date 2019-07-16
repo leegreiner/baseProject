@@ -22,13 +22,13 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import edu.duke.rs.baseProject.BaseTest;
+import edu.duke.rs.baseProject.AbstractBaseTest;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
 
-public class UserDetailsServiceUnitTest extends BaseTest {
+public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 	@Mock
 	private UserRepository userRepository;
 	@InjectMocks

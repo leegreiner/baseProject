@@ -18,3 +18,7 @@
 .page-footer {
     background-color: #454545;
 }
+
+.jarviswidget-color-blueDark>header {
+  background: #27547A !important;
+}

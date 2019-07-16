@@ -8,5 +8,4 @@ import org.springframework.validation.annotation.Validated;
 
 @Validated
 public interface UserService {
-	Page<UserListItem> search(String term, @NotNull Pageable pageable);
 }

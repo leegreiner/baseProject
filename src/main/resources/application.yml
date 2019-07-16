@@ -93,6 +93,7 @@ app:
 logging:
   level:
     edu.duke.rs: debug
+#    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: trace
     
 app:
   google:

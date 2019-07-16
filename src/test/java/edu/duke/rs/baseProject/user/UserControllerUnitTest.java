@@ -1,36 +1,21 @@
 package edu.duke.rs.baseProject.user;
 
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.notNullValue;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.web.servlet.MockMvc;
 
-import edu.duke.rs.baseProject.BaseWebMvcTest;
+import edu.duke.rs.baseProject.AbstractWebUnitTest;
 import edu.duke.rs.baseProject.login.LoginController;
 
-@RunWith(SpringRunner.class)
 @WebMvcTest(UserController.class)
-public class UserControllerUnitTest extends BaseWebMvcTest {
-  @Autowired
-  private MockMvc mockMvc;
-  @MockBean
-  private UserService userService;
-
+public class UserControllerUnitTest extends AbstractWebUnitTest {
   @Test
   public void whenNotAuthenticated_thenRedirectToLogin() throws Exception {
-    assertThat(this.userService, notNullValue());
-
     this.mockMvc.perform(get(UserController.USERS_MAPPING))
       .andExpect(status().isFound())
       .andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));

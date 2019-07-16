@@ -19,13 +19,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import edu.duke.rs.baseProject.BaseTest;
+import edu.duke.rs.baseProject.AbstractBaseTest;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class UserRepositoryIntegrationTest extends BaseTest {
+public class UserRepositoryIntegrationTest extends AbstractBaseTest {
 	@Autowired
 	private TestEntityManager entityManager;
 	@Autowired
@@ -33,7 +33,7 @@ public class UserRepositoryIntegrationTest extends BaseTest {
 	
 	@Test
 	public void whenFindByUserNameStartingWithIgnoreCaseNoUsers_thenReturnNoUsers() {
-		final Page<UserListItem> page = userRepository.findByUserNameStartingWithIgnoreCase(
+		final Page<UserListItem> page = userRepository.findByLastNameStartingWithIgnoreCase(
 				"j", PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "userName")));
 		
 		final List<UserListItem> users = page.getContent();
@@ -50,15 +50,15 @@ public class UserRepositoryIntegrationTest extends BaseTest {
 		
 		User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens", roles);
 		user1 = entityManager.persist(user1);
-		User user2 = new User("jimmyjohnson", "password", "Jimmy", "Johnson", roles);
+		User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson", roles);
 		user2 = entityManager.persist(user2);
-		User user3 = new User("simmyjohnson", "password", "Simmy", "Johnson", roles);
+		User user3 = new User("jimmyjohnson", "password", "Jimmy", "Johnson", roles);
 		user3 = entityManager.persistAndFlush(user3);
 		
-		final Page<UserListItem> page = userRepository.findByUserNameStartingWithIgnoreCase(
-				"j", PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "userName")));
+		final Page<UserListItem> page = userRepository.findByLastNameStartingWithIgnoreCase(
+				"j", PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "lastName")));
 		
-		final List<User> expectedResult = new ArrayList<>(List.of(user2, user1));
+		final List<User> expectedResult = new ArrayList<>(List.of(user3, user2));
 		final List<UserListItem> users = page.getContent();
 		
 		assertThat(users, notNullValue());
@@ -66,7 +66,8 @@ public class UserRepositoryIntegrationTest extends BaseTest {
 		
 		for (int i = 0; i < users.size(); i++) {
 			assertThat(users.get(i).getId(), equalTo(expectedResult.get(i).getId()));
-			assertThat(users.get(i).getUserName(), equalTo(expectedResult.get(i).getUserName()));
+			assertThat(users.get(i).getFirstName(), equalTo(expectedResult.get(i).getFirstName()));
+			assertThat(users.get(i).getLastName(), equalTo(expectedResult.get(i).getLastName()));
 		}
 	}
 }

@@ -12,11 +12,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import edu.duke.rs.baseProject.BaseTest;
+import edu.duke.rs.baseProject.AbstractBaseTest;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class RoleRepositoryIntegrationTest extends BaseTest {
+public class RoleRepositoryIntegrationTest extends AbstractBaseTest {
 	@Autowired
 	private TestEntityManager entityManager;
 	@Autowired

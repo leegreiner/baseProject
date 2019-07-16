@@ -16,7 +16,7 @@ public class LoginController extends BaseWebController {
 	
 	@GetMapping(LOGIN_MAPPING)
 	public String loginPage() {
-		log.debug("In login()");
+		log.trace("In login()");
 		return SecurityUtils.userIsAuthenticated() ? this.createRedirectViewPath(HomeController.HOME_MAPPING) : LOGIN_VIEW;
 	}
 }

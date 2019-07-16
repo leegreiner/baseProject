@@ -11,15 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 public class UserController extends BaseWebController {
 	public static final String USERS_VIEW =  "/users/users";
 	public static final String USERS_MAPPING = "/users";
-	private transient final UserService userService;
-	
-	public UserController(final UserService userService) {
-		this.userService = userService;
-	}
 	
 	@GetMapping(USERS_MAPPING)
 	public String getUsers() {
-	  log.debug("In getUsers()");
+	  log.trace("In getUsers()");
 		return USERS_VIEW;
-	}
+  }
 }
