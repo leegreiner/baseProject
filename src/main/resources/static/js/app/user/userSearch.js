@@ -4,8 +4,6 @@ var targetPageSetUp = function() {
       tablet : 1024,
       phone : 480
   };
-  var token = $("meta[name='_csrf']").attr("content"); 
-  var header = $("meta[name='_csrf_header']").attr("content");
   
   var dt = $('#searchResults').DataTable({
     'sDom': "<'dt-toolbar'<'col-xs-12 col-sm-6'f><'col-sm-6 col-xs-12 hidden-xs'l>r>t"+
@@ -14,14 +12,7 @@ var targetPageSetUp = function() {
     'serverSide': true,
       'ajax': {
         'url': '/api/users',
-        'contentType': 'application/json',
-        'type': 'POST',
-        'beforeSend': function (request) {
-          request.setRequestHeader(header, token);
-        },
-        'data': function (d) {
-          return JSON.stringify(d);
-        },
+        'data': DataTables.flatten,
         'error': AjaxUtil.onLoadError
       },
     'columns': [

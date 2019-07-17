@@ -2,8 +2,6 @@ package edu.duke.rs.baseProject.user;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
@@ -15,7 +13,6 @@ import java.util.Set;
 
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
@@ -26,6 +23,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import edu.duke.rs.baseProject.AbstractWebIntegrationTest;
 import edu.duke.rs.baseProject.datatables.DataTablesInput;
 import edu.duke.rs.baseProject.datatables.DataTablesOutput;
+import edu.duke.rs.baseProject.datatables.DataTablesTestUtils;
 import edu.duke.rs.baseProject.datatables.Search;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
@@ -43,11 +41,10 @@ public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTes
     final DataTablesInput input = new DataTablesInput();
     input.addColumn("lastName", false, false, "");
     input.addOrder("lastName", true);
+    final String params = DataTablesTestUtils.toRequestParameters(input);
   
-    final RequestBuilder requestBuilder = MockMvcRequestBuilders.post(API + UserController.USERS_MAPPING)
-        .contentType(MediaType.APPLICATION_JSON_UTF8)
-        .content(mapper.writeValueAsString(input).getBytes())
-        .with(csrf());
+    final RequestBuilder requestBuilder =
+        MockMvcRequestBuilders.get(API + UserController.USERS_MAPPING + "?" + params);
     
     final Role role = roleRepository.save(new Role(RoleName.USER));
     final Set<Role> roles = new HashSet<Role>();
@@ -101,11 +98,10 @@ public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTes
     input.addColumn("lastName", false, false, "");
     input.addOrder("lastName", true);
     input.setSearch(new Search("jo", false));
-  
-    final RequestBuilder requestBuilder = MockMvcRequestBuilders.post(API + UserController.USERS_MAPPING)
-        .contentType(MediaType.APPLICATION_JSON_UTF8)
-        .content(mapper.writeValueAsString(input).getBytes())
-        .with(csrf());
+    
+    final String params = DataTablesTestUtils.toRequestParameters(input);
+    final RequestBuilder requestBuilder =
+        MockMvcRequestBuilders.get(API + UserController.USERS_MAPPING + "?" + params);
     
     final Role role = roleRepository.save(new Role(RoleName.USER));
     final Set<Role> roles = new HashSet<Role>();

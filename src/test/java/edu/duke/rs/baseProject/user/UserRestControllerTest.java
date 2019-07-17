@@ -6,7 +6,6 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.ArrayList;
@@ -16,13 +15,13 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import edu.duke.rs.baseProject.AbstractWebUnitTest;
 import edu.duke.rs.baseProject.datatables.DataTablesInput;
+import edu.duke.rs.baseProject.datatables.DataTablesTestUtils;
 import edu.duke.rs.baseProject.datatables.Search;
 
 @WebMvcTest(UserRestController.class)
@@ -36,11 +35,10 @@ public class UserRestControllerTest extends AbstractWebUnitTest {
     final DataTablesInput input = new DataTablesInput();
     input.addColumn("lastName", false, false, "");
     input.addOrder("lastName", true);
+    final String params = DataTablesTestUtils.toRequestParameters(input);
 
-    final RequestBuilder requestBuilder = MockMvcRequestBuilders.post(API + UserController.USERS_MAPPING)
-        .contentType(MediaType.APPLICATION_JSON_UTF8)
-        .content(mapper.writeValueAsString(input).getBytes())
-        .with(csrf());
+    final RequestBuilder requestBuilder =
+        MockMvcRequestBuilders.get(API + UserController.USERS_MAPPING + "?" + params);
     
     when(userRepositoryMock.findAllBy(any(Pageable.class))).thenReturn(new PageImpl<UserListItem>(new ArrayList<UserListItem>()));
     
@@ -58,11 +56,10 @@ public class UserRestControllerTest extends AbstractWebUnitTest {
     input.addColumn("lastName", false, false, "");
     input.addOrder("lastName", true);
     input.setSearch(new Search("abc", false));
-
-    final RequestBuilder requestBuilder = MockMvcRequestBuilders.post(API + UserController.USERS_MAPPING)
-        .contentType(MediaType.APPLICATION_JSON_UTF8)
-        .content(mapper.writeValueAsString(input).getBytes())
-        .with(csrf());
+    final String params = DataTablesTestUtils.toRequestParameters(input);
+    
+    final RequestBuilder requestBuilder =
+        MockMvcRequestBuilders.get(API + UserController.USERS_MAPPING + "?" + params);
     
     when(userRepositoryMock.findByLastNameStartingWithIgnoreCase(eq(input.getSearch().getValue()), any(Pageable.class)))
       .thenReturn(new PageImpl<UserListItem>(new ArrayList<UserListItem>()));

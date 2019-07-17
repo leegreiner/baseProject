@@ -9,8 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.duke.rs.baseProject.BaseRestController;
@@ -25,8 +24,8 @@ public class UserRestController extends BaseRestController {
   @Autowired
   private UserRepository userRepository;
   
-  @PostMapping(API_MAPPING + UserController.USERS_MAPPING)
-  public DataTablesOutput<UserListItem> searchUsers(@Valid @RequestBody DataTablesInput input) {
+  @GetMapping(API_MAPPING + UserController.USERS_MAPPING)
+  public DataTablesOutput<UserListItem> searchUsers(@Valid DataTablesInput input) {
     log.trace("In searchUsers(): " + input.toString());
     final List<String> additionalOrders = new ArrayList<String>();
     additionalOrders.add("id");

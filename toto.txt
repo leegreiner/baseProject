@@ -26,3 +26,7 @@ SAML integration
 GitLab CI
 New Smartadmin
 * Logback formatting and log rolling
+Junit 5
+  - UT
+  - IT
+  - mvn test vs mvn verify
