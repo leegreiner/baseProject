@@ -13,4 +13,19 @@ public class SecurityUtils {
 				!(SecurityContextHolder.getContext().getAuthentication() 
 				          instanceof AnonymousAuthenticationToken);
 	}
+	
+	public static AppPrincipal getPrincipal() {
+    AppPrincipal appPrincipal = null;
+    Authentication auth = SecurityContextHolder.getContext()
+        .getAuthentication();
+
+    if (auth != null
+        && auth.getPrincipal() != null
+        && AppPrincipal.class.isAssignableFrom(auth.getPrincipal()
+            .getClass())) {
+      appPrincipal = (AppPrincipal) (auth.getPrincipal());
+    }
+
+    return appPrincipal;
+  }
 }

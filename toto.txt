@@ -19,7 +19,7 @@ Kubernetes
 * Https only configuration with keystore
 * Spring Session
 * Google Analytics
-Auditing
+* Auditing
 Figure out why actuator present error page (thymeleaf error) when invalid credentials
 * Code coverage
 SAML integration

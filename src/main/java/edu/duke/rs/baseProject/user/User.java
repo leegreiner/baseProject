@@ -21,6 +21,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
+import org.hibernate.annotations.Type;
+import org.hibernate.envers.Audited;
+
 import edu.duke.rs.baseProject.model.BaseEntity;
 import edu.duke.rs.baseProject.role.Role;
 import io.micrometer.core.instrument.util.StringUtils;
@@ -36,6 +39,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Entity
+@Audited
 @Table(name = "users")
 @NamedEntityGraphs({
 	@NamedEntityGraph(name = "user.userAndRoles", attributeNodes = {
@@ -79,6 +83,10 @@ public class User extends BaseEntity implements Serializable {
   @NotBlank
   @Size(max = 30)
 	private String lastName;
+	
+	@Column(name = "account_enabled", nullable = false)
+	@Type(type = "yes_no")
+	private boolean accountEnabled = true;
 	
 	@Column(name = "last_logged_in")
 	private LocalDateTime lastLoggedIn;

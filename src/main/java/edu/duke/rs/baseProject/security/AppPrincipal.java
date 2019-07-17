@@ -45,7 +45,7 @@ public class AppPrincipal implements UserDetails {
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return true;
+		return user.isAccountEnabled();
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class AppPrincipal implements UserDetails {
 
 	@Override
 	public boolean isEnabled() {
-		return true;
+		return user.isAccountEnabled();
 	}
 	
 	@Override

@@ -11,6 +11,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
+import org.hibernate.envers.Audited;
+
 import edu.duke.rs.baseProject.model.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -24,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Entity
+@Audited
 public class Role extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	

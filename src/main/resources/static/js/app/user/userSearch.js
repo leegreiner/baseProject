@@ -13,6 +13,9 @@ var targetPageSetUp = function() {
       'ajax': {
         'url': '/api/users',
         'data': DataTables.flatten,
+        'beforeSend': function (request) {
+            ga('send', 'event', 'User', 'search');
+          },
         'error': AjaxUtil.onLoadError
       },
     'columns': [

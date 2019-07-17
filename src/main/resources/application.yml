@@ -17,6 +17,11 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+      org:
+        hibernate:
+          envers:
+            track_entities_changed_in_revision: true
+            global_with_modified_flag: true
   quartz:    job-store-type: jdbc
     overwrite-existing-jobs: true
     scheduler-name: baseProjectScheduler
