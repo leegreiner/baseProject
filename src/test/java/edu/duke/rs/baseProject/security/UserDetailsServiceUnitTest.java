@@ -52,7 +52,7 @@ public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 		final Role role = new Role(RoleName.USER);
 		final Set<Role> roles = new HashSet<Role>();
 		roles.add(role);
-		final User user = new User("johnsmith", "johnspassword", "John", "Smith", roles);
+		final User user = new User("johnsmith", "johnspassword", "John", "Smith","johnSmith@gmail.com", roles);
 		when(userRepository.findByUserNameIgnoreCase(user.getUserName()))
 			.thenReturn(Optional.of(user));
 		
