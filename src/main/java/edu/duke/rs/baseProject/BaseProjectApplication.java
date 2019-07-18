@@ -30,19 +30,19 @@ public class BaseProjectApplication {
 		return (args) -> {
 			final Set<Role> roles = new HashSet<Role>();
 			roles.add(roleRepository.save(new Role(RoleName.USER)));
-			userRepository.save(new User("username", passwordEncoder.encode("password"), "Default", "User", roles));
-			userRepository.save(new User("billstafford", passwordEncoder.encode("password"), "Bill", "Stafford", roles));
-			userRepository.save(new User("briancole", passwordEncoder.encode("password"), "Brian", "Cole", roles));
-			userRepository.save(new User("samsmith", passwordEncoder.encode("password"), "Sam", "Smith", roles));
-			userRepository.save(new User("perterpiper", passwordEncoder.encode("password"), "Peter", "Piper", roles));
-			userRepository.save(new User("johnjameson", passwordEncoder.encode("password"), "John", "Jameson", roles));
-			userRepository.save(new User("fredflannery", passwordEncoder.encode("password"), "Fred", "Flannery", roles));
-			userRepository.save(new User("stevebosworth", passwordEncoder.encode("password"), "Steve", "Bosworth", roles));
-			userRepository.save(new User("harrythompson", passwordEncoder.encode("password"), "Harry", "Thompson", roles));
-			userRepository.save(new User("peterparker", passwordEncoder.encode("password"), "Peter", "Parker", roles));
-			userRepository.save(new User("janejohnson", passwordEncoder.encode("password"), "Jane", "Johnson", roles));
-			userRepository.save(new User("marysmith", passwordEncoder.encode("password"), "Mary", "Smith", roles));
-			userRepository.save(new User("gregjohansen", passwordEncoder.encode("password"), "Greg", "Johansen", roles));
+			userRepository.save(new User("username", passwordEncoder.encode("password"), "Default", "User","defaultUser@gmail.com", roles));
+			userRepository.save(new User("billstafford", passwordEncoder.encode("password"), "Bill", "Stafford","billStafford@gmail.com", roles));
+			userRepository.save(new User("briancole", passwordEncoder.encode("password"), "Brian", "Cole","brianCole@gmail.com", roles));
+			userRepository.save(new User("samsmith", passwordEncoder.encode("password"), "Sam", "Smith","samSmith@gmail.com", roles));
+			userRepository.save(new User("perterpiper", passwordEncoder.encode("password"), "Peter", "Piper","peterPiper@gmail.com", roles));
+			userRepository.save(new User("johnjameson", passwordEncoder.encode("password"), "John", "Jameson","johnJameson@gmail.com", roles));
+			userRepository.save(new User("fredflannery", passwordEncoder.encode("password"), "Fred", "Flannery","fredFlannery@gmail.com", roles));
+			userRepository.save(new User("stevebosworth", passwordEncoder.encode("password"), "Steve", "Bosworth","steveBosworth@gmail.com", roles));
+			userRepository.save(new User("harrythompson", passwordEncoder.encode("password"), "Harry", "Thompson","harryThompson@gmail.com", roles));
+			userRepository.save(new User("peterparker", passwordEncoder.encode("password"), "Peter", "Parker","peterParker@gmail.com", roles));
+			userRepository.save(new User("janejohnson", passwordEncoder.encode("password"), "Jane", "Johnson","janeJohnson@gmail.com", roles));
+			userRepository.save(new User("marysmith", passwordEncoder.encode("password"), "Mary", "Smith","marySmith@gmail.com", roles));
+			userRepository.save(new User("gregjohansen", passwordEncoder.encode("password"), "Greg", "Johansen","gregJohansen@gmail.com", roles));
 			
 		};
 	}

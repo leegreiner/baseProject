@@ -28,6 +28,7 @@ public class UserDetailsBuilder {
     user.setId(Long.valueOf(1));
     user.setLastName("Smith");
     user.setUserName("johnsmith");
+    user.setEmail("johnSmith@gmail.com");
     user.setRoles(roleEntities);
     
     return new AppPrincipal(user);

@@ -84,6 +84,12 @@ public class User extends BaseEntity implements Serializable {
   @Size(max = 30)
 	private String lastName;
 	
+	@Column(name = "email", length = 320, nullable = false)
+  @NonNull
+  @NotBlank
+  @Size(max = 320)
+  private String email;
+	
 	@Column(name = "account_enabled", nullable = false)
 	@Type(type = "yes_no")
 	private boolean accountEnabled = true;

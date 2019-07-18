@@ -20,7 +20,14 @@ var targetPageSetUp = function() {
       },
     'columns': [
         { 'data': 'lastName' },
-        { 'data': 'firstName' }
+        { 'data': 'firstName' },
+        { 'data': 'userName' },
+        { 'data': 'email',
+          'render': DataTables.renderEmail
+        },
+        { 'data': 'accountEnabled',
+          'render': DataTables.renderYesNo
+        }
     ],
     'preDrawCallback' : function() {
       // Initialize the responsive datatables helper once.
