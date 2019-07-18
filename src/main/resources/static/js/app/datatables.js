@@ -37,5 +37,15 @@ var DataTables = {
       delete params.search;
 
       return params;
+    },
+    
+    renderEmail: function(data,type,full,meta){
+    	"use strict";
+    	return '<a href="mailto:' + data + '" target="_top">' + data +'</a>';
+    },
+    
+    renderYesNo: function(data,type,full,meta){
+    	"use strict";
+        return (data === true) ? 'Yes' : 'No';
     }
 }
