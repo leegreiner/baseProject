@@ -48,11 +48,11 @@ public class UserRepositoryIntegrationTest extends AbstractBaseTest {
 		final Set<Role> roles = new HashSet<Role>();
 		roles.add(role);
 		
-		User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens", roles);
+		User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
 		user1 = entityManager.persist(user1);
-		User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson", roles);
+		User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
 		user2 = entityManager.persist(user2);
-		User user3 = new User("jimmyjohnson", "password", "Jimmy", "Johnson", roles);
+		User user3 = new User("jimmyjohnson", "password", "Jimmy", "Johnson","jimmyJohnson@gmail.com", roles);
 		user3 = entityManager.persistAndFlush(user3);
 		
 		final Page<UserListItem> page = userRepository.findByLastNameStartingWithIgnoreCase(
