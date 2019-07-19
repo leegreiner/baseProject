@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import edu.duke.rs.baseProject.BaseWebController;
+import io.micrometer.core.instrument.util.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -23,7 +24,15 @@ public class ApplicationErrorController extends BaseWebController implements Err
 		final Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 		String result = "/unknownError";
 		
-		if (status != null) {
+		if (status == null) {
+		  // one scenario when status is null is when we are redirecting from the
+		  //  custom AuthenticationFailureHandler
+		  final String error = request.getParameter("error");
+      
+      if (StringUtils.isNotBlank(error)) {
+        result = "/" + error;
+      }
+		} else {
       final Integer statusCode = Integer.valueOf(status.toString());
    
       if (statusCode == HttpStatus.BAD_REQUEST.value()) {
@@ -36,7 +45,7 @@ public class ApplicationErrorController extends BaseWebController implements Err
       	result ="/404";
       } else if(statusCode == HttpStatus.INTERNAL_SERVER_ERROR.value()) {
       	result = "/500" ;
-      }
+      } 
 	  }
 		
 		return BASE_ERROR_VIEW + result;

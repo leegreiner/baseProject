@@ -1,6 +1,8 @@
 package edu.duke.rs.baseProject.config;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -14,6 +16,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.authentication.CredentialsExpiredException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -25,10 +31,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.DefaultRedirectStrategy;
+import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
+import edu.duke.rs.baseProject.error.ApplicationErrorController;
 import edu.duke.rs.baseProject.role.RoleName;
 
 @Configuration
@@ -95,21 +106,21 @@ public class WebSecurityConfig {
 			http
 				.authorizeRequests()
 				  .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-					.antMatchers("/", "/error/**", "/fonts/**", "/img/**").permitAll()
+					.antMatchers("/", "/error/**", "/fonts/**", "/img/**", "/loginPage").permitAll()
 					.anyRequest().hasAuthority(RoleName.USER.name())
 					.and()
 				.formLogin()
 						.loginPage("/loginPage").permitAll()
 						.loginProcessingUrl("/login")
 						.defaultSuccessUrl("/home", true)
-						.failureUrl("/loginPage?error=loginError")
+						.failureHandler(authenticationFailureHandler())
 				.and()
 						.logout()
 							.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
 							.logoutSuccessUrl("/")
+							.permitAll()
 							.deleteCookies("SESSION")
-			    			.invalidateHttpSession(true)
-			    			.permitAll();
+			    			.invalidateHttpSession(true);
 		}
 	}
 	
@@ -143,6 +154,21 @@ public class WebSecurityConfig {
 			setRealmName("management realm");
 			super.afterPropertiesSet();
 		}
-
+	}
+	
+	@Bean
+	public static AuthenticationFailureHandler authenticationFailureHandler() {
+	  final ExceptionMappingAuthenticationFailureHandler handler = new ExceptionMappingAuthenticationFailureHandler();
+	  final Map<String, String> failureMap = new HashMap<>();
+	  
+	  failureMap.put(AccountExpiredException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountExpired");
+	  failureMap.put(CredentialsExpiredException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=credentialsExpired");
+	  failureMap.put(DisabledException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountDisabled");
+	  failureMap.put(LockedException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountLocked");
+	  
+	  handler.setExceptionMappings(failureMap);
+	  handler.setDefaultFailureUrl("/loginPage?error=true");
+	  
+	  return handler;
 	}
 }
