@@ -1,0 +1,13 @@
+package edu.duke.rs.baseProject.security;
+
+import javax.validation.constraints.NotNull;
+
+import org.springframework.validation.annotation.Validated;
+import edu.duke.rs.baseProject.user.User;
+
+@Validated
+public interface PasswordExpirationStrategy {
+  
+  boolean isPasswordExpired(@NotNull User user);
+
+}

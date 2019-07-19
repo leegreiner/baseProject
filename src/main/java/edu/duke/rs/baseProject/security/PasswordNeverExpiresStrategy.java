@@ -1,0 +1,11 @@
+package edu.duke.rs.baseProject.security;
+import edu.duke.rs.baseProject.user.User;
+
+public class PasswordNeverExpiresStrategy implements PasswordExpirationStrategy{
+  
+  @Override
+  public boolean isPasswordExpired(User user) {
+    return false;
+  }
+
+}
