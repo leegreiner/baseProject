@@ -13,10 +13,12 @@ import edu.duke.rs.baseProject.user.User;
 public class AppPrincipal implements UserDetails {
 	private static final long serialVersionUID = 1L;
 	private final User user;
+	private final boolean passwordExpired;
 	private final Collection<SimpleGrantedAuthority> authorities;
 	
-	public AppPrincipal(final User user) {
+	public AppPrincipal(final User user,final boolean passwordExpired) {
 		this.user = user;
+		this.passwordExpired = passwordExpired;
 		authorities = new ArrayList<SimpleGrantedAuthority>();
 		
 		for (final Role role : user.getRoles()) {
@@ -50,7 +52,7 @@ public class AppPrincipal implements UserDetails {
 
 	@Override
 	public boolean isCredentialsNonExpired() {
-		return true;
+		return !passwordExpired;
 	}
 
 	@Override

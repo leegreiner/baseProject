@@ -31,6 +31,6 @@ public class UserDetailsBuilder {
     user.setEmail("johnSmith@gmail.com");
     user.setRoles(roleEntities);
     
-    return new AppPrincipal(user);
+    return new AppPrincipal(user, false);
   }
 }

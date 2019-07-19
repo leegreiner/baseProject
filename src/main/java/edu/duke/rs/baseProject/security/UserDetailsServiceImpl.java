@@ -16,9 +16,11 @@ import lombok.extern.slf4j.Slf4j;
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 	private transient final UserRepository userRepository;
+	private transient final PasswordExpirationStrategy passwordExpirationStrategy;
 	
-	public UserDetailsServiceImpl(final UserRepository userRepository) {
+	public UserDetailsServiceImpl(final UserRepository userRepository,final PasswordExpirationStrategy passwordExpirationStrategy) {
 		this.userRepository = userRepository;
+		this.passwordExpirationStrategy = passwordExpirationStrategy;
 	}
 	
 	@Override
@@ -30,6 +32,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
 		user.setLastLoggedIn(LocalDateTime.now());
 		
-		return new AppPrincipal(user);
+		return new AppPrincipal(user, passwordExpirationStrategy.isPasswordExpired(user));
 	}
 }

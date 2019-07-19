@@ -31,12 +31,15 @@ import edu.duke.rs.baseProject.user.UserRepository;
 public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 	@Mock
 	private UserRepository userRepository;
+	@Mock
+	private PasswordExpirationStrategy passwordExpirationStrategy;
 	@InjectMocks
 	private UserDetailsServiceImpl userDetailsService;
 	
 	@Before
 	public void inint() {
 		MockitoAnnotations.initMocks(this);
+		when(passwordExpirationStrategy.isPasswordExpired(any(User.class))).thenReturn(false);
 	}
 	
 	@Test(expected = UsernameNotFoundException.class)
