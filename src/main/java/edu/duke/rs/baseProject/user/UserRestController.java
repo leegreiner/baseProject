@@ -5,7 +5,6 @@ import java.util.List;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
@@ -21,8 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 public class UserRestController extends BaseRestController {
-  @Autowired
-  private UserRepository userRepository;
+  private transient final UserRepository userRepository;
+  
+  public UserRestController(final UserRepository userRepository) {
+    this.userRepository = userRepository;
+  }
   
   @GetMapping(API_MAPPING + UserController.USERS_MAPPING)
   public DataTablesOutput<UserListItem> searchUsers(@Valid DataTablesInput input) {
