@@ -67,7 +67,6 @@ public class AppPrincipal implements UserDetails {
 	
 	public void setTimeZone(TimeZone timeZone) {
 	  this.user.setTimeZone(timeZone);
-	  TimeZone.setDefault(timeZone);
 	}
 	
 	@Override
