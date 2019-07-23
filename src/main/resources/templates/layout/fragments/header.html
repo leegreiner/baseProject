@@ -22,7 +22,7 @@
 		</div>
 		
 		<div sec:authorize="isAuthenticated()" class="pull-right headerUserName">
-		  <span sec:authentication="principal.displayName"></span>
+		  <a th:href="@{userProfile}" sec:authentication="principal.displayName">userName</a>
 		</div>
 		
 	</header>
