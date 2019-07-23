@@ -17,6 +17,8 @@
 		
 		<div id="main" role="main">
 			<div id="content" class="container-fluid">
+			  <div th:replace="layout/fragments/messages :: messages" th:remove="tag">Messages go here</div>
+			  
 				<section layout:fragment="content">
     			<p>Page content goes here</p>
   			</section>
