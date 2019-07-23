@@ -4,13 +4,14 @@ spring:
     initialization-mode: never
     platform: postgresql
     url: jdbc:postgresql://localhost:5432/devdb?currentSchema=baseapp
-    username: lmg
-    password: 'tta&cno2'
+    username: rmg
+    password: 'casl1soccer'
   jpa:
     jpa:
     show-sql: true
     hibernate:
       ddl-auto: none
+    open-in-view: false
     properties:      hibernate:
         dialect: org.hibernate.dialect.PostgreSQL94Dialect
         default_schema: baseapp

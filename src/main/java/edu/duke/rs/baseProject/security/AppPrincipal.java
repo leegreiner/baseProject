@@ -2,6 +2,7 @@ package edu.duke.rs.baseProject.security;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.TimeZone;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -58,6 +59,15 @@ public class AppPrincipal implements UserDetails {
 	@Override
 	public boolean isEnabled() {
 		return user.isAccountEnabled();
+	}
+	
+	public TimeZone getTimeZone() {
+	  return this.user.getTimeZone();
+	}
+	
+	public void setTimeZone(TimeZone timeZone) {
+	  this.user.setTimeZone(timeZone);
+	  TimeZone.setDefault(timeZone);
 	}
 	
 	@Override
