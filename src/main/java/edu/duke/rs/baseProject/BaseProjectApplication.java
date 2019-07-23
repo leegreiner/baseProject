@@ -2,6 +2,9 @@ package edu.duke.rs.baseProject;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TimeZone;
+
+import javax.annotation.PostConstruct;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,6 +24,12 @@ public class BaseProjectApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(BaseProjectApplication.class, args);
+		
+	}
+	
+	@PostConstruct
+	public void started() {
+	  TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 	}
 	
 	@Bean
