@@ -21,6 +21,7 @@
     <java.version>11</java.version>
     <spring-cloud.version>2.1.0.RELEASE</spring-cloud.version>
     <jacoco.version>0.8.4</jacoco.version>
+    <powermock.version>2.0.2</powermock.version>
   </properties>
 
   <dependencies>
@@ -153,6 +154,18 @@
       <artifactId>jackson-module-mrbean</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-module-junit4</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+   </dependency>
+   <dependency>
+      <groupId>org.powermock</groupId>
+      <artifactId>powermock-api-mockito2</artifactId>
+      <version>${powermock.version}</version>
+      <scope>test</scope>
+   </dependency>
   </dependencies>
 
   <build>
