@@ -5,11 +5,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.time.ZoneId;
 import java.util.List;
-import java.util.TimeZone;
 
 import org.junit.Test;
-
-
 
 public class TimeZoneDisplayTest {
   

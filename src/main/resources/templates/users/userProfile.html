@@ -23,7 +23,7 @@
 			                <label th:text="#{timeZone}">Time Zone</label>
 			                <div class="input-group">
 			                  <select th:field="*{timeZone}">
-			                    <option th:each= "tz: ${timeZones}" th:value="${tz.zoneId}" th:label="${tz.label}" ></option>
+			                    <option th:each= "tz: ${T(edu.duke.rs.baseProject.util.TimeZoneDisplay).getDisplayableTimeZones()}" th:value="${tz.zoneId}" th:label="${tz.label}" ></option>
 			                  </select>
 			                </div>
 		                </div>

@@ -28,7 +28,7 @@ public class UserRestController extends BaseRestController {
   
   @GetMapping(API_MAPPING + UserController.USERS_MAPPING)
   public DataTablesOutput<UserListItem> searchUsers(@Valid DataTablesInput input) {
-    log.trace("In searchUsers(): " + input.toString());
+    log.debug("In searchUsers(): " + input.toString());
     final List<String> additionalOrders = new ArrayList<String>();
     additionalOrders.add("id");
     

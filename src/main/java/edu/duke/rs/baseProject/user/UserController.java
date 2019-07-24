@@ -14,7 +14,7 @@ public class UserController extends BaseWebController {
 	
 	@GetMapping(USERS_MAPPING)
 	public String getUsers() {
-	  log.trace("In getUsers()");
+	  log.debug("In getUsers()");
 		return USERS_VIEW;
   }
 }
