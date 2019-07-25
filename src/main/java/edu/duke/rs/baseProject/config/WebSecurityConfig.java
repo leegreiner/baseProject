@@ -1,12 +1,7 @@
 package edu.duke.rs.baseProject.config;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +10,6 @@ import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
@@ -25,24 +19,29 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
-import org.springframework.security.web.authentication.ExceptionMappingAuthenticationFailureHandler;
-import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import edu.duke.rs.baseProject.error.ApplicationErrorController;
+import edu.duke.rs.baseProject.home.HomeController;
 import edu.duke.rs.baseProject.role.RoleName;
+import edu.duke.rs.baseProject.security.AjaxAwareAccessDeniedHandler;
+import edu.duke.rs.baseProject.security.AjaxAwareExceptionMappingAuthenticationHandler;
+import edu.duke.rs.baseProject.security.AjaxAwareLoginUrlAuthenticationEntryPoint;
+import edu.duke.rs.baseProject.security.RestBasicAuthenticationEntryPoint;
 
 @Configuration
 @EnableWebSecurity
 public class WebSecurityConfig {
+  private static final String LOGIN_PAGE = "/loginPage";
+  
 	@Bean
   public static PasswordEncoder passwordEncoder() {
       return new BCryptPasswordEncoder();
@@ -72,17 +71,20 @@ public class WebSecurityConfig {
 		@Override
     protected void configure(final HttpSecurity http) throws Exception {
 			http
-				.requestMatcher(EndpointRequest.toAnyEndpoint())
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
+        .requiresChannel()
+        .and()
+  				.requestMatcher(EndpointRequest.toAnyEndpoint())
+  				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
+				.and()
+  				.exceptionHandling()
+            .accessDeniedHandler(accessDeniedHandler())
 				.and()
 					.csrf().disable()
 					.authorizeRequests().anyRequest().hasAuthority("MANAGEMENT")
 				.and()
 					.httpBasic()
-						.authenticationEntryPoint(authenticationEntryPoint())
-					.and()
-						.exceptionHandling()
-							.accessDeniedHandler(accessDeniedHandler());
+						.authenticationEntryPoint(restAuthenticationEntryPoint());
+						
 		}
 	}
 	
@@ -94,69 +96,52 @@ public class WebSecurityConfig {
 		
 		@Override
 		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-	        auth
-	        	.userDetailsService(userDetailsService)
-	        	.passwordEncoder(passwordEncoder());
-	    }
+      auth
+      	.userDetailsService(userDetailsService)
+      	.passwordEncoder(passwordEncoder());
+	  }
 		
 		@Override
 		protected void configure(HttpSecurity http) throws Exception {
 			http
-				.authorizeRequests()
-				  .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-					.antMatchers("/", "/error/**", "/fonts/**", "/img/**", "/loginPage").permitAll()
-					.anyRequest().hasAuthority(RoleName.USER.name())
-					.and()
-				.formLogin()
-						.loginPage("/loginPage").permitAll()
+			  .requiresChannel()
+			  .and()
+  			  .exceptionHandling()
+  			    .accessDeniedHandler(accessDeniedHandler())
+  			    .authenticationEntryPoint(loginUrlAuthenticationEntryPoint())
+			  .and()
+  				.authorizeRequests()
+  				  .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+  					.antMatchers("/", "/error/**", "/fonts/**", "/img/**", "/loginPage").permitAll()
+  					.anyRequest().hasAuthority(RoleName.USER.name())
+  			.and()
+  				.formLogin()
 						.loginProcessingUrl("/login")
 						.defaultSuccessUrl("/home", true)
 						.failureHandler(authenticationFailureHandler())
-				.and()
-						.logout()
-							.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-							.logoutSuccessUrl("/")
-							.permitAll()
-							.deleteCookies("SESSION")
-			    			.invalidateHttpSession(true);
+  			.and()
+					.logout()
+						.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+						.logoutSuccessUrl("/")
+						.permitAll()
+						.deleteCookies("SESSION")
+		    			.invalidateHttpSession(true);
 		}
 	}
 	
 	@Bean
-	public static RestAutenticationAccessDeniedHandler accessDeniedHandler() {
-		return new RestAutenticationAccessDeniedHandler();
-	}
-	
-	@Bean
-	public static RestBasicAuthenticationEntryPoint authenticationEntryPoint() {
+	public static AuthenticationEntryPoint restAuthenticationEntryPoint() {
 		return new RestBasicAuthenticationEntryPoint();
 	}
 	
-	public static class RestAutenticationAccessDeniedHandler implements AccessDeniedHandler {
-		@Override
-		public void handle(HttpServletRequest request, HttpServletResponse response,
-				AccessDeniedException accessDeniedException) throws IOException, ServletException {
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-		}
-	}
-
-	public static class RestBasicAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
-		@Override
-		public void commence(HttpServletRequest request, HttpServletResponse response,
-				AuthenticationException authException) throws IOException, ServletException {
-			response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized");
-		}
-		
-		@Override
-		public void afterPropertiesSet() throws Exception {
-			setRealmName("management realm");
-			super.afterPropertiesSet();
-		}
+	@Bean
+	public static AuthenticationEntryPoint loginUrlAuthenticationEntryPoint() {
+	  return new AjaxAwareLoginUrlAuthenticationEntryPoint(LOGIN_PAGE);
 	}
 	
 	@Bean
 	public static AuthenticationFailureHandler authenticationFailureHandler() {
-	  final ExceptionMappingAuthenticationFailureHandler handler = new ExceptionMappingAuthenticationFailureHandler();
+	  final AjaxAwareExceptionMappingAuthenticationHandler handler = new AjaxAwareExceptionMappingAuthenticationHandler();
 	  final Map<String, String> failureMap = new HashMap<>();
 	  
 	  failureMap.put(AccountExpiredException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountExpired");
@@ -168,5 +153,10 @@ public class WebSecurityConfig {
 	  handler.setDefaultFailureUrl("/loginPage?error=true");
 	  
 	  return handler;
+	}
+	
+	@Bean
+	public static AccessDeniedHandler accessDeniedHandler() {
+	  return new AjaxAwareAccessDeniedHandler(ApplicationErrorController.ERROR_PATH, HomeController.HOME_MAPPING);
 	}
 }
