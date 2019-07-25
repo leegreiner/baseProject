@@ -57,7 +57,7 @@ public class LocalDateTimeStringConverterUnitTest {
     
     final String expected = LocalDateTimeStringSerializer.FORMATTER.format(ZonedDateTime.of(now, ZoneId.systemDefault()).withZoneSameInstant(zoneId));
     
-    assertThat(expected, equalTo(serializedDateTime.getValue()));
+    assertThat(serializedDateTime.getValue(), equalTo(expected));
   }
   
   @Test
@@ -75,7 +75,7 @@ public class LocalDateTimeStringConverterUnitTest {
     
     final String expected = LocalDateTimeStringSerializer.FORMATTER.format(ZonedDateTime.of(now, ZoneId.systemDefault()));
     
-    assertThat(expected, equalTo(serializedDateTime.getValue()));
+    assertThat(serializedDateTime.getValue(), equalTo(expected));
   }
   
   @Test
@@ -94,7 +94,7 @@ public class LocalDateTimeStringConverterUnitTest {
     
     final String expected = LocalDateTimeStringSerializer.FORMATTER.format(ZonedDateTime.of(now, ZoneId.systemDefault()));
     
-    assertThat(expected, equalTo(serializedDateTime.getValue()));
+    assertThat(serializedDateTime.getValue(), equalTo(expected));
   }
 
 }

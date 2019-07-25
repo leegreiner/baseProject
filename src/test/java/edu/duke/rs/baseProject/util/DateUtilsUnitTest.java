@@ -57,8 +57,8 @@ public class DateUtilsUnitTest {
     
     DateUtils.convertLocalDateTimeToCurrentUserTime(ldt);
     
-    assertThat(expectedStart, equalTo(ldt.getStart()));
-    assertThat(expectedEnd, equalTo(ldt.getEnd()));
+    assertThat(ldt.getStart(), equalTo(expectedStart));
+    assertThat(ldt.getEnd(), equalTo(expectedEnd));
   }
   
   @Test
@@ -91,8 +91,8 @@ public class DateUtilsUnitTest {
     
     DateUtils.convertCurrentUserTimeToLocalDateTime(ldt);
     
-    assertThat(expectedStart, equalTo(ldt.getStart()));
-    assertThat(expectedEnd, equalTo(ldt.getEnd()));
+    assertThat(ldt.getStart(), equalTo(expectedStart));
+    assertThat(ldt.getEnd(), equalTo(expectedEnd));
   }
   
   @Test
@@ -119,7 +119,7 @@ public class DateUtilsUnitTest {
     
     final LocalDateTime result = DateUtils.convertToZone(now, fromZoneId, toZoneId);
     
-    assertThat(expectedLocalDateTime, equalTo(result));
+    assertThat(result, equalTo(expectedLocalDateTime));
   }
   
   @Test
@@ -134,7 +134,7 @@ public class DateUtilsUnitTest {
     
     final LocalDateTime result = DateUtils.convertToZone(now, fromZoneId, toZoneId);
     
-    assertThat(expectedLocalDateTime, equalTo(result));
+    assertThat(result, equalTo(expectedLocalDateTime));
   }
   
   @Getter

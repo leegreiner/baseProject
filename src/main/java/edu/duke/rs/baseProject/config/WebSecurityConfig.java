@@ -60,9 +60,9 @@ public class WebSecurityConfig {
 		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 			final InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
 	        
-	        manager.createUser(User.withUsername(managementUserName)
-	        		.password(passwordEncoder().encode(managementPassword))
-	        		.authorities("MANAGEMENT").build());
+	    manager.createUser(User.withUsername(managementUserName)
+    		.password(passwordEncoder().encode(managementPassword))
+    		.authorities("MANAGEMENT").build());
 	        
 			 auth
 			 	.userDetailsService(manager)
