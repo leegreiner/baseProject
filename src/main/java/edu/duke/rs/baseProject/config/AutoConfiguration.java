@@ -8,8 +8,7 @@ import edu.duke.rs.baseProject.security.PasswordNeverExpiresStrategy;
 
 @Configuration
 public class AutoConfiguration {
-  
-  
+
   @Bean
   @ConditionalOnMissingBean
   public PasswordExpirationStrategy passwordExpirationStrategy() {

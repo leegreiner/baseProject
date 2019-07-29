@@ -20,7 +20,7 @@ Kubernetes
 * Spring Session
 * Google Analytics
 * Auditing
-Figure out why actuator present error page (thymeleaf error) when invalid credentials
+* Figure out why actuator present error page (thymeleaf error) when invalid credentials
 * Code coverage
 SAML integration
 GitLab CI
