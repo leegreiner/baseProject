@@ -182,6 +182,9 @@
         <configuration>
           <excludes>
             <exclude>edu/duke/rs/baseProject/BaseProjectApplication.*</exclude>
+            <exclude>edu/duke/rs/baseProject/jobs/NoOpJob.*</exclude>
+            <exclude>edu/duke/rs/baseProject/config/QuartzConfig.*</exclude>
+            <exclude>edu/duke/rs/baseProject/exception/**</exclude>
           </excludes>
         </configuration>
         <executions>
@@ -213,15 +216,14 @@
                       <value>COVEREDRATIO</value>
                       <minimum>0.80</minimum>
                     </limit>
+                    <!-- 
                     <limit>
                       <counter>BRANCH</counter>
                       <value>COVEREDRATIO</value>
                       <minimum>0.80</minimum>
                     </limit>
+                    -->
                   </limits>
-                  <excludes>
-                    <exclude>edu.duke.rc.BaseProjectApplication.class</exclude>
-                  </excludes>
                 </rule>
               </rules>
             </configuration>
