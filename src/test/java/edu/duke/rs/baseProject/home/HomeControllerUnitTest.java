@@ -26,7 +26,7 @@ public class HomeControllerUnitTest extends AbstractWebUnitTest {
 	@Test
 	public void whenAuthenticated_thenHomeReturned() throws Exception {
 		this.mockMvc.perform(get(HomeController.HOME_MAPPING)
-		   .with(user(UserDetailsBuilder.build(RoleName.USER))))
+		   .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))
 			.andExpect(status().isOk())
 			.andExpect(view().name(HomeController.HOME_VIEW));
 	}

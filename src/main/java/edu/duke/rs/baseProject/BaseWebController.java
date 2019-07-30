@@ -15,9 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class BaseWebController {
   private static final String VIEW_REDIRECT_PREFIX = "redirect:";
-  private static final String FLASH_ERROR_MESSAGE = "errorMessage";
-  private static final String FLASH_FEEDBACK_MESSAGE = "feedbackMessage";
-  private static final String FLASH_WARNING_MESSAGE = "warningMessage";
+  public static final String FLASH_ERROR_MESSAGE = "errorMessage";
+  public static final String FLASH_FEEDBACK_MESSAGE = "feedbackMessage";
+  public static final String FLASH_WARNING_MESSAGE = "warningMessage";
   @Autowired
   private GoogleProperties googleProperties;
   @Autowired
