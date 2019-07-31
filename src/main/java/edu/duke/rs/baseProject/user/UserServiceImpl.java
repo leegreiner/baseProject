@@ -17,9 +17,8 @@ public class UserServiceImpl implements UserService {
 	
 	@Override
   public UserProfile getUserProfile() {
-    final AppPrincipal currentUser = getCurrentUser();
-    final User user = userRepository.findById(currentUser.getUserId())
-        .orElseThrow(() -> new NotFoundException("User not found: " + currentUser.getUserId()));
+    final User user = userRepository.findById(getCurrentUser().getUserId())
+        .orElseThrow(() -> new NotFoundException("error.userNotFound"));
     
     final UserProfile userProfile = new UserProfile(user.getTimeZone());
     return userProfile;
@@ -29,9 +28,8 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public void updateUserProfile(UserProfile userProfile) {
-    final AppPrincipal currentUser = getCurrentUser();
-    final User user = userRepository.findById(currentUser.getUserId())
-        .orElseThrow(() -> new NotFoundException("User not found: " + currentUser.getUserId()));
+    final User user = userRepository.findById(getCurrentUser().getUserId())
+        .orElseThrow(() -> new NotFoundException("error.userNotFound"));
     
     user.setTimeZone(userProfile.getTimeZone());
     
@@ -40,7 +38,7 @@ public class UserServiceImpl implements UserService {
   private AppPrincipal getCurrentUser() {
     final AppPrincipal appPrincipal = SecurityUtils.getPrincipal();
     if(appPrincipal == null) {
-      throw new IllegalArgumentException("No current user found.");
+      throw new IllegalArgumentException("error.principalNotFound");
     }
     return appPrincipal;
     

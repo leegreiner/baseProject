@@ -23,7 +23,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   @Test
   public void whenAuthenticated_thenUsersReturned() throws Exception {
     this.mockMvc.perform(get(UserController.USERS_MAPPING)
-        .with(user(UserDetailsBuilder.build(RoleName.USER))))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USERS_VIEW));
   }
