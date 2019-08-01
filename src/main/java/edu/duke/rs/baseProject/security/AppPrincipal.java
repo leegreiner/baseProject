@@ -27,10 +27,6 @@ public class AppPrincipal implements UserDetails {
 		}
 	}
 	
-	public Long getUserId() {
-	  return this.user.getId();
-	}
-
 	@Override
 	public String getPassword() {
 		return user.getPassword();
@@ -61,6 +57,11 @@ public class AppPrincipal implements UserDetails {
 		return user.isAccountEnabled();
 	}
 	
+	@Override
+  public Collection<? extends GrantedAuthority> getAuthorities() {
+    return authorities;
+  }
+	
 	public TimeZone getTimeZone() {
 	  return this.user.getTimeZone();
 	}
@@ -69,12 +70,15 @@ public class AppPrincipal implements UserDetails {
 	  this.user.setTimeZone(timeZone);
 	}
 	
-	@Override
-  public Collection<? extends GrantedAuthority> getAuthorities() {
-    return authorities;
+	public Long getUserId() {
+    return this.user.getId();
   }
-	
+
 	public String getDisplayName() {
-	  return user.getDisplayName();
+	  return this.user.getDisplayName();
+	}
+	
+	public String getEmail() {
+	  return this.user.getEmail();
 	}
 }

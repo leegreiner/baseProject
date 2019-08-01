@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+<body>
+  <header th:fragment="header" id="header" class="page-header" role="banner">
+    <div class="fs-xl fw-700 mr-5">
+      <span th:text="#{headerTitle}">Header title</span>
+    </div>
+    
+    <div class="ml-auto d-flex">
+      <span id="login"><a th:href="@{/home}"
+          th:title="#{login}" th:inline="text"><i class="fal fa-inverse fa-2x fa-arrow-alt-square-right"></i></a></span>
+    </div>
+  </header>
+</body>
+</html>

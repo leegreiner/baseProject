@@ -1,0 +1,31 @@
+.panel-hdr-custom {
+  background-color: #00539B;
+}
+
+.panel-hdr-custom h2 {
+  color: #ffffff;
+}
+
+.header-icon-custom {
+  color: #ffffff;
+}
+
+.table-custom {
+}
+
+.table-custom th, .table-custom td {
+  padding: 0.60rem;
+}
+
+.table-custom.dataTable thead .sorting:before,
+.table-custom.dataTable thead .sorting:after,
+.table-custom.dataTable thead .sorting_asc:before,
+.table-custom.dataTable thead .sorting_asc:after,
+.table-custom.dataTable thead .sorting_desc:before,
+.table-custom.dataTable thead .sorting_desc:after,
+.table-custom.dataTable thead .sorting_asc_disabled:before,
+.table-custom.dataTable thead .sorting_asc_disabled:after,
+.table-custom.dataTable thead .sorting_desc_disabled:before,
+.table-custom.dataTable thead .sorting_desc_disabled:after {
+  bottom: 0.6em;
+}

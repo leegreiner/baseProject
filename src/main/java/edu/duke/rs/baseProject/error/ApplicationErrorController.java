@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ApplicationErrorController extends BaseWebController implements ErrorController {
 	public static final String ERROR_PATH = "/error";
 	public static final String BASE_ERROR_VIEW = "error";
+	public static final String ERROR_VIEW_PARAM = "error";
 
 	@GetMapping(ERROR_PATH)
 	public String handleError(final HttpServletRequest request) {
@@ -27,7 +28,7 @@ public class ApplicationErrorController extends BaseWebController implements Err
 		if (status == null) {
 		  // one scenario when status is null is when we are redirecting from the
 		  //  custom AuthenticationFailureHandler
-		  final String error = request.getParameter("error");
+		  final String error = request.getParameter(ERROR_VIEW_PARAM);
       
       if (StringUtils.isNotBlank(error)) {
         result = "/" + error;

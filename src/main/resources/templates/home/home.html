@@ -1,14 +1,22 @@
 <!DOCTYPE html>
-<html
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	xmlns:th="http://www.thymeleaf.org"
-	layout:decorate="~{layout/layout.html}">
+<html th:replace="~{layout/layout :: layout(~{}, ~{::breadCrumb}, ~{::content}, ~{})}"
+	xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<title th:text="#{title.home}">AAAA</title>
 	</head>
 	<body>
-		<div layout:fragment="content">
-			<h1 th:text="#{home}">AAAA</h1>
-		</div>
+	  <breadCrumb th:remove="tag">
+	    <li class="breadcrumb-item" th:text="#{home}">home</li>
+    </breadCrumb>
+	  
+		<content th:remove="tag">
+		  <div class="subheader">
+	      <h1 class="subheader-title">
+	        <th:block th:text="#{title.home}" th:remove="tag">Home</th:block>
+	      </h1>
+      </div>
+              
+			<p>This is the home page.</p>
+		</content>
 	</body>
 </html>

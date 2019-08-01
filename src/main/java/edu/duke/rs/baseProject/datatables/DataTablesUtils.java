@@ -20,7 +20,7 @@ public class DataTablesUtils {
     
     for (final Order order : input.getOrder()) {
       String columnName = input.getColumns().get(order.getColumn()).getData();
-      final Sort.Direction direction = order.getDir() == Order.DESC ? Sort.Direction.DESC : Sort.Direction.ASC;
+      final Sort.Direction direction = order.getDir().equals(Order.DESC) ? Sort.Direction.DESC : Sort.Direction.ASC;
       
       if (renamedColumns != null && renamedColumns.containsKey(columnName)) {
         columnName = renamedColumns.get(columnName);

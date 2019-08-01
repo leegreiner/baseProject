@@ -2,29 +2,72 @@
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 <body>
-	<header th:fragment="header" id="header">
-		<div id="logo-group">
-			<span id="logo"><img th:src="@{/img/custom/logo.png}"
-				th:alt="${@environment.getProperty('spring.application.name')}" /></span>
+	<header th:fragment="header" id="header" class="page-header" role="banner">
+		<!-- we need this logo when user switches to nav-function-top -->
+		<div class="page-logo">
+		  <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative"
+		     data-toggle="modal" data-target="#modal-shortcut">
+		    <img src="img/app/logo.png" alt="SmartAdmin WebApp" aria-roledescription="logo">
+		    <!--<span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>-->
+		  </a>
 		</div>
+		
+		<!-- DOC: nav menu layout change shortcut -->
+		
+		<div sec:authorize="isAuthenticated()" class="hidden-md-down dropdown-icon-menu position-relative">
+		  <a href="#" class="header-btn btn js-waves-off" data-action="toggle"
+		     data-class="nav-function-hidden" title="Hide Navigation">
+		    <i class="ni ni-menu"></i>
+		  </a>
+		</div>
+		<!-- DOC: mobile button appears during mobile width -->
+		<div sec:authorize="isAuthenticated()" class="hidden-lg-up">
+		  <a href="#" class="header-btn btn press-scale-down" data-action="toggle" data-class="mobile-nav-on">
+		    <i class="ni ni-menu"></i>
+		  </a>
+		</div>
+		
+		<div class="fs-xl fw-700 mr-5">
+		  <span th:text="#{headerTitle}">Header title</span>
+		</div>
+		
+		<div sec:authorize="isAuthenticated()" class="ml-auto d-flex">
+		  <div>
+		    <a href="#" data-toggle="dropdown" title="defaultUser@gmail.com"
+		       class="far fa-user fa-2x header-icon header-icon-custom d-flex align-items-center justify-content-center ml-2">
+		    </a>
+		    <div class="dropdown-menu dropdown-menu-animated dropdown-lg">
+		      <div class="dropdown-header bg-primary-500 d-flex flex-row py-4 rounded-top">
+		        <div class="d-flex flex-row align-items-center mt-1 mb-1 color-white">
+		          <div class="info-card-text">
+		            <div class="fs-lg text-truncate text-truncate-lg" sec:authentication="principal.displayName">Default User</div>
+		            <span class="text-truncate text-truncate-md opacity-80" sec:authentication="principal.email">defaultUser@gmail.com</span>
+		          </div>
+		        </div>
+		      </div>
 
-		<div class="pull-right">
-			<div sec:authorize="isAuthenticated()" id="logoff" class="btn-header pull-right">
-				<span><a href="#" th:href="@{/logout}"
-					th:title="#{menu.logout}" th:inline="text"><i
-						class="fa fa-sign-out"></i></a></span>
-			</div>
-				
-			<div sec:authorize="!isAuthenticated()" id="login" class="btn-header pull-right">
-				<span id="login"><a href="/home"
-					th:title="#{menu.login}" th:inline="text"><i class="fa fa-sign-in"></i></a></span>
-			</div>
-		</div>
-		
-		<div sec:authorize="isAuthenticated()" class="pull-right headerUserName">
-		  <a th:href="@{userProfile}" sec:authentication="principal.displayName">userName</a>
-		</div>
-		
-	</header>
-</body>
+		      <div class="dropdown-divider m-0"></div>
+		      <a href="#" class="dropdown-item" data-action="app-fullscreen">
+		        <span th:text="#{fullScreen}">Fullscreen</span>
+		        <i class="float-right text-muted fw-n">F11</i>
+		      </a>
+		      
+		      <a href="#" class="dropdown-item" data-action="app-print">
+		        <span th:text="#{print}">Print</span>
+		        <i class="float-right text-muted fw-n">Ctrl + P</i>
+		      </a>
+		      
+		      <div class="dropdown-divider m-0"></div>
+		      <a class="dropdown-item" th:href="@{/userProfile}">
+		        <span th:text="#{editProfile}">Edit Profile</span>
+		      </a>
+		      <div class="dropdown-divider m-0"></div>
+		      <a class="dropdown-item fw-700 pt-3 pb-3" th:href="@{/logout}">
+		          <span th:text="#{logout}">Logout</span>
+		      </a>
+		    </div>
+		  </div>
+		  </div>
+    </header>
+  </body>
 </html>

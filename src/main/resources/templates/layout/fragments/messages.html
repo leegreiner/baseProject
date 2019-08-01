@@ -3,21 +3,24 @@
   xmlns:th="http://www.thymeleaf.org">
   <body>
 	  <div th:fragment="messages" id="messages" th:remove="tag">
-	    <div th:if="${feedbackMessage != null}" class="alert alert-success fade in">
-		    <button class="close" data-dismiss="alert">x</button>
-        <i class="fa-fw fa fa-check"></i>
+	    <div th:if="${feedbackMessage != null}" class="alert alert-success alert-dismissible fade show" role="alert">
+		    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true"><i class="fal fa-times"></i></span>
+        </button>
         <strong th:text="#{success} + ': ' + ${feedbackMessage}">Feedback message</strong>
 	    </div>
 	    
-	    <div th:if="${warningMessage != null}" class="alert alert-warning fade in">
-        <button class="close" data-dismiss="alert">x</button>
-        <i class="fa-fw fa fa-warning"></i>
+	    <div th:if="${warningMessage != null}" class="alert alert-warning alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true"><i class="fal fa-times"></i></span>
+        </button>
         <strong th:text="#{warning} + ': ' + ${warningMessage}">Warning message</strong>
       </div>
       
-      <div th:if="${errorMessage != null}" class="alert alert-danger fade in">
-        <button class="close" data-dismiss="alert">x</button>
-        <i class="fa-fw fa fa-times"></i>
+      <div th:if="${errorMessage != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <span aria-hidden="true"><i class="fal fa-times"></i></span>
+        </button>
         <strong th:text="#{error} + ': ' + ${errorMessage}">Error message</strong>
       </div>
 	  </div>

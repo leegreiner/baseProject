@@ -21,10 +21,10 @@
 .bar {
 	height: 400px;
 	width: 100%;
-	background: transparent url(/img/custom/homebar.png) repeat-x top left;
+	background: transparent url(/img/app/homebar.png) repeat-x top left;
 }
 
 .imagerow {
 	height: 400px;
-	background: transparent url(/img/custom/homebanner.png) no-repeat top right;
+	background: transparent url(/img/app/homebanner.png) no-repeat top right;
 }

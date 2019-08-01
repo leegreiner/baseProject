@@ -75,6 +75,16 @@ public class ApplicationErrorControllerUnitTest extends AbstractWebUnitTest {
   }
 	
 	@Test
+  public void whenErrorNotSetAndErrorViewIsSet_thenForwardTErrorView() throws Exception {
+    final MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get(ApplicationErrorController.ERROR_PATH)
+        .param(ApplicationErrorController.ERROR_VIEW_PARAM, "accountDisabled");
+    
+    this.mockMvc.perform(builder)
+      .andExpect(status().isOk())
+      .andExpect(view().name(ApplicationErrorController.BASE_ERROR_VIEW + "/accountDisabled"));
+  }
+	
+	@Test
   public void whenErrorNotSet_thenForwardToUnknownErrorView() throws Exception {
     final MockHttpServletRequestBuilder builder = MockMvcRequestBuilders.get(ApplicationErrorController.ERROR_PATH);
     

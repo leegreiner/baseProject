@@ -1,43 +1,56 @@
 <!DOCTYPE html>
-<html
-  xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-  xmlns:th="http://www.thymeleaf.org"
-  layout:decorate="~{layout/layout.html}">
+<html th:replace="~{layout/layout :: layout(~{::customCss}, ~{}, ~{::content}, ~{::customJs})}"
+  xmlns:th="http://www.thymeleaf.org">
   <head>
     <title th:text="#{title.userProfile}">AAAA</title>
   </head>
   <body>
-    <div layout:fragment="content">
-			<div class="row">
-        <article class="col-sm-12 col-md-12 col-lg-6">
-		      <div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-0" data-widget-editbutton="false" data-widget-colorbutton="false" data-widget-deletebutton="false">
-		        <header>
-		          <span class="widget-icon"> <i class="fa fa-user"></i></span>
-		          <h2 th:text= "#{title.userProfile}"></h2>
-		        </header>
-		        <div>
-		          <div class="widget-body">
-		            <form action="#" th:action="@{/userProfile}" th:object="${userProfile}" th:method="put">
-		              <fieldset>
-		                <div class="form-group">
-			                <label th:text="#{timeZone}">Time Zone</label>
-			                <div class="input-group">
-			                  <select th:field="*{timeZone}">
-			                    <option th:each= "tz: ${T(edu.duke.rs.baseProject.util.TimeZoneDisplay).getDisplayableTimeZones()}" th:value="${tz.zoneId}" th:label="${tz.label}" ></option>
-			                  </select>
-			                </div>
-		                </div>
-		              </fieldset>
-		
-		              <div class="form-actions">
-			              <input type="submit" class="btn btn-primary btn-default" th:value="Submit"></input>
-			              <a th:href="@{/home}" class="btn btn-default" th:value="cancel">Cancel</a>
-		              </div>
-		            </form> 
-		          </div>
-		        </div>
-		      </div>
-        </article>
+    <customCss th:remove="tag">
+      <link rel="stylesheet" media="screen, print" th:href="@{css/formplugins/select2/select2.bundle.css}">
+    </customCss>
+    
+    <content th:remove="tag">
+      <div class="subheader">
+        <h1 class="subheader-title">
+          <th:block th:text="#{editUserProfile}" th:remove="tag">User profile</th:block>
+        </h1>
       </div>
-    </div>
+              
+			<div class="row">
+        <div class="col-xl-6">
+          <div id="panelDiv" class="panel">
+            <div class="panel-hdr panel-hdr-custom">
+	            <h2 th:text="#{title.userProfile}">Title</h2>
+            </div>
+            
+            <div class="panel-container show">
+              <div class="panel-content">
+	              <form id="userProfileForm" th:action="@{/userProfile}" th:object="${userProfile}" th:method="put" class="needs-validation" novalidate autocomplete="off">
+	                <div class="form-group">
+                    <label class="form-label" for="timeZone" ><span th:text="#{timeZone}" th:remove="tag"></span> <span class="text-danger">*</span></label>
+                    <select class="form-control select2 w-100" th:field="*{timeZone}" required>
+                      <option th:each= "tz: ${T(edu.duke.rs.baseProject.util.TimeZoneDisplay).getDisplayableTimeZones()}" th:value="${tz.zoneId}" th:utext="${tz.label}"></option>
+                    </select>
+                    <div class="invalid-feedback">
+                      <th:block th:text="#{validation.required.timeZone}"></th:block>
+                    </div>
+	                </div>
+	                  
+	                <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row">
+	                  <button type="submit" class="btn btn-primary ml-auto" th:text="#{submit}"></button>
+	                  <a th:href="@{/home}" class="btn btn-default ml-3" th:text="#{cancel}">Cancel</a>
+	                </div>
+	              </form>
+	            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </content>
+    
+    <customJs th:remove="tag">
+      <script th:src="@{js/formplugins/select2/select2.bundle.js}"></script>
+      <script th:src="@{js/app/user/userProfile.js}"></script>
+    </customJs>
+  </body>
 </html>

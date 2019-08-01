@@ -1,25 +1,17 @@
 <!DOCTYPE html>
-<html
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	xmlns:th="http://www.thymeleaf.org"
-	layout:decorate="~{layout/layout.html}">
+<html  th:replace="~{layout/unauthenticatedLayout :: layout(~{::customCss}, ~{::content}, ~{})}"
+	xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<title th:text="#{title.index}">AAAA</title>
-		
-		<link rel="stylesheet" type="text/css" media="screen" href="css/app/index.css"/>
 	</head>
 
 	<body>
-		<div layout:fragment="content">
-			<div class="row">
-				<div class="homepagedefs">
-					<div th:text="#{welcome}" class="welcometext"></div>
-					
-					<div class="bar">
-						<div class="imagerow"></div>
-					</div>
-				</div>
-			</div>
-		</div>
+    <customCss th:remove="tag">
+      <link rel="stylesheet" type="text/css" media="screen" th:href="@{css/app/index.css}"/>
+    </customCss>
+    
+    <content th:remove="tag">
+      <div class="bar"><div class="imagerow"></div></div>
+    </content>
 	</body>
 </html>

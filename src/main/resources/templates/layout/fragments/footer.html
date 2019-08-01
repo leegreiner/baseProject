@@ -2,14 +2,15 @@
 <html
 	xmlns:th="http://www.thymeleaf.org">
 	<body>
-		<div th:fragment="footer" id="footer" class="page-footer">
-			<div class="col-xs-6">
-				<span class="txt-color-white" th:text="|${@environment.getProperty('spring.application.name')} ${@environment.getProperty('info.app.version')}|">Application Name - Application Version</span>
-			</div>
-			
-			<div class="col-xs-6">
-				<span th:text="|${@environment.getProperty('spring.application.name')} ${@environment.getProperty('info.app.version')}|" class="txt-color-white pull-right"></span>
-			</div>
-		</div>
+		<footer th:fragment="footer" id="footer" class="page-footer" role="contentinfo">
+        <div class="flex-1 text-muted">
+          <span th:text="|#{version} ${@environment.getProperty('info.app.version')}|" class="fw-700">Version X.Y.Z</span>
+        </div>
+        <div>
+          <div class="flex-l text-muted">
+            <a href="#" th:text="#{contactUs}" class="text-secondary fw-700">Contact us</a>
+          </div>
+        </div>
+      </footer>
 	</body>
 </html>

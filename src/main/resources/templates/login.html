@@ -1,65 +1,57 @@
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	xmlns:th="http://www.thymeleaf.org"
-	layout:decorate="~{layout/layout.html}">
+<html th:replace="~{layout/layout :: layout(~{}, ~{}, ~{::content}, ~{::customJs})}"
+	xmlns:th="http://www.thymeleaf.org">
 <head>
 	<title th:text="#{title.login}">AAAA</title>
 </head>
 <body>
-	<div layout:fragment="content">
-		<div class="row">
-			<div class="col-xs-4 col-xs-offset-4">
-				<div class="well no-padding">
-					<form th:action="@{/login}" method="post" id="loginForm" class="smart-form client-form">
-						<header th:text="#{login}">Sign In</header>
-						
-						<div th:if="${param.error}">
-							<div class="alert alert-danger fade in">
-								<button class="close" data-dismiss="alert">&#120;</button>
-								<i class="fa-fw fa fa-times"></i>
-								<strong th:text="#{error}">E!</strong>
-								<span th:text="#{invalidUserNamePassword}">Failure</span>
-							</div>
-            </div>
-            
-						<fieldset>
-							<section>
-								<label th:text="#{userName}" class="label">Username</label> <label class="input">
-									<i class="icon-append fa fa-user"></i>
-									<input type="text" id="username" name="username">
-										<b th:text="#{pleaseEnterYourUserName}" class="tooltip tooltip-top-right">
-											<i class="fa fa-user txt-color-teal"></i>
-											Enter user name
-										</b>
-								</label>
-							</section>
-
-							<section>
-								<label th:text="#{password}" class="label">Pwd</label>
-								<label class="input">
-									<i class="icon-append fa fa-lock"></i>
-									<input type="password" id="password" name="password">
-										<b th:text="#{enterYourPassword}" class="tooltip tooltip-top-right">
-											<i class="fa fa-lock txt-color-teal"></i>
-											Enter pwd
-									</b>
-								</label>
-								<div class="note">
-									<a th:text="#{forgotYourPassword}"href="#">Forgot password?</a>
-								</div>
-							</section>
-						</fieldset>
-						<footer>
-							<button th:text="#{login}" type="submit" class="btn btn-primary">AAA</button>
-						</footer>
-					</form>
-				</div>
+  <content th:remove="tag">
+    <div class="row">
+			<div class="col-sm-12 col-md-6 col-lg-5 col-xl-4 ml-auto mr-auto my-auto">
+			  <div class="card p-4 rounded-plus bg-faded">
+          <div th:if="${param.error}">
+	          <div class="alert alert-danger alert-dismissible fade show" role="alert">
+	            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true"><i class="fal fa-times"></i></span>
+              </button>
+              
+	            <span th:text="#{invalidUserNamePassword}">Failure</span>
+	          </div>
+          </div>
+          
+			    <form th:action="@{/login}" method="post" id="loginForm" class="needs-validation" novalidate autocomplete="off">
+			      <div class="form-group">
+			        <label th:text="#{userName}" class="form-label" for="userName">User name</label>
+			        <input type="text" id="username" name="username" class="form-control form-control-lg" required>
+			        <div class="invalid-feedback">
+                <th:block th:text="#{validation.required.userName}"></th:block>
+              </div>
+			      </div>
+			      
+			      <div class="form-group">
+			        <label th:text="#{password}" class="form-label" for="password">Pwd</label>
+			        <input type="password" id="password" name="password" class="form-control form-control-lg" required>
+			        <div class="invalid-feedback">
+                <th:block th:text="#{validation.required.password}"></th:block>
+              </div>
+			      </div>
+			      
+			      <div class="form-group">
+	            <a th:text="#{forgotYourPassword}"href="#">Forgot password?</a>
+	          </div>
+			      
+			      <div class="row no-gutters">
+			        <div class="col-lg-6 pr-lg-1 my-2">
+			          <button th:text="#{login}" type="submit" class="btn btn-primary btn-block btn-lg">AAA</button>
+			        </div>
+			      </div>
+			    </form>
+			  </div>
 			</div>
 		</div>
-	</div>
-	
-	<div layout:fragment="customJs">
-		<script src="js/plugin/jquery-validate/jquery.validate.min.js"></script>
-		<script src="js/app/login.js"></script>
-	</div>
+		
+		<customJs th:remove="tag">
+			<script src="js/app/login.js"></script>
+		</customJs>
+  </content>
 </body>
 </html>

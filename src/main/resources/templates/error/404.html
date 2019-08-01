@@ -1,15 +1,13 @@
 <!DOCTYPE html>
-<html
-	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	xmlns:th="http://www.thymeleaf.org"
-	layout:decorate="~{layout/layout.html}">
+<html th:replace="~{layout/layout :: layout(~{}, ~{}, ~{::content}, ~{})}"
+	xmlns:th="http://www.thymeleaf.org">
 	<head>
 		<title th:text="#{title.404Error}">AAAA</title>
 	</head>
 
 	<body>
-		<div layout:fragment="content">
+		<content th:remove="tag">
 			<h1 th:text="#{404Error}">BBB</h1>
-		</div>
+		</content>
 	</body>
 </html>

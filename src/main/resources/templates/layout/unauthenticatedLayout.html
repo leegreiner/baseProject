@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html th:fragment="layout(customCss, content, customJs)"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+	<head>
+		<title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE" th:text="${@environment.getProperty('info.app.name')}|">Title</title>
+
+		<meta th:replace="layout/fragments/head :: head"/>
+		<meta th:replace="${customCss}"/>
+	</head>
+	
+	<body class="mod-bg-1 mod-nav-link">  
+    <div class="page-wrapper">
+      <div class="page-inner">
+        <div class="page-content-wrapper">
+          <div th:replace="layout/fragments/unauthenticatedHeader :: header">Header goes here</div> 
+            <main id="js-page-content" role="main" class="page-content">
+							<div class="fs-lg fw-300 mb-g">
+							   <span th:replace="${content}">Content</span>
+							</div>
+            </main>
+            
+            <div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div>
+            
+            <div th:replace="layout/fragments/footer :: footer" th:remove="tag">Footer goes here</div>
+		    </div>
+		 </div>
+	 </div>
+
+	 <div th:replace="layout/fragments/js :: js">Javascript goes here</div>
+	 
+   <div th:replace="${customJs}"></div>
+	</body>
+</html>

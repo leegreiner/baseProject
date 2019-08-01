@@ -1,12 +1,50 @@
 <!DOCTYPE html>
-<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+<html th:replace="~{layout/layout :: layout(~{::customCss}, ~{::breadCrumb}, ~{::content}, ~{::customJs})}"
 	xmlns:th="http://www.thymeleaf.org"
 	layout:decorate="~{layout/layout.html}">
 <head>
 <title th:text="#{title.users}">AAAA</title>
 </head>
 <body>
-  <div layout:fragment="content">
+  <customCss th:remove="tag">
+    <link rel="stylesheet" media="screen, print" th:href="@{css/datagrid/datatables/datatables.bundle.css}">
+  </customCss>
+  
+  <breadCrumb th:remove="tag">
+    <li class="breadcrumb-item" th:text="#{admin}">admin</li>
+    <li class="breadcrumb-item active" th:text="#{users}">users</li>
+  </breadCrumb>
+  
+  <content th:remove="tag">
+    <div class="col-xl-12">
+      <div id="panel-1" class="panel">
+        <div class="panel-hdr panel-hdr-custom">
+          <h2 th:text="#{user.search}">Search</h2>
+        </div>
+        
+        <div class="panel-container show">
+          <div class="panel-content">
+            <table id="searchResults" class="table table-bordered table-hover table-striped w-100 table-custom">
+              <thead class="thead-themed">
+                <tr>
+	                <th th:text="#{lastName}">ln</th>
+	                <th th:text="#{firstName}">fn</th>
+	                <th th:text="#{userName}">username</th>
+	                <th th:text="#{email}">email</th>
+	                <th th:text="#{accountEnabled}">accountEnabled</th>
+                </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </content>
+        
+        
+  
+  <!--  
 		<div class="row">
 			<article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				<div class="jarviswidget jarviswidget-color-blueDark" id="wid-id-0"
@@ -42,17 +80,14 @@
 				</div>
 			</article>
 	  </div>
-	</div>
+-->
+	</content>
 	
-	<div layout:fragment="customJs">
-	  <script src="js/plugin/datatables/jquery.dataTables.min.js" type="text/javascript"></script>
-    <script src="js/plugin/datatables/dataTables.colVis.min.js" type="text/javascript"></script>
-    <script src="js/plugin/datatables/dataTables.tableTools.min.js" type="text/javascript"></script>
-    <script src="js/plugin/datatables/dataTables.bootstrap.min.js" type="text/javascript"></script>
-    <script src="js/plugin/datatable-responsive/datatables.responsive.min.js" type="text/javascript"></script>
-    <script src="js/app/ajaxUtil.js" type="text/javascript"></script>
-    <script src="js/app/datatables.js" type="text/javascript"></script> 
-    <script src="js/app/user/userSearch.js" type="text/javascript"></script> 
-	</div>
+	<customJs th:remove="tag">
+	  <script th:src="@{js/datagrid/datatables/datatables.bundle.js}"></script>
+    <script th:src="@{js/app/ajaxUtil.js}" type="text/javascript"></script>
+    <script th:src="@{js/app/datatables.js}" type="text/javascript"></script> 
+    <script th:src="@{js/app/user/userSearch.js}" type="text/javascript"></script> 
+	</customJs>
 </body>
 </html>

@@ -112,7 +112,7 @@ public class WebSecurityConfig {
 			  .and()
   				.authorizeRequests()
   				  .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-  					.antMatchers("/", "/error/**", "/fonts/**", "/img/**", "/loginPage").permitAll()
+  					.antMatchers("/", "/error/**", "/webfonts/**", "/img/**", "/loginPage").permitAll()
   					.anyRequest().hasAuthority(RoleName.USER.name())
   			.and()
   				.formLogin()
