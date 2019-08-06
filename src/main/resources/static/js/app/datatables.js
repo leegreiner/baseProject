@@ -34,5 +34,26 @@ var DataTables = {
     renderYesNo: function(data,type,full,meta){
       'use strict';
       return (data === true) ? 'Yes' : 'No';
-    }
+    },
+    
+    renderLink: function(url, newWindow, resourceName, displayProperty, data, type, full, meta) {
+      'use strict';
+      var displayValue = '';
+      
+      try {
+        displayValue = full[displayProperty];
+      } catch (e) {}
+      
+      if (displayValue === null) {
+        displayValue = '';
+      }
+      
+      if (displayValue !== '') {
+        var resource = full[resourceName];
+        var target = (newWindow === true) ? ' target="_blank"' : '';
+        return '<a href="' + url + resource + '"' + target + '>' + displayValue + '</a>';
+      } else {
+        return '';
+      }
+    },
 }
