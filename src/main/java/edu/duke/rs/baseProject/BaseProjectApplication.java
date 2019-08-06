@@ -51,7 +51,7 @@ public class BaseProjectApplication {
 			userRepository.save(new User("peterparker", passwordEncoder.encode("password"), "Peter", "Parker","peterParker@gmail.com", roles));
 			userRepository.save(new User("janejohnson", passwordEncoder.encode("password"), "Jane", "Johnson","janeJohnson@gmail.com", roles));
 			userRepository.save(new User("marysmith", passwordEncoder.encode("password"), "Mary", "Smith","marySmith@gmail.com", roles));
-			userRepository.save(new User("gregjohansen", passwordEncoder.encode("password"), "Greg", "Johansen","gregJohansen@gmail.com", roles));
+			userRepository.save(new User("grein003", passwordEncoder.encode("password"), "Lee", "Greiner","lee.greiner@duke.edu", roles));
 			
 		};
 	}
