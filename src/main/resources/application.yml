@@ -4,8 +4,8 @@ spring:
     initialization-mode: never
     platform: postgresql
     url: jdbc:postgresql://localhost:5432/devdb?currentSchema=baseapp
-    username: rmg
-    password: 'casl1soccer'
+    username: lmg
+    password: 'tta&cno2'
   jpa:
     jpa:
     show-sql: true
@@ -54,7 +54,7 @@ server:  compression:    enabled: true
   port: 8443
   servlet:    session:      timeout: 60m
   ssl:
-    ciphers: TLS_ECDHE_ECDSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA
+    ciphers: TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA256, TLS_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
     enabled-protocols: TLSv1.2
     enabled: true
     key-store: classpath:keystore.p12
@@ -99,7 +99,7 @@ app:
     
 logging:
   level:
-    edu.duke.rs: trace
+    edu.duke.rs: debug
 #    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: trace
     
 app:

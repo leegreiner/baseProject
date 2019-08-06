@@ -4,7 +4,7 @@
   xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
   <aside sec:authorize="isAuthenticated()" th:fragment="navigation" id="navigation" class="page-sidebar">
 	 <div class="page-logo">
-	   <img src="img/app/logo.gif" alt="Duke Medicine" aria-roledescription="logo">
+	   <img th:src="@{/img/app/logo.png}" alt="Duke Medicine" aria-roledescription="logo">
 	 </div>
 
 	 <nav id="js-primary-nav" class="primary-nav" role="navigation">
