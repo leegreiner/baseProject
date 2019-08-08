@@ -18,9 +18,10 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no, minimal-ui">
     <meta name="msapplication-tap-highlight" content="no">
-    <meta sec:authorize="isAuthenticated()" name="_csrf" th:content="${_csrf.token}"/>
-    <meta sec:authorize="isAuthenticated()" name="_csrf_header" th:content="${_csrf.headerName}"/>
     
+    <meta sec:authorize="isAuthenticated()" th:if="${_csrf}" name="_csrf" th:content="${_csrf.token}"/>
+    <meta sec:authorize="isAuthenticated()" th:if="${_csrf}" name="_csrf_header" th:content="${_csrf.headerName}"/>
+
 		<link rel="stylesheet" media="screen, print" th:href="@{/css/vendors.bundle.css}">
     <link rel="stylesheet" media="screen, print" th:href="@{/css/app.bundle.css}">
     <link rel="stylesheet" media="screen, print" th:href="@{/css/fa-solid.css}">

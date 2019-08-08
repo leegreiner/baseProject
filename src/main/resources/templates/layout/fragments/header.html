@@ -7,7 +7,8 @@
 		<div class="page-logo">
 		  <a href="#" class="page-logo-link press-scale-down d-flex align-items-center position-relative"
 		     data-toggle="modal" data-target="#modal-shortcut">
-		    <img src="img/app/logo.png" alt="SmartAdmin WebApp" aria-roledescription="logo">
+		    <img src="img/app/logoNoName.png" alt="DTS" aria-roledescription="logo">
+		    <span class="page-logo-text mr-1 24px" th:utext="#{dukeMedicine}">Duke Medicine</span>
 		    <!--<span class="position-absolute text-white opacity-50 small pos-top pos-right mr-2 mt-n2"></span>-->
 		  </a>
 		</div>
@@ -16,9 +17,21 @@
 		
 		<div sec:authorize="isAuthenticated()" class="hidden-md-down dropdown-icon-menu position-relative">
 		  <a href="#" class="header-btn btn js-waves-off" data-action="toggle"
-		     data-class="nav-function-hidden" title="Hide Navigation">
+		     data-class="nav-function-hidden" th:title="#{hideNavigation}">
 		    <i class="ni ni-menu"></i>
 		  </a>
+		  <ul>
+	      <li>
+          <a href="#" class="btn js-waves-off" data-action="toggle" data-class="nav-function-minify" th:title="#{minifyNavigation}">
+            <i class="ni ni-minify-nav"></i>
+          </a>
+	      </li>
+	      <li>
+          <a href="#" class="btn js-waves-off" data-action="toggle" data-class="nav-function-fixed" th:title="#{lockNavigation}">
+            <i class="ni ni-lock-nav"></i>
+          </a>
+	      </li>
+      </ul>
 		</div>
 		<!-- DOC: mobile button appears during mobile width -->
 		<div sec:authorize="isAuthenticated()" class="hidden-lg-up">
@@ -62,7 +75,7 @@
 		        <span th:text="#{editProfile}">Edit Profile</span>
 		      </a>
 		      <div class="dropdown-divider m-0"></div>
-		      <a class="dropdown-item fw-700 pt-3 pb-3" th:href="@{/logout}">
+		      <a class="dropdown-item fw-700 pt-3 pb-3" th:href="@{/saml/logout(local=true)}">
 		          <span th:text="#{logout}">Logout</span>
 		      </a>
 		    </div>
