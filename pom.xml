@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.1.6.RELEASE</version>
+    <version>2.1.7.RELEASE</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>edu.duke.rs</groupId>
@@ -14,12 +14,21 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>Base Project</name>
   <description>Base Thymeleaf, JPA project</description>
+  
+  <repositories>
+    <repository>
+      <id>JitPack</id>
+      <name>JitPack</name>
+      <url>https://jitpack.io</url>
+    </repository>
+  </repositories>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>11</java.version>
     <spring-cloud.version>2.1.0.RELEASE</spring-cloud.version>
+    <spring.boot.saml.version>1.17</spring.boot.saml.version>
     <jacoco.version>0.8.4</jacoco.version>
     <powermock.version>2.0.2</powermock.version>
   </properties>
@@ -104,6 +113,11 @@
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.ulisesbocchio</groupId>
+      <artifactId>spring-boot-security-saml</artifactId>
+      <version>${spring.boot.saml.version}</version>
     </dependency>
 
     <dependency>

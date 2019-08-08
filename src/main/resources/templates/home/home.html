@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html th:replace="~{layout/layout :: layout(~{}, ~{::breadCrumb}, ~{::content}, ~{})}"
 	xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<title th:text="#{title.home}">AAAA</title>
-	</head>
 	<body>
 	  <breadCrumb th:remove="tag">
 	    <li class="breadcrumb-item" th:text="#{home}">home</li>

@@ -9,8 +9,10 @@ import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointR
 import org.springframework.boot.autoconfigure.security.servlet.PathRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AccountExpiredException;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
@@ -21,13 +23,17 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+import com.github.ulisesbocchio.spring.boot.security.saml.bean.SAMLConfigurerBean;
 
 import edu.duke.rs.baseProject.error.ApplicationErrorController;
 import edu.duke.rs.baseProject.home.HomeController;
@@ -38,16 +44,8 @@ import edu.duke.rs.baseProject.security.AjaxAwareLoginUrlAuthenticationEntryPoin
 import edu.duke.rs.baseProject.security.RestBasicAuthenticationEntryPoint;
 
 @Configuration
-@EnableWebSecurity
 public class WebSecurityConfig {
-  private static final String LOGIN_PAGE = "/loginPage";
-  
-	@Bean
-  public static PasswordEncoder passwordEncoder() {
-      return new BCryptPasswordEncoder();
-  }
-	
-	@Configuration
+  @Configuration
 	@Order(1)
 	public static class ManagementConfigurationAdapter extends WebSecurityConfigurerAdapter {
 		@Value("${app.management.userName}")
@@ -87,47 +85,138 @@ public class WebSecurityConfig {
 						
 		}
 	}
-	
-	@Configuration
-	@Order(2)
-	public static class ApplicationConfigurationAdapter extends WebSecurityConfigurerAdapter {
-		@Autowired
-		private UserDetailsService userDetailsService;
-		
-		@Override
-		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+  
+  @Profile("!samlSecurity")
+  @Configuration
+  @EnableWebSecurity
+  @Order(2)
+  public static class ApplicationConfigurationAdapter extends WebSecurityConfigurerAdapter {
+    private static final String LOGIN_PAGE = "/loginPage";
+    @Autowired
+    private UserDetailsService userDetailsService;
+    
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
       auth
-      	.userDetailsService(userDetailsService)
-      	.passwordEncoder(passwordEncoder());
-	  }
-		
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http
-			  .requiresChannel()
-			  .and()
-  			  .exceptionHandling()
-  			    .accessDeniedHandler(accessDeniedHandler())
-  			    .authenticationEntryPoint(loginUrlAuthenticationEntryPoint())
-			  .and()
-  				.authorizeRequests()
-  				  .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-  					.antMatchers("/", "/error/**", "/webfonts/**", "/img/**", "/loginPage").permitAll()
-  					.anyRequest().hasAuthority(RoleName.USER.name())
-  			.and()
-  				.formLogin()
-						.loginProcessingUrl("/login")
-						.defaultSuccessUrl("/home", true)
-						.failureHandler(authenticationFailureHandler())
-  			.and()
-					.logout()
-						.logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-						.logoutSuccessUrl("/")
-						.permitAll()
-						.deleteCookies("SESSION")
-		    			.invalidateHttpSession(true);
-		}
-	}
+        .userDetailsService(userDetailsService)
+        .passwordEncoder(passwordEncoder());
+    }
+    
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+      http
+        .requiresChannel()
+        .and()
+          .exceptionHandling()
+            .accessDeniedHandler(accessDeniedHandler())
+            .authenticationEntryPoint(loginUrlAuthenticationEntryPoint())
+        .and()
+          .authorizeRequests()
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+            .antMatchers("/", "/error/**", "/webfonts/**", "/img/**", "/loginPage").permitAll()
+            .anyRequest().hasAuthority(RoleName.USER.name())
+        .and()
+          .formLogin()
+            .loginProcessingUrl("/login")
+            .defaultSuccessUrl("/home", true)
+            .failureHandler(authenticationFailureHandler())
+        .and()
+          .logout()
+            .logoutRequestMatcher(new AntPathRequestMatcher("/saml/logout"))
+            .logoutSuccessUrl("/")
+            .permitAll()
+            .deleteCookies("SESSION")
+              .invalidateHttpSession(true);
+    }
+    
+    @Bean
+    public static AuthenticationEntryPoint loginUrlAuthenticationEntryPoint() {
+      return new AjaxAwareLoginUrlAuthenticationEntryPoint(LOGIN_PAGE);
+    }
+    
+    @Bean
+    public static AuthenticationFailureHandler authenticationFailureHandler() {
+      final AjaxAwareExceptionMappingAuthenticationHandler handler = new AjaxAwareExceptionMappingAuthenticationHandler();
+      final Map<String, String> failureMap = new HashMap<>();
+      
+      failureMap.put(AccountExpiredException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountExpired");
+      failureMap.put(CredentialsExpiredException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=credentialsExpired");
+      failureMap.put(DisabledException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountDisabled");
+      failureMap.put(LockedException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountLocked");
+      
+      handler.setExceptionMappings(failureMap);
+      handler.setDefaultFailureUrl(LOGIN_PAGE + "?error=true");
+      
+      return handler;
+    }
+  }
+  
+  @Profile("samlSecurity")
+  @Order(2)
+  @Configuration
+  public static class SamlWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+    @Autowired
+    private SAMLUserDetailsService samlUserDetailsService;
+    
+    @Bean
+    SAMLConfigurerBean saml() {
+      return new SAMLConfigurerBean();
+    }
+    
+    @Bean
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+      return super.authenticationManagerBean();
+    }
+    
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) {
+      // to prevent infinite loop when UsernameNotFoundException is thrown
+      auth.parentAuthenticationManager(null);
+    }
+    
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+      http.httpBasic()
+        .disable()
+        .csrf()
+        .disable()
+        .anonymous()
+      .and()
+        .apply(saml())
+        .serviceProvider()
+          .sso()
+          .failureHandler(authenticationFailureHandler())
+       .and()
+         .authenticationProvider()
+           .userDetailsService(samlUserDetailsService)
+       .and()
+         .http()
+           .exceptionHandling()
+           .accessDeniedHandler(accessDeniedHandler())
+         .and()
+          .authorizeRequests()
+            .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
+            .antMatchers("/", "/error/**", "/webfonts/**", "/img/**").permitAll()
+            .anyRequest().hasAuthority(RoleName.USER.name());
+    }
+    
+    @Bean
+    public static AuthenticationFailureHandler authenticationFailureHandler() {
+      final AjaxAwareExceptionMappingAuthenticationHandler handler = new AjaxAwareExceptionMappingAuthenticationHandler();
+      final Map<String, String> failureMap = new HashMap<>();
+      
+      failureMap.put(AccountExpiredException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountExpired");
+      failureMap.put(CredentialsExpiredException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=credentialsExpired");
+      failureMap.put(DisabledException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountDisabled");
+      failureMap.put(LockedException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountLocked");
+      failureMap.put(UsernameNotFoundException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountNotFound");
+      
+      handler.setExceptionMappings(failureMap);
+      handler.setDefaultFailureUrl(ApplicationErrorController.ERROR_PATH);
+      
+      return handler;
+    }
+  }
 	
 	@Bean
 	public static AuthenticationEntryPoint restAuthenticationEntryPoint() {
@@ -135,28 +224,12 @@ public class WebSecurityConfig {
 	}
 	
 	@Bean
-	public static AuthenticationEntryPoint loginUrlAuthenticationEntryPoint() {
-	  return new AjaxAwareLoginUrlAuthenticationEntryPoint(LOGIN_PAGE);
-	}
+  public static AccessDeniedHandler accessDeniedHandler() {
+    return new AjaxAwareAccessDeniedHandler(ApplicationErrorController.ERROR_PATH, HomeController.HOME_MAPPING);
+  }
 	
 	@Bean
-	public static AuthenticationFailureHandler authenticationFailureHandler() {
-	  final AjaxAwareExceptionMappingAuthenticationHandler handler = new AjaxAwareExceptionMappingAuthenticationHandler();
-	  final Map<String, String> failureMap = new HashMap<>();
-	  
-	  failureMap.put(AccountExpiredException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountExpired");
-	  failureMap.put(CredentialsExpiredException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=credentialsExpired");
-	  failureMap.put(DisabledException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountDisabled");
-	  failureMap.put(LockedException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountLocked");
-	  
-	  handler.setExceptionMappings(failureMap);
-	  handler.setDefaultFailureUrl("/loginPage?error=true");
-	  
-	  return handler;
-	}
-	
-	@Bean
-	public static AccessDeniedHandler accessDeniedHandler() {
-	  return new AjaxAwareAccessDeniedHandler(ApplicationErrorController.ERROR_PATH, HomeController.HOME_MAPPING);
-	}
+  public static PasswordEncoder passwordEncoder() {
+      return new BCryptPasswordEncoder();
+  }
 }

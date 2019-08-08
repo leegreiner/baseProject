@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html  th:replace="~{layout/unauthenticatedLayout :: layout(~{::customCss}, ~{::content}, ~{})}"
 	xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<title th:text="#{title.index}">AAAA</title>
-	</head>
-
 	<body>
     <customCss th:remove="tag">
       <link rel="stylesheet" type="text/css" media="screen" th:href="@{/css/app/index.css}"/>

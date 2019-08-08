@@ -4,7 +4,7 @@
 	xmlns:th="http://www.thymeleaf.org"
 	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
 	<head>
-		<title layout:title-pattern="$LAYOUT_TITLE - $CONTENT_TITLE" th:text="${@environment.getProperty('info.app.name')}|">Title</title>
+		<title th:text="${@environment.getProperty('info.app.name')}|">Title</title>
 
 		<meta th:replace="layout/fragments/head :: head"/>
 		<meta th:replace="${customCss}"/>

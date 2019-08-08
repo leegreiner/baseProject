@@ -2,6 +2,7 @@ package edu.duke.rs.baseProject.security;
 
 import java.time.LocalDateTime;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -13,6 +14,7 @@ import edu.duke.rs.baseProject.user.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@Profile("!samlSecurity")
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 	private transient final UserRepository userRepository;

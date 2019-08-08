@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html th:replace="~{layout/layout :: layout(~{::customCss}, ~{}, ~{::content}, ~{::customJs})}"
   xmlns:th="http://www.thymeleaf.org">
-  <head>
-    <title th:text="#{title.userProfile}">AAAA</title>
-  </head>
   <body>
     <customCss th:remove="tag">
       <link rel="stylesheet" media="screen, print" th:href="@{/css/formplugins/select2/select2.bundle.css}">

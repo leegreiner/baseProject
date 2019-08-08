@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html  th:replace="~{layout/layout :: layout(~{}, ~{}, ~{::content}, ~{})}"
 	xmlns:th="http://www.thymeleaf.org">
-	<head>
-		<title th:text="#{title.401Error}">AAAA</title>
-	</head>
-
 	<body>
 		<content th:remove="tag">
 	    <h1 th:text="#{401Error}">BBB</h1>

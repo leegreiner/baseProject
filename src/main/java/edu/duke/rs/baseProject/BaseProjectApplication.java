@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import edu.duke.rs.baseProject.annotations.EnableSAMLSSOWhenProfileActive;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.role.RoleRepository;
@@ -20,6 +21,7 @@ import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
 
 @SpringBootApplication
+@EnableSAMLSSOWhenProfileActive("samlSecurity")
 public class BaseProjectApplication {
 
 	public static void main(String[] args) {

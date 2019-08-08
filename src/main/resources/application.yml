@@ -69,6 +69,18 @@ server:  compression:    enabled: true
       request-attributes-enabled: true
       rotate: true
       suffix: .log
+
+saml:
+  sso:
+    default-success-url: /home
+    default-failure-url: /error?error=404
+    idp-selection-page-url: /idpselection
+    idp:
+      metadata-location: classpath:/security/idp-duke.xml
+    metadata-manager:
+      refresh-check-interval: 0
+    extended-metadata:
+      idp-discovery-enabled: false
     
 management:
   endpoints:    web:      exposure:        include: '*'
@@ -96,10 +108,20 @@ app:
     hibernate:      ddl-auto: create-drop
     properties:      hibernate:
         format_sql: true
+saml:
+  sso:
+    metadata-generator:
+      entity-id: https://wearables-local.dcri.duke.edu
+    logout:
+      default-target-url: https://shib.oit.duke.edu/cgi-bin/logout.pl?returnto=http://www.yahoo.com
+    key-manager:
+      private-key-der-location: classpath:/security/private-local.der
+      public-key-pem-location: classpath:/security/public-local.cert
     
 logging:
   level:
     edu.duke.rs: debug
+#    org.springframework.security: debug
 #    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: trace
     
 app:
