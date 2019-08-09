@@ -8,7 +8,7 @@ import lombok.Setter;
 @RequiredArgsConstructor
 @Getter
 @Setter
-class ErrorInfo {
+public class ErrorInfo {
   @NonNull
 	private String message;
   @NonNull

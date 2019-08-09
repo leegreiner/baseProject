@@ -128,7 +128,33 @@ public class UserServiceUnitTest {
     assertThat(user.getTimeZone(), equalTo(userProfile.getTimeZone()));
     verify(userRepository, times(1)).findById(appPrincipal.getUserId());
     verifyNoMoreInteractions(userRepository);
-    
   }
   
+  @Test(expected = NotFoundException.class)
+  public void whenUserNotFound_thenGetUserThrowsNotFoundException() {
+    final User user = new User();
+    user.setId(Long.valueOf(1));
+    user.setUserName("abc");
+    when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
+    
+    final UserServiceImpl service = new UserServiceImpl(userRepository);
+    
+    service.getUser(user.getId());
+  }
+  
+  @Test
+  public void whenUserFound_thenGetUserReturnsUser() {
+    final User user = new User();
+    user.setId(Long.valueOf(1));
+    user.setUserName("abc");
+    when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+    
+    final UserServiceImpl service = new UserServiceImpl(userRepository);
+    
+    final User retrievedUser = service.getUser(user.getId());
+    
+    assertThat(retrievedUser, equalTo(user));
+    verify(userRepository, times(1)).findById(user.getId());
+    verifyNoMoreInteractions(userRepository);
+  }
 }

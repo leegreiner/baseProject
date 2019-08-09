@@ -9,7 +9,7 @@ import edu.duke.rs.baseProject.config.GoogleProperties;
 public abstract class AbstractWebUnitTest extends AbstractWebTest {
   @Autowired
   protected MockMvc mockMvc;
-  @MockBean
+  @MockBean(name = "googleProperties")
   protected GoogleProperties googleProperties;
 
 }

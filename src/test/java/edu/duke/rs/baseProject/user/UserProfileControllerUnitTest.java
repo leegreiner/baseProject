@@ -41,7 +41,6 @@ public class UserProfileControllerUnitTest extends AbstractWebUnitTest{
   private UserService userService;
   @MockBean
   private BindingResult bindingResult;
-
   
   @Test
   public void whenNotAuthenticated_thenRedirectToLogin() throws Exception {

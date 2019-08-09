@@ -100,7 +100,6 @@ public class User extends BaseEntity implements Serializable {
 	@NotNull
 	private TimeZone timeZone = TimeZone.getTimeZone("UTC");
 	
-	
 	@Column(name = "last_logged_in")
 	private LocalDateTime lastLoggedIn;
 	

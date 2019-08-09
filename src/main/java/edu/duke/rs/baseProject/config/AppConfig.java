@@ -1,5 +1,6 @@
 package edu.duke.rs.baseProject.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,8 +13,10 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 @Configuration
 public class AppConfig {
   private transient Environment environment;
+  @Autowired
+  private GoogleProperties googleProperties;
   
-  public AppConfig(final Environment environment ) {
+  public AppConfig(final Environment environment) {
     this.environment = environment;
   }
   
@@ -40,5 +43,10 @@ public class AppConfig {
     DefaultCookieSerializer serializer = new DefaultCookieSerializer();
     serializer.setSameSite(null);
     return serializer;
+  }
+  
+  @Bean
+  public GoogleProperties googlePropeties() {
+    return this.googleProperties;
   }
 }

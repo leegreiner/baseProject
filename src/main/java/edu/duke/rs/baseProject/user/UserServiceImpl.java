@@ -1,5 +1,7 @@
 package edu.duke.rs.baseProject.user;
 
+import javax.validation.constraints.NotNull;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +35,13 @@ public class UserServiceImpl implements UserService {
     
     user.setTimeZone(userProfile.getTimeZone());
     
+  }
+  
+
+  @Override
+  public User getUser(@NotNull Long userId) {
+    return userRepository.findById(userId)
+        .orElseThrow(() -> new NotFoundException("error.userNotFound"));
   }
   
   private AppPrincipal getCurrentUser() {
