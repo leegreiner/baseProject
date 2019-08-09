@@ -1,0 +1,35 @@
+image: docker:latest
+services:
+  - docker:dind
+  
+stages:
+  - test
+  - build
+
+variables:
+  DOCKER_HOST: tcp://docker:2375
+  DOCKER_DRIVER: overlay2
+  IMAGE_TAG: $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_SLUG
+  JAR_FILE: target/baseProject.jar
+  SPRING_PROFILES_ACTIVE: test
+
+maven-test:
+  image: maven:3-jdk-11-slim
+  stage: test
+  script:
+    - mvn -DENCRYPT_KEY=$ENCRYPT_KEY package -B
+    - cat target/site/jacoco/index.html | grep -o 'Total[^%]*%' | sed -e 's/Total/Jacoco-Test-Coverage:/g'
+  artifacts:
+    paths:
+      - target/*.jar
+    reports:
+      junit: target/surefire-reports/TEST-*.xml
+
+docker-build:
+  stage: build
+  dependencies:
+    - maven-test
+  script:
+    - docker build --build-arg JAR_FILE=$JAR_FILE -t $IMAGE_TAG .
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $IMAGE_TAG

@@ -10,28 +10,37 @@
 
 	 <nav id="js-primary-nav" class="primary-nav" role="navigation">
 	   <ul id="js-nav-menu" class="nav-menu">
-	     <li class="active open">
-	       <a th:href="@{/home}" th:title="#{home}">
+	     <li>
+	       <a th:href="@{/home}" th:title="#{home}" id="homeMenuOption">
 	         <i class="fal fa-home"></i>
 	         <span th:text="#{home}" class="nav-link-text">Home</span>
 	       </a>
 	     </li>
 	     
 	     <li>
-	       <a href="#" th:title="#{admin}">
+	       <a href="#" th:title="#{admin}" id="adminMenuOption">
 	         <i class="fal fa-cog"></i>
 	         <span th:text="#{admin}" class="nav-link-text">Admin</span>
          </a>
          
 	       <ul>
 	         <li>
-	           <a th:href="@{/users}" th:title="#{users}">
+	           <a th:href="@{/users}" th:title="#{users}" id="usersMenuOption">
 	             <span th:text="#{users}" class="nav-link-text">Users</span>
 	           </a>
 	         </li>
 	       </ul>
 	     </li>
 	    </ul>
+	    <div class="filter-message js-filter-message bg-success-600"></div>
 	  </nav>
+	  
+	  <div class="nav-footer shadow-top">
+	    <a href="#" onclick="return false;" data-action="toggle" data-class="nav-function-minify"
+	       class="hidden-md-down">
+	      <i class="ni ni-chevron-right"></i>
+	      <i class="ni ni-chevron-right"></i>
+	    </a>
+	  </div>
   </aside>
 </html>
