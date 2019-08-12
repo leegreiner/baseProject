@@ -8,6 +8,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import edu.duke.rs.baseProject.security.AppPrincipal;
@@ -80,12 +81,8 @@ public class DateUtils {
   }
   
   private static ZoneId getCurrentUserZoneId() {
-    final AppPrincipal currentUser = SecurityUtils.getPrincipal();
+    final Optional<AppPrincipal> currentUser = SecurityUtils.getPrincipal();
     
-    if (currentUser == null || currentUser.getTimeZone() == null) {
-      return null;
-    }
-    
-    return currentUser.getTimeZone().toZoneId();
+    return currentUser.isPresent() ? currentUser.get().getTimeZone().toZoneId() : null;
   }
 }

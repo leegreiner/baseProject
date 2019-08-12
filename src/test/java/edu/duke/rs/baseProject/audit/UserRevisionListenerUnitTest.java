@@ -5,6 +5,8 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
+import java.util.Optional;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,7 +33,7 @@ public class UserRevisionListenerUnitTest {
   @Test
   public void whenPrincipalNotFound_thenAuditRevisionEntityUserIdNotChanged() {
     final AuditRevisionEntity are = new AuditRevisionEntity();
-    when(SecurityUtils.getPrincipal()).thenReturn(null);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
     when(appPrincipal.getUserId()).thenReturn(Long.valueOf(1));
     
     final UserRevisionListener listener = new UserRevisionListener();
@@ -44,7 +46,7 @@ public class UserRevisionListenerUnitTest {
   @Test
   public void whenPrincipalFoundAndIsAnAppPrincipal_thenAuditRevisionEntityUserIdSetToUsersId() {
     final AuditRevisionEntity are = new AuditRevisionEntity();
-    when(SecurityUtils.getPrincipal()).thenReturn(appPrincipal);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(appPrincipal.getUserId()).thenReturn(Long.valueOf(1));
     
     final UserRevisionListener listener = new UserRevisionListener();

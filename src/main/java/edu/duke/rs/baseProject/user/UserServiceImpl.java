@@ -20,36 +20,28 @@ public class UserServiceImpl implements UserService {
 	@Override
   public UserProfile getUserProfile() {
     final User user = userRepository.findById(getCurrentUser().getUserId())
-        .orElseThrow(() -> new NotFoundException("error.userNotFound"));
-    
-    final UserProfile userProfile = new UserProfile(user.getTimeZone());
-    return userProfile;
-    
+        .orElseThrow(() -> new NotFoundException("error.principalNotFound", new Object[0]));
+
+    return new UserProfile(user.getTimeZone());
   }
 
   @Override
   @Transactional
   public void updateUserProfile(UserProfile userProfile) {
     final User user = userRepository.findById(getCurrentUser().getUserId())
-        .orElseThrow(() -> new NotFoundException("error.userNotFound"));
+        .orElseThrow(() -> new NotFoundException("error.principalNotFound", new Object[0]));
     
     user.setTimeZone(userProfile.getTimeZone());
-    
   }
   
 
   @Override
   public User getUser(@NotNull Long userId) {
     return userRepository.findById(userId)
-        .orElseThrow(() -> new NotFoundException("error.userNotFound"));
+        .orElseThrow(() -> new NotFoundException("error.userNotFound", new Object[] {userId}));
   }
   
   private AppPrincipal getCurrentUser() {
-    final AppPrincipal appPrincipal = SecurityUtils.getPrincipal();
-    if(appPrincipal == null) {
-      throw new IllegalArgumentException("error.principalNotFound");
-    }
-    return appPrincipal;
-    
+    return SecurityUtils.getPrincipal().orElseThrow(() ->  new IllegalArgumentException("error.principalNotFound"));
   }
 }

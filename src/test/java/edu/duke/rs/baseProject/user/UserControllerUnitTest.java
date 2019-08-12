@@ -55,7 +55,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   @Test
   public void whenAuthenticatedButRequestingNonexistantUser_thenExceptionErrorPageReturned() throws Exception {
     final Long userId = Long.valueOf(1);
-    when(userService.getUser(userId)).thenThrow(new NotFoundException("User not found"));
+    when(userService.getUser(userId)).thenThrow(new NotFoundException("error.principalNotFound", new Object[0]));
     
     this.mockMvc.perform(get(UserController.USER_DETAILS_MAPPING, userId)
         .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))

@@ -9,6 +9,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 import java.util.TimeZone;
 
 import org.junit.Before;
@@ -44,7 +45,7 @@ public class LocalDateTimeStringConverterUnitTest {
     final ZoneId zoneId = ZoneId.of("America/Los_Angeles");
     final TimeZone timeZone = TimeZone.getTimeZone(zoneId);
     when(appPrincipal.getTimeZone()).thenReturn(timeZone);
-    when(SecurityUtils.getPrincipal()).thenReturn(appPrincipal);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     
     final LocalDateTimeStringSerializer serializer = new LocalDateTimeStringSerializer();
     final LocalDateTime now = LocalDateTime.now();
@@ -62,7 +63,7 @@ public class LocalDateTimeStringConverterUnitTest {
   
   @Test
   public void whenCurrentUserNotPresent_thenDateConvertedToSystemTimezone() throws Exception {
-    when(SecurityUtils.getPrincipal()).thenReturn(null);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
     
     final LocalDateTimeStringSerializer serializer = new LocalDateTimeStringSerializer();
     final LocalDateTime now = LocalDateTime.now();
@@ -81,7 +82,7 @@ public class LocalDateTimeStringConverterUnitTest {
   @Test
   public void whenCurrentUserTimezoneNotPresent_thenDateConvertedToSystemTimezone() throws Exception {
     when(appPrincipal.getTimeZone()).thenReturn(null);
-    when(SecurityUtils.getPrincipal()).thenReturn(appPrincipal);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     
     final LocalDateTimeStringSerializer serializer = new LocalDateTimeStringSerializer();
     final LocalDateTime now = LocalDateTime.now();

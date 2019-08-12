@@ -16,7 +16,7 @@ import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import edu.duke.rs.baseProject.BaseWebController;
-import edu.duke.rs.baseProject.exception.NotFoundException;
+import edu.duke.rs.baseProject.exception.ApplicationException;
 import edu.duke.rs.baseProject.security.ErrorInfo;
 import edu.duke.rs.baseProject.util.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -32,21 +32,21 @@ public class ExceptionController extends BaseWebController {
     this.messageSource = messageSource;
   }
   
-  @ExceptionHandler(NotFoundException.class)
-  public ModelAndView handleNotFoundException(HttpServletRequest request, HttpServletResponse response,
-      NotFoundException nfe) {
-    log.error("In handleNotFoundException()", nfe);
+  @ExceptionHandler(ApplicationException.class)
+  public ModelAndView handleApplicationException(HttpServletRequest request, HttpServletResponse response,
+      ApplicationException ae) {
+    log.error("In handleApplicationException()", ae);
     
-    if (AnnotationUtils.findAnnotation(nfe.getClass(), ResponseStatus.class) != null) {
-      throw nfe;
+    if (AnnotationUtils.findAnnotation(ae.getClass(), ResponseStatus.class) != null) {
+      throw ae;
     }
     
     if (HttpUtils.isAjaxRequest(request)) {
-      return processAjaxRequest(request, response, nfe);
+      return processAjaxRequest(request, response, ae);
     } else {
       final ModelAndView mav = new ModelAndView();
       mav.setViewName(EXCEPTION_ERROR_VIEW);
-      mav.addObject(EXCEPTION_MESSAGE_ATTRIBUTE, convertToMessage(nfe.getMessage()));
+      mav.addObject(EXCEPTION_MESSAGE_ATTRIBUTE, convertToMessage(ae.getMessage(), ae.getMessageArguments()));
       
       return mav;
     }
@@ -65,7 +65,7 @@ public class ExceptionController extends BaseWebController {
     return new ModelAndView(view);
   }
   
-  private String convertToMessage(final String code) {
-    return messageSource.getMessage(code, null, code, LocaleContextHolder.getLocale());
+  private String convertToMessage(final String code, final Object[] args) {
+    return messageSource.getMessage(code, args, code, LocaleContextHolder.getLocale());
   }
 }

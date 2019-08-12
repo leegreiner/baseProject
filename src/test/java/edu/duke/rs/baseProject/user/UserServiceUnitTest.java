@@ -41,7 +41,7 @@ public class UserServiceUnitTest {
   
   @Test(expected = IllegalArgumentException.class)
   public void whenNoCurrentUser_thenGetUserProfileThrowsIllegalArgumentExceptionThrown() {
-    when(SecurityUtils.getPrincipal()).thenReturn(null);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
     
     final UserServiceImpl service = new UserServiceImpl(userRepository);
     
@@ -51,7 +51,7 @@ public class UserServiceUnitTest {
   @Test
   public void whenUserNotFound_thenGetUserProfileThrowsNotFoundException() {
     when(appPrincipal.getUserId()).thenReturn(1L);
-    when(SecurityUtils.getPrincipal()).thenReturn(appPrincipal);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findById(appPrincipal.getUserId())).thenReturn(Optional.empty());
     
     final UserServiceImpl service = new UserServiceImpl(userRepository);
@@ -72,7 +72,7 @@ public class UserServiceUnitTest {
     final User user = new User();
     user.setTimeZone(TimeZone.getTimeZone("GMT"));
     when(appPrincipal.getUserId()).thenReturn(1L);
-    when(SecurityUtils.getPrincipal()).thenReturn(appPrincipal);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findById(appPrincipal.getUserId())).thenReturn(Optional.of(user));
     
     final UserServiceImpl service = new UserServiceImpl(userRepository);
@@ -86,7 +86,7 @@ public class UserServiceUnitTest {
   
   @Test(expected = IllegalArgumentException.class)
   public void whenNoCurrentUser_thenUpdateUserProfileThrowsIllegalArgumentExceptionThrown() {
-    when(SecurityUtils.getPrincipal()).thenReturn(null);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
     final UserProfile userProfile = new UserProfile(TimeZone.getTimeZone("GMT"));
     final UserServiceImpl service = new UserServiceImpl(userRepository);
     
@@ -96,7 +96,7 @@ public class UserServiceUnitTest {
   @Test
   public void whenUserNotFound_thenUpdateUserProfileThrowsNotFoundException() {
     when(appPrincipal.getUserId()).thenReturn(1L);
-    when(SecurityUtils.getPrincipal()).thenReturn(appPrincipal);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findById(appPrincipal.getUserId())).thenReturn(Optional.empty());
     
     final UserServiceImpl service = new UserServiceImpl(userRepository);
@@ -117,7 +117,7 @@ public class UserServiceUnitTest {
   public void whenUserFound_thenUserTimeZoneEqualsUserProfileTimeZone() {
     final User user = new User();
     when(appPrincipal.getUserId()).thenReturn(1L);
-    when(SecurityUtils.getPrincipal()).thenReturn(appPrincipal);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findById(appPrincipal.getUserId())).thenReturn(Optional.of(user));
     
     final UserProfile userProfile = new UserProfile(TimeZone.getTimeZone("GMT"));

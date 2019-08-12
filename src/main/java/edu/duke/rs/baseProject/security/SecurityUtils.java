@@ -1,5 +1,7 @@
 package edu.duke.rs.baseProject.security;
 
+import java.util.Optional;
+
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,9 +16,9 @@ public class SecurityUtils {
 				          instanceof AnonymousAuthenticationToken);
 	}
 	
-	public static AppPrincipal getPrincipal() {
+	public static Optional<AppPrincipal> getPrincipal() {
     AppPrincipal appPrincipal = null;
-    Authentication auth = SecurityContextHolder.getContext()
+    final Authentication auth = SecurityContextHolder.getContext()
         .getAuthentication();
 
     if (auth != null
@@ -26,6 +28,6 @@ public class SecurityUtils {
       appPrincipal = (AppPrincipal) (auth.getPrincipal());
     }
 
-    return appPrincipal;
+    return appPrincipal == null ? Optional.empty() : Optional.of(appPrincipal);
   }
 }

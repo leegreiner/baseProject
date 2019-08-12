@@ -8,7 +8,7 @@ spring:
     password: 'tta&cno2'
   jpa:
     jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: none
     open-in-view: false
@@ -18,11 +18,17 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+        show_sql: false
       org:
         hibernate:
           envers:
             track_entities_changed_in_revision: true
             global_with_modified_flag: true
+            
+  mail:
+    default-encoding: UTF-8
+    host: smtpgw.duhs.duke.edu
+    
   quartz:    job-store-type: jdbc
     overwrite-existing-jobs: true
     scheduler-name: baseProjectScheduler
@@ -94,6 +100,7 @@ info:
 logging:  level:    edu.duke.rs: info
     
 app:
+  defaultEmailFrom: abc@123.com
   google:
     analysicsTrackingId: None	
   management:
@@ -108,6 +115,7 @@ app:
     hibernate:      ddl-auto: create-drop
     properties:      hibernate:
         format_sql: true
+        show_sql: true
 saml:
   sso:
     metadata-generator:
@@ -146,10 +154,14 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
         default_schema:
+        
+  mail:    host: localhost
     
 logging:
   level:
-    edu.duke.rs: info
+    root: off
+    edu.duke.rs: off
+    org.springframework: off
     
 server:
   port:

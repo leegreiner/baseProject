@@ -8,6 +8,7 @@ import static org.powermock.api.mockito.PowerMockito.mockStatic;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.Optional;
 import java.util.TimeZone;
 
 import org.junit.Before;
@@ -44,7 +45,7 @@ public class DateUtilsUnitTest {
     final TimeZone timeZone = TimeZone.getTimeZone(ZONE_ID);
     final LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
     when(appPrincipal.getTimeZone()).thenReturn(timeZone);
-    when(SecurityUtils.getPrincipal()).thenReturn(appPrincipal);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     
     final LocalDateTimes ldt = new LocalDateTimes(now, now.plusDays(1L));
     
@@ -65,7 +66,7 @@ public class DateUtilsUnitTest {
   public void whenCurrentUserDoesntExists_thenConvertLocalDateTimeToCurrentUserTimeDoesntConvert() {
     final LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
     final LocalDateTimes ldt = new LocalDateTimes(now, now.plusDays(1L));
-    when(SecurityUtils.getPrincipal()).thenReturn(null);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
     
     DateUtils.convertLocalDateTimeToCurrentUserTime(ldt);
     
@@ -78,7 +79,7 @@ public class DateUtilsUnitTest {
     final TimeZone timeZone = TimeZone.getTimeZone(ZONE_ID);
     final LocalDateTime now = LocalDateTime.now(ZONE_ID);
     when(appPrincipal.getTimeZone()).thenReturn(timeZone);
-    when(SecurityUtils.getPrincipal()).thenReturn(appPrincipal);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     
     final LocalDateTimes ldt = new LocalDateTimes(now, now.plusDays(1L));
     
@@ -99,7 +100,7 @@ public class DateUtilsUnitTest {
   public void whenCurrentUserDoesntExists_thenConvertCurrentUserTimeToLocalDateTimeDoesntConvert() {
     final LocalDateTime now = LocalDateTime.now(ZONE_ID);
     final LocalDateTimes ldt = new LocalDateTimes(now, now.plusDays(1L));
-    when(SecurityUtils.getPrincipal()).thenReturn(null);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
     
     DateUtils.convertCurrentUserTimeToLocalDateTime(ldt);
     

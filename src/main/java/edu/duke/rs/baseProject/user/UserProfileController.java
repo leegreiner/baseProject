@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import edu.duke.rs.baseProject.BaseWebController;
 import edu.duke.rs.baseProject.home.HomeController;
+import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -50,16 +51,16 @@ public class UserProfileController extends BaseWebController {
       return USER_PROFILE_VIEW;
     }
     
+    final AppPrincipal principal = SecurityUtils.getPrincipal().orElseThrow(() ->  new IllegalArgumentException("error.principalNotFound"));
+    
     try {
       userService.updateUserProfile(userProfile);
-      
     } catch(final Exception exception) {
       this.addErrorMessage(model, exception.getMessage(), (Object[])null);
       return USER_PROFILE_VIEW;
     }
     
-
-    SecurityUtils.getPrincipal().setTimeZone(userProfile.getTimeZone());
+    principal.setTimeZone(userProfile.getTimeZone());
     // need to tickle the session to have Spring Session save the changes to the principal
     httpSession.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
     

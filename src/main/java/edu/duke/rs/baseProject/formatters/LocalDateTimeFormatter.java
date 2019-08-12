@@ -6,6 +6,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import java.util.Optional;
 
 import org.springframework.format.Formatter;
 
@@ -21,13 +22,13 @@ public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
       return "";
     }
     
-    final AppPrincipal currentUser = SecurityUtils.getPrincipal();
+    final Optional<AppPrincipal> currentUser = SecurityUtils.getPrincipal();
     ZoneId zoneId;
     
-    if (currentUser == null || currentUser.getTimeZone() == null) {
-      zoneId = ZoneId.systemDefault();
+    if (currentUser.isPresent()) {
+      zoneId = currentUser.get().getTimeZone().toZoneId();
     } else {
-      zoneId = currentUser.getTimeZone().toZoneId();
+      zoneId = ZoneId.systemDefault();
     }
     
     final ZonedDateTime systemZonedDateTime = ZonedDateTime.of(dateTime, ZoneId.systemDefault());

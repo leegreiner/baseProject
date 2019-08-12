@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.TimeZone;
 
 import org.junit.Before;
@@ -45,7 +46,7 @@ public class LocalDateTimeFormatterUnitTest {
   
   @Test
   public void whenAppUserNotFound_thenSystemTimezoneUsed() {
-    when(SecurityUtils.getPrincipal()).thenReturn(null);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
     
     final LocalDateTime now = LocalDateTime.now();
     final String actual = formatter.print(now, Locale.getDefault());
@@ -61,7 +62,7 @@ public class LocalDateTimeFormatterUnitTest {
   public void whenAppUserFound_thenAppUserTimezoneUsed() {
     final TimeZone timeZone = TimeZone.getTimeZone(ZONE_ID);
     when(appPrincipal.getTimeZone()).thenReturn(timeZone);
-    when(SecurityUtils.getPrincipal()).thenReturn(appPrincipal);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     
     final LocalDateTime now = LocalDateTime.now();
     final String actual = formatter.print(now, Locale.getDefault());

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -23,13 +24,13 @@ public class LocalDateTimeStringSerializer extends JsonSerializer<LocalDateTime>
   
   @Override
   public void serialize(LocalDateTime value, JsonGenerator gen, SerializerProvider serializers) throws IOException {
-    final AppPrincipal currentUser = SecurityUtils.getPrincipal();
+    final Optional<AppPrincipal> currentUser = SecurityUtils.getPrincipal();
     ZoneId zoneId;
     
-    if (currentUser == null || currentUser.getTimeZone() == null) {
-      zoneId = ZoneId.systemDefault();
+    if (currentUser.isPresent() && currentUser.get().getTimeZone() != null) {
+      zoneId = currentUser.get().getTimeZone().toZoneId();
     } else {
-      zoneId = currentUser.getTimeZone().toZoneId();
+      zoneId = ZoneId.systemDefault();
     }
     
     final ZonedDateTime systemZonedDateTime = ZonedDateTime.of(value, ZoneId.systemDefault());

@@ -9,12 +9,19 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 public abstract class BaseWebController {
-  private static final String VIEW_REDIRECT_PREFIX = "redirect:";
+  public static final String VIEW_REDIRECT_PREFIX = "redirect:";
   public static final String FLASH_ERROR_MESSAGE = "errorMessage";
   public static final String FLASH_FEEDBACK_MESSAGE = "feedbackMessage";
   public static final String FLASH_WARNING_MESSAGE = "warningMessage";
   @Autowired
   private MessageSource messageSource;
+  
+  protected BaseWebController() {}
+  
+  // for testing only
+  protected BaseWebController(final MessageSource messageSource) {
+    this.messageSource = messageSource;
+  }
   
   protected void addErrorMessage(Model model, String code, Object...params) {
     final Locale current = LocaleContextHolder.getLocale();
