@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/layout :: layout(~{::customCss}, ~{}, ~{::content}, ~{::customJs})}"
+  xmlns:th="http://www.thymeleaf.org">
+  <body>
+    <customCss th:remove="tag">
+      <link rel="stylesheet" media="screen, print" th:href="@{/css/formplugins/select2/select2.bundle.css}">
+    </customCss>
+    
+    <content th:remove="tag">
+      <div class="subheader">
+        <h1 class="subheader-title">
+          <th:block th:text="#{editUser}" th:remove="tag">User profile</th:block>
+        </h1>
+      </div>
+              
+			<div class="row">
+        <div class="col-xl-10">
+          <div id="panelDiv" class="panel">
+            <div class="panel-hdr panel-hdr-custom">
+	            <h2 th:text="#{title.user}">Title</h2>
+            </div>
+            
+            <div class="panel-container show">
+              <div class="panel-content">
+	              <form id="userForm" th:action="@{'/users/' + ${user.id}}" th:object="${user}" th:method="put" class="needs-validation" novalidate autocomplete="off">
+	                <input type="hidden" th:field="*{id}"/>
+	                <input type="hidden" th:field="*{userName}"/>
+	                
+	                <div class="form-row">
+	                 <div class="col-md-5 mb-3">
+	                   <label class="form-label" th:for="firstName" ><span th:text="#{firstName}" th:remove="tag"></span> <span class="text-danger">*</span></label>
+	                   <input type="text" class="form-control" th:field="*{firstName}" pattern="^.{1,30}$" required/>
+	                   
+	                   <div class="invalid-feedback">
+                        <th:block th:text="#{validation.firstName}"></th:block>
+                     </div>
+                     <div th:if="${#fields.hasErrors('firstName')}" class="invalid-feedback d-block">
+                        <th:block th:errors="*{firstName}"></th:block>
+                     </div>
+	                 </div>                         
+                   
+                   <div class="col-md-2 mb-3">
+                     <label class="form-label" th:for="middleIntial" th:text="#{middleInitial}">middle initial</label>
+                     <input type="text" class="form-control" th:field="*{middleInitial}" size="1" pattern="^[A-Z]?$"/>
+                     
+                     <div class="invalid-feedback">
+                        <th:block th:text="#{validation.middleIntial}"></th:block>
+                     </div>
+                     <div th:if="${#fields.hasErrors('middleInitial')}" class="invalid-feedback d-block">
+                        <th:block th:errors="*{middleInitial}"></th:block>
+                     </div>
+                   </div>
+                   
+                   <div class="col-md-5 mb-3">
+                     <label class="form-label" th:for="lastName" ><span th:text="#{lastName}" th:remove="tag"></span> <span class="text-danger">*</span></label>
+                     <input type="text" class="form-control" th:field="*{lastName}" pattern="^.{1,30}$" required/>
+                     
+                     <div class="invalid-feedback">
+                        <th:block th:text="#{validation.lastName}"></th:block>
+                     </div>
+                     <div th:if="${#fields.hasErrors('lastName')}" class="invalid-feedback d-block">
+                        <th:block th:errors="*{lastName}"></th:block>
+                     </div>
+                   </div>    
+	                </div>
+	                
+	                <div class="form-row">
+                   <div class="col-md-5 mb-3">
+                     <label class="form-label" th:for="email" ><span th:text="#{email}" th:remove="tag"></span> <span class="text-danger">*</span></label>
+                     <input type="email" class="form-control" th:field="*{email}" required/>
+                     
+                     <div class="invalid-feedback">
+                      <th:block th:text="#{validation.email}"></th:block>
+                     </div>
+                     <div th:if="${#fields.hasErrors('email')}" class="invalid-feedback d-block">
+                      <th:block th:errors="*{email}"></th:block>
+                     </div>
+                   </div>
+                   
+                   <div class="col-md-2 mb-3">
+                   </div>
+                   
+                   <div class="col-md-5 mb-3">
+                     <label class="form-label" th:for="timeZone" ><span th:text="#{timeZone}" th:remove="tag"></span> <span class="text-danger">*</span></label>
+                     <select class="form-control select2 w-100" th:field="*{timeZone}" required>
+                       <option th:each= "tz: ${T(edu.duke.rs.baseProject.util.TimeZoneDisplay).getDisplayableTimeZones()}" th:value="${tz.zoneId}" th:utext="${tz.label}"></option>
+                     </select>
+                     
+                     <div class="invalid-feedback">
+                       <th:block th:text="#{validation.timeZone}"></th:block>
+                     </div>
+                     <div th:if="${#fields.hasErrors('timeZone')}" class="invalid-feedback d-block">
+                      <th:block th:errors="*{timeZone}"></th:block>
+                     </div>
+                   </div>
+                  </div>
+                  
+                  <div class="form-row">
+                    <div class="col-md-5 mb-3">
+                      <label class="form-label" th:for="roles" ><span th:text="#{roles}" th:remove="tag"></span> <span class="text-danger">*</span></label>
+                      <select class="form-control select2 w-100" th:field="*{roles}" multiple required>
+                       <option th:each= "role: ${roles}" th:value="${role.key}" th:utext="${role.value}"></option>
+                      </select>
+                      
+	                    <div class="invalid-feedback">
+	                      <th:block th:text="#{validation.roles}"></th:block>
+	                    </div>
+	                    <div th:if="${#fields.hasErrors('roles')}" class="invalid-feedback d-block">
+                        <th:block th:errors="*{roles}"></th:block>
+                      </div>
+                    </div>
+                    
+                    <div class="col-md-2 mb-3">
+                    </div>
+                    
+                    <div class="col-md-5 mb-3">
+                      <div class="custom-control custom-checkbox">
+                        <input type="checkbox" class="custom-control-input" id="accountEnabled" name="accountEnabled" th:checked="${user.accountEnabled}">
+                        <input type="hidden" name="_accountEnabled" th:value="${user.accountEnabled} ? 'on' : 'off'">
+                        <label class="custom-control-label" th:for="accountEnabled" th:text="#{accountEnabled}">enabled</label>  
+                        
+                        <div th:if="${#fields.hasErrors('accountEnabled')}" class="invalid-feedback d-block">
+                          <th:block th:errors="*{accountEnabled}"></th:block>
+                        </div>           
+                      </div>
+                    </div>
+                  </div>
+	   
+	                <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row">
+	                  <button type="submit" class="btn btn-primary ml-auto" th:text="#{submit}">submit</button>
+	                  <a th:href="@{'/users/' + ${user.id}}" class="btn btn-default ml-3" th:text="#{cancel}">cancel</a>
+	                </div>
+	              </form>
+	            </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </content>
+    
+    <customJs th:remove="tag">
+      <script th:src="@{/js/formplugins/select2/select2.bundle.js}"></script>
+      <script th:src="@{/js/app/user/newEditUser.js}"></script>
+    </customJs>
+  </body>
+</html>

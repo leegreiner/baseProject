@@ -5,7 +5,7 @@ import org.springframework.format.FormatterRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import edu.duke.rs.baseProject.formatters.LocalDateTimeFormatter;
-import edu.duke.rs.baseProject.formatters.RolesFormatter;
+import edu.duke.rs.baseProject.role.RolesFormatter;
 
 @Configuration
 public class WebMvcConfig implements WebMvcConfigurer  {

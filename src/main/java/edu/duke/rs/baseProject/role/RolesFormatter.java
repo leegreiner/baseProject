@@ -1,4 +1,4 @@
-package edu.duke.rs.baseProject.formatters;
+package edu.duke.rs.baseProject.role;
 
 import java.text.ParseException;
 import java.util.Locale;
@@ -7,8 +7,6 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang.WordUtils;
 import org.springframework.format.Formatter;
-
-import edu.duke.rs.baseProject.role.Role;
 
 public class RolesFormatter implements Formatter<Set<Role>> {
   @Override

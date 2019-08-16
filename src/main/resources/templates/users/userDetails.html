@@ -3,7 +3,6 @@
 	xmlns:th="http://www.thymeleaf.org">
 	<body>
 	  <breadCrumb th:remove="tag">
-	    <li class="breadcrumb-item" th:text="#{admin}">admin</li>
 	    <li class="breadcrumb-item"><a th:href="@{/users}" th:text="#{users}">users</a></li>
       <li class="breadcrumb-item active" th:text="${user.displayName}">user details</li>
     </breadCrumb>
@@ -47,7 +46,17 @@
                       <dd class="col-sm-9" th:text="${{user.lastLoggedIn}}">00:00</dd>
                     </dl>
 		              </div>
+		              <div class="col-xl-6">
+		                <dl class="row">
+                      <dt class="col-sm-3" th:text="#{accountEnabled}">account enabled</dt>
+                      <dd class="col-sm-9" th:text="${user.accountEnabled} ? #{yes} : #{no}">yes</dd>
+                    </dl>
+		              </div>
 	              </div>
+              </div>
+
+              <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row">
+	              <a th:href="@{'/users/' + ${user.id}(action='edit')}" class="btn btn-primary ml-auto" th:classappend="${user.id == #authentication.getPrincipal().getUserId() ? 'disabled' : ''}" th:text="#{edit}">edit</a>
               </div>
             </div>
           </div>

@@ -36,7 +36,7 @@ public class Role extends BaseEntity implements Serializable {
   @SequenceGenerator(name="role_seq", sequenceName = "ROLE_SEQ", allocationSize = 1)
 	private Long id;
 	
-	@Column(name = "name", length = 20, nullable = false)
+	@Column(name = "name", length = 20, unique = true, nullable = false)
 	@NonNull
 	@Enumerated(EnumType.STRING)
 	@Include

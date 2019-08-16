@@ -26,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 public class ExceptionController extends BaseWebController {
   public static final String EXCEPTION_ERROR_VIEW = "/error/exceptionError";
   public static final String EXCEPTION_MESSAGE_ATTRIBUTE = "errorMessage";
+  public static final String UNKNOWN_ERROR_PROPERTY = "unknownError";
   private transient final MessageSource messageSource;
   
   public ExceptionController(final MessageSource messageSource) {
@@ -52,14 +53,39 @@ public class ExceptionController extends BaseWebController {
     }
   }
   
+  @ExceptionHandler(Exception.class)
+  public ModelAndView handleException(HttpServletRequest request, HttpServletResponse response,
+      Exception exception) throws Exception {
+    log.error("In handleException()", exception);
+    
+    if (AnnotationUtils.findAnnotation(exception.getClass(), ResponseStatus.class) != null) {
+      throw exception;
+    }
+    
+    if (HttpUtils.isAjaxRequest(request)) {
+      return processAjaxRequest(request, response, exception);
+    } else {
+      final ModelAndView mav = new ModelAndView();
+      mav.setViewName(EXCEPTION_ERROR_VIEW);
+      mav.addObject(EXCEPTION_MESSAGE_ATTRIBUTE, convertToMessage(UNKNOWN_ERROR_PROPERTY, (Object[])null));
+      
+      return mav;
+    }
+  }
+  
   private ModelAndView processAjaxRequest(HttpServletRequest request, HttpServletResponse response,
       Exception ex) {
     response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     final MappingJackson2JsonView view = new MappingJackson2JsonView();
     final String url = request.getRequestURL().toString();
     final Map<String, Object> map = new HashMap<String, Object>();
+    Object[] params = (Object[])null;
     
-    map.put("error", new ErrorInfo(url, ex.getMessage()));
+    if (ex instanceof ApplicationException) {
+      params = ((ApplicationException) ex).getMessageArguments();
+    }
+    
+    map.put("error", new ErrorInfo(convertToMessage(ex.getMessage(), params), url));
     view.setAttributesMap(map);
     
     return new ModelAndView(view);

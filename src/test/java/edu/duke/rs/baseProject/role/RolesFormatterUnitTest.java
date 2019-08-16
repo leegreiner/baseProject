@@ -1,4 +1,4 @@
-package edu.duke.rs.baseProject.formatters;
+package edu.duke.rs.baseProject.role;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -13,6 +13,7 @@ import org.junit.Test;
 
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
+import edu.duke.rs.baseProject.role.RolesFormatter;
 
 public class RolesFormatterUnitTest {
   private static final RolesFormatter formatter = new RolesFormatter();

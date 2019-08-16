@@ -22,12 +22,12 @@ public class AppConfig {
   
   @Bean
   public MessageSource messageSource() {
-      ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource();
+    final ResourceBundleMessageSource messageSource = new ResourceBundleMessageSource ();
 
-      messageSource.setBasename(environment.getRequiredProperty("spring.messages.basename"));
-      messageSource.setUseCodeAsDefaultMessage(true);
-      messageSource.setDefaultEncoding("UTF-8");
-      return messageSource;
+    messageSource.setBasename(environment.getRequiredProperty("spring.messages.basename"));
+    messageSource.setDefaultEncoding("UTF-8");
+    messageSource.setUseCodeAsDefaultMessage(true);
+    return messageSource;
   }
   
   @Bean(name = "validator")

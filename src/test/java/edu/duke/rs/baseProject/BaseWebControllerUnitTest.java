@@ -125,6 +125,6 @@ public class BaseWebControllerUnitTest {
   public void whenPathPassed_thenRedirectPrependedToPath() {
     final String path = "/abc";
     
-    assertThat(baseWebController.createRedirectViewPath(path), equalTo(BaseWebController.VIEW_REDIRECT_PREFIX + path));
+    assertThat(baseWebController.createRedirectViewPath(path), equalTo(BaseWebController.REDIRECT_PREFIX + path));
   }
 }

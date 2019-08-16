@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
+import org.springframework.security.web.csrf.MissingCsrfTokenException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -37,7 +38,8 @@ public class AjaxAwareAccessDeniedHandler implements AccessDeniedHandler {
       
       response.getOutputStream().println(mapper.writeValueAsString(data));
     } else {
-      if (accessDeniedException instanceof InvalidCsrfTokenException) {
+      if (accessDeniedException instanceof InvalidCsrfTokenException ||
+          accessDeniedException instanceof MissingCsrfTokenException) {
         response.sendRedirect(request.getContextPath() + invalidCsrfTokenUrl);
       } else {
         response.sendRedirect(request.getContextPath() + accessDeniedUrl);

@@ -9,7 +9,7 @@ import com.fasterxml.jackson.module.mrbean.MrBeanModule;
 @RunWith(SpringRunner.class)
 public abstract class AbstractWebTest extends AbstractBaseTest {
   protected static final String LOCAL_HOST = "http://localhost";
-  protected static final String API = "/api";
+  public static final String API = "/api";
   protected static final ObjectMapper mapper;
   
   static {

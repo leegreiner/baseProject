@@ -9,7 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 public abstract class BaseWebController {
-  public static final String VIEW_REDIRECT_PREFIX = "redirect:";
+  public static final String REDIRECT_PREFIX = "redirect:";
   public static final String FLASH_ERROR_MESSAGE = "errorMessage";
   public static final String FLASH_FEEDBACK_MESSAGE = "feedbackMessage";
   public static final String FLASH_WARNING_MESSAGE = "warningMessage";
@@ -67,7 +67,7 @@ public abstract class BaseWebController {
 
   protected String createRedirectViewPath(String path) {
     StringBuilder builder = new StringBuilder();
-    builder.append(VIEW_REDIRECT_PREFIX);
+    builder.append(REDIRECT_PREFIX);
     builder.append(path);
     return builder.toString();
   }

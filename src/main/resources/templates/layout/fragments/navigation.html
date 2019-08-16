@@ -18,9 +18,9 @@
 	     </li>
 	     
 	     <li>
-	       <a href="#" th:title="#{admin}" id="adminMenuOption">
-	         <i class="fal fa-cog"></i>
-	         <span th:text="#{admin}" class="nav-link-text">Admin</span>
+	       <a href="#" th:title="#{search}" id="searchMenuOption">
+	         <i class="fal fa-search"></i>
+	         <span th:text="#{search}" class="nav-link-text">search</span>
          </a>
          
 	       <ul>
@@ -31,6 +31,21 @@
 	         </li>
 	       </ul>
 	     </li>
+	     
+	     <li>
+         <a href="#" th:title="#{new}" id="newMenuOption">
+           <i class="fal fa-plus"></i>
+           <span th:text="#{new}" class="nav-link-text">new</span>
+         </a>
+         
+         <ul>
+           <li>
+             <a th:href="@{'/users' (action='edit')}" th:title="#{user}" id="newUserMenuOption">
+               <span th:text="#{user}" class="nav-link-text">user</span>
+             </a>
+           </li>
+         </ul>
+       </li>
 	    </ul>
 	    <div class="filter-message js-filter-message bg-success-600"></div>
 	  </nav>

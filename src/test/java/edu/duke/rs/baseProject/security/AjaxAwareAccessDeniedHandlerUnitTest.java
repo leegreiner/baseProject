@@ -18,6 +18,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.DefaultCsrfToken;
 import org.springframework.security.web.csrf.InvalidCsrfTokenException;
+import org.springframework.security.web.csrf.MissingCsrfTokenException;
 
 import edu.duke.rs.baseProject.StubServletOutputStream;
 import edu.duke.rs.baseProject.util.HttpUtils;
@@ -55,10 +56,19 @@ public class AjaxAwareAccessDeniedHandlerUnitTest {
   }
   
   @Test
-  public void whenIsNotAjaxRequestAndIsInvalidCsrfException_thenRedirectedToInvalidCsrfUrl() throws Exception {
+  public void whenIsNotAjaxRequestAndIsInvalidCsrfTokenException_thenRedirectedToInvalidCsrfUrl() throws Exception {
     when(httpServletRequest.getContextPath()).thenReturn("/app");
     
     HANDLER.handle(httpServletRequest, httpServletResponse, new InvalidCsrfTokenException(EXPECTED_CSRF_TOKEN, ACTUAL_TOKEN));
+    
+    verify(httpServletResponse, times(1)).sendRedirect("/app" + INVALID_CSRF_URL);
+  }
+  
+  @Test
+  public void whenIsNotAjaxRequestAndIsMissingCsrfTokenException_thenRedirectedToInvalidCsrfUrl() throws Exception {
+    when(httpServletRequest.getContextPath()).thenReturn("/app");
+    
+    HANDLER.handle(httpServletRequest, httpServletResponse, new MissingCsrfTokenException(ACTUAL_TOKEN));
     
     verify(httpServletResponse, times(1)).sendRedirect("/app" + INVALID_CSRF_URL);
   }

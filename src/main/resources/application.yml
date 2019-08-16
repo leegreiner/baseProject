@@ -107,7 +107,14 @@ app:
     userName: mgmt_user
 # changeMe1
     password: '{cipher}8595c9f67620ea4ed95370dca6c87ad9317f8bc4b035e9971b71d47a1632bd73'
-    
+  security:
+    password:
+      minLength: 8
+      maxLength: 16
+      numberLowerCase: 1
+      numberUpperCase: 1
+      numberDigits: 1
+      numberSpecial: 0
 ---
 spring:  profiles: local
   resources:    cache:      cachecontrol:        no-cache: true

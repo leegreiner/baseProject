@@ -1,6 +1,5 @@
 package edu.duke.rs.baseProject.user;
 
-
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -70,11 +69,10 @@ public class UserProfileControllerUnitTest extends AbstractWebUnitTest{
     
     when(userService.getUserProfile()).thenReturn(userProfile);
     
-    
     this.mockMvc.perform(put(UserProfileController.USER_PROFILE_MAPPING).with(csrf()).param("timeZone", "abc")
         .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))
         .andExpect(view().name(UserProfileController.USER_PROFILE_VIEW))
-        .andExpect(model().attribute(BaseWebController.FLASH_ERROR_MESSAGE, equalTo("Your profile has NOT been updated. Please correct the errors below.")));
+        .andExpect(model().attribute(BaseWebController.FLASH_ERROR_MESSAGE, equalTo("Please correct the errors below.")));
   }
   
   @Test

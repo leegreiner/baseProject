@@ -14,6 +14,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Page<UserListItem> findAllBy(Pageable pageable);
 	@EntityGraph("user.userAndRoles")
 	Optional<User> findByUserNameIgnoreCase(String userName);
+	Optional<User> findByEmailIgnoreCase(String email);
 	@EntityGraph("user.userAndRoles")
   Optional<User> findById(Long id);
 }

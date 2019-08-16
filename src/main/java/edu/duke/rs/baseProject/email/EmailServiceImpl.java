@@ -53,7 +53,7 @@ public class EmailServiceImpl implements EmailService {
     try {
       mailSender.send(messagePreparator);
     } catch (final MailException me) {
-      throw new EmailException("error.unableToSendEmail", me, new Object[0]);
+      throw new EmailException("error.unableToSendEmail", me, (Object[])null);
     }
   }
 }
