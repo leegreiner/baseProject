@@ -35,11 +35,13 @@ import lombok.EqualsAndHashCode.Include;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
+@ToString(callSuper = true)
 @Entity
 @Audited
 @Table(name = "users")
@@ -110,6 +112,7 @@ public class User extends BaseEntity implements Serializable {
 	)
 	@NonNull
 	@NotEmpty
+	@ToString.Exclude
 	private Set<Role> roles;
 	
 	public String getDisplayName() {

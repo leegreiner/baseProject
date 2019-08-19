@@ -19,13 +19,13 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import edu.duke.rs.baseProject.AbstractBaseTest;
+import edu.duke.rs.baseProject.AbstractRepositoryTest;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 
 @RunWith(SpringRunner.class)
 @DataJpaTest
-public class UserRepositoryIntegrationTest extends AbstractBaseTest {
+public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
 	@Autowired
 	private TestEntityManager entityManager;
 	@Autowired

@@ -4,10 +4,13 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import edu.duke.rs.baseProject.event.CreatedEvent;
 import edu.duke.rs.baseProject.exception.ConstraintViolationException;
 import edu.duke.rs.baseProject.exception.NotFoundException;
 import edu.duke.rs.baseProject.role.Role;
@@ -16,18 +19,23 @@ import edu.duke.rs.baseProject.role.RoleRepository;
 import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.security.password.PasswordGenerator;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 	private transient final UserRepository userRepository;
 	private transient final RoleRepository roleRepository;
 	private transient final PasswordGenerator passwordGenerator;
+	private transient final ApplicationEventPublisher eventPublisher;
 	
 	public UserServiceImpl(final UserRepository userRepository,
-	    final RoleRepository roleRepository, final PasswordGenerator passwordGenerator) {
+	    final RoleRepository roleRepository, final PasswordGenerator passwordGenerator,
+	    final ApplicationEventPublisher eventPublisher) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.passwordGenerator = passwordGenerator;
+		this.eventPublisher = eventPublisher;
 	}
 	
 	@Override
@@ -64,8 +72,9 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  @Transactional
+  @Transactional(propagation = Propagation.REQUIRED)
   public User save(final UserDto userDto) {
+    log.debug("In save(): " + userDto.toString());
     return userDto.getId() == null ? createUser(userDto) : saveUser(userDto);
   }
   
@@ -76,7 +85,7 @@ public class UserServiceImpl implements UserService {
       throw new ConstraintViolationException("error.duplicateEmail", new Object[] {userDto.getEmail()});
     }
     
-    final User user = this.getUser(userDto.getId());
+    User user = this.getUser(userDto.getId());
     
     user.setAccountEnabled(userDto.isAccountEnabled());
     user.setEmail(userDto.getEmail().trim());
@@ -99,7 +108,7 @@ public class UserServiceImpl implements UserService {
       throw new ConstraintViolationException("error.duplicateEmail", new Object[] {userDto.getEmail()});
     }
     
-    final User user = new User();
+    User user = new User();
     
     user.setAccountEnabled(userDto.isAccountEnabled());
     user.setEmail(userDto.getEmail().trim());
@@ -112,7 +121,11 @@ public class UserServiceImpl implements UserService {
     
     populateRoles(userDto, user);
     
-    return userRepository.save(user);
+    user = userRepository.save(user);
+    
+    eventPublisher.publishEvent(new CreatedEvent<User>(user));
+    
+    return user;
   }
   
   private void populateRoles(final UserDto userDto, final User user) {

@@ -25,10 +25,13 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Sort;
 
+import edu.duke.rs.baseProject.event.CreatedEvent;
 import edu.duke.rs.baseProject.exception.ConstraintViolationException;
 import edu.duke.rs.baseProject.exception.NotFoundException;
 import edu.duke.rs.baseProject.role.Role;
@@ -39,6 +42,7 @@ import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.security.password.PasswordGenerator;
 
 @RunWith(PowerMockRunner.class)
+@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*"})
 @PrepareForTest(SecurityUtils.class)
 public class UserServiceUnitTest {
   @Mock
@@ -49,6 +53,8 @@ public class UserServiceUnitTest {
   private RoleRepository roleRepository;
   @Mock
   private PasswordGenerator passwordGenerator;
+  @Mock
+  private ApplicationEventPublisher eventPublisher;
   
   private UserServiceImpl service;
   
@@ -56,7 +62,7 @@ public class UserServiceUnitTest {
   public void init() {
     MockitoAnnotations.initMocks(this);
     mockStatic(SecurityUtils.class);
-    service = new UserServiceImpl(userRepository, roleRepository, passwordGenerator);
+    service = new UserServiceImpl(userRepository, roleRepository, passwordGenerator, eventPublisher);
   }
   
   @Test(expected = IllegalArgumentException.class)
@@ -286,9 +292,11 @@ public class UserServiceUnitTest {
     verify(roleRepository, times(1)).findByName(role.getName());
     verify(userRepository, times(1)).save(any(User.class));
     verify(passwordGenerator, times(1)).generate();
+    verify(eventPublisher, times(1)).publishEvent(any(CreatedEvent.class));
     verifyNoMoreInteractions(userRepository);
     verifyNoMoreInteractions(roleRepository);
     verifyNoMoreInteractions(passwordGenerator);
+    verifyNoMoreInteractions(eventPublisher);
   }
   
   @Test(expected = ConstraintViolationException.class)

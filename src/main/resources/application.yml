@@ -6,6 +6,13 @@ spring:
     url: jdbc:postgresql://localhost:5432/devdb?currentSchema=baseapp
     username: lmg
     password: 'tta&cno2'
+    hikari:      auto-commit: false
+      connection-timeout: 30000
+      idle-timeout: 30000
+      max-lifetime: 1200000
+      maximum-pool-size: 20
+      minimum-idle: 5
+      
   jpa:
     jpa:
     show-sql: false
@@ -13,6 +20,8 @@ spring:
       ddl-auto: none
     open-in-view: false
     properties:      hibernate:
+        connection:
+          provider_disables_autocommit: true
         dialect: org.hibernate.dialect.PostgreSQL94Dialect
         default_schema: baseapp
         jdbc:
