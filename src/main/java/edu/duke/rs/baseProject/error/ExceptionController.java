@@ -6,11 +6,14 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
@@ -31,6 +34,12 @@ public class ExceptionController extends BaseWebController {
   
   public ExceptionController(final MessageSource messageSource) {
     this.messageSource = messageSource;
+  }
+  
+  @InitBinder
+  public void initBinder (WebDataBinder binder) {
+    // trim all string in incoming model attributes
+    binder.registerCustomEditor(String.class, new StringTrimmerEditor(true));
   }
   
   @ExceptionHandler(ApplicationException.class)

@@ -2,7 +2,6 @@ package edu.duke.rs.baseProject.user;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -85,7 +84,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))
       .andExpect(status().isOk())
       .andExpect(view().name(ExceptionController.EXCEPTION_ERROR_VIEW))
-      .andExpect(model().attribute(ExceptionController.EXCEPTION_MESSAGE_ATTRIBUTE, is(notNullValue())));
+      .andExpect(model().attribute(ExceptionController.EXCEPTION_MESSAGE_ATTRIBUTE, notNullValue()));
     
     verify(userService, times(1)).getUser(userId);
     verifyNoMoreInteractions(userService);

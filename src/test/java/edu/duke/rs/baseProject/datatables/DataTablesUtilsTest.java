@@ -2,7 +2,6 @@ package edu.duke.rs.baseProject.datatables;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 import java.util.ArrayList;
@@ -144,7 +143,7 @@ public class DataTablesUtilsTest {
     final Page<String> page = new PageImpl<String>(strings, pageable, 100L);
     final DataTablesOutput<String> output = DataTablesUtils.toDataTablesOutput(input, page);
     
-    assertThat(output.getData(), is(equalTo(page.getContent())));
+    assertThat(output.getData(), equalTo(page.getContent()));
     assertThat(output.getDraw(), equalTo(input.getDraw()));
     assertThat(output.getRecordsTotal(), equalTo(page.getTotalElements()));
   }
