@@ -10,6 +10,8 @@ var targetPageSetUp = function() {
       if (form.checkValidity() === false) {
           event.preventDefault();
           event.stopPropagation();
+      } else {
+        ga('send', 'event', 'User', 'edit');
       }
       
       form.classList.add('was-validated');

@@ -3,7 +3,6 @@
 *	- Services
 *	- Controllers
 *	- Embedded(H2) DB for repositories and integration tests?
-
 * Client side form validation
 * Quartz integration with sample job
 * Paging and sorting via ajax
@@ -12,7 +11,7 @@ Security
 *	- actuator
 	- change password
 	- forgotten password
-	- edit profile
+*	- edit profile
 *	- name on header
 Docker
 Kubernetes
@@ -20,11 +19,10 @@ Kubernetes
 * Spring Session
 * Google Analytics
 * Auditing
-* Figure out why actuator present error page (thymeleaf error) when invalid credentials
 * Code coverage
-SAML integration
+* SAML integration
 GitLab CI
-New Smartadmin
+* New Smartadmin
 * Logback formatting and log rolling
 Junit 5
   - UT

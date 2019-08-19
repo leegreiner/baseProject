@@ -1,4 +1,8 @@
 var targetPageSetUp = function() {
+  'use strict';
+  
+  $('.select2').select2();
+
   var forms = document.getElementsByClassName('needs-validation');
 
   var validation = Array.prototype.filter.call(forms, function(form) {
@@ -7,7 +11,7 @@ var targetPageSetUp = function() {
           event.preventDefault();
           event.stopPropagation();
       } else {
-        ga('send', 'event', 'User', 'login');
+        ga('send', 'event', 'User', 'new');
       }
       
       form.classList.add('was-validated');

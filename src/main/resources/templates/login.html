@@ -18,7 +18,7 @@
 			    <form th:action="@{/login}" method="post" id="loginForm" class="needs-validation" novalidate autocomplete="off">
 			      <div class="form-group">
 			        <label th:text="#{userName}" class="form-label" for="userName">User name</label>
-			        <input type="text" id="username" name="username" class="form-control form-control-lg" required>
+			        <input type="text" id="username" name="username" class="form-control form-control-lg" autofocus="autofocus" required>
 			        <div class="invalid-feedback">
                 <th:block th:text="#{validation.required.userName}"></th:block>
               </div>

@@ -27,7 +27,7 @@
 	                <div class="form-row">
 	                 <div class="col-md-5 mb-3">
 	                   <label class="form-label" th:for="firstName" ><span th:text="#{firstName}" th:remove="tag"></span> <span class="text-danger">*</span></label>
-	                   <input type="text" class="form-control" th:field="*{firstName}" pattern="^.{1,30}$" required/>
+	                   <input type="text" class="form-control" th:field="*{firstName}" autofocus="autofocus" pattern="^.{1,30}$" required/>
 	                   
 	                   <div class="invalid-feedback">
                         <th:block th:text="#{validation.firstName}"></th:block>
@@ -138,7 +138,7 @@
     
     <customJs th:remove="tag">
       <script th:src="@{/js/formplugins/select2/select2.bundle.js}"></script>
-      <script th:src="@{/js/app/user/newEditUser.js}"></script>
+      <script th:src="@{/js/app/user/newUser.js}"></script>
     </customJs>
   </body>
 </html>
