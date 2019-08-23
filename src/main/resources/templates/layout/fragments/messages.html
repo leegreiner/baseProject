@@ -7,21 +7,21 @@
 		    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true"><i class="fal fa-times"></i></span>
         </button>
-        <span th:text="#{success} + ': ' + ${feedbackMessage}">Feedback message</span>
+        <span th:inline="text"><strong>[[#{success}]]</strong> [[${feedbackMessage}]]</span>
 	    </div>
 	    
 	    <div th:if="${warningMessage != null}" class="alert alert-warning alert-dismissible fade show" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true"><i class="fal fa-times"></i></span>
         </button>
-        <span th:text="#{warning} + ': ' + ${warningMessage}">Warning message</span>
+        <span th:inline="text"><strong>[[#{warning}]]</strong> [[${warningMessage}]]</span>
       </div>
       
       <div th:if="${errorMessage != null}" class="alert alert-danger alert-dismissible fade show" role="alert">
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
           <span aria-hidden="true"><i class="fal fa-times"></i></span>
         </button>
-        <span th:text="#{error} + ': ' + ${errorMessage}">Error message</span>
+        <span th:inline="text"><strong>[[#{error}]]</strong> [[${errorMessage}]]</span>
       </div>
 	  </div>
   </body>
