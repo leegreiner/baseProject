@@ -9,7 +9,7 @@
 	  
 		<content th:remove="tag">             
 			<div class="row">
-        <div class="col-xl-8">
+        <div class="col-sm-12 col-lg-6">
           <div id="panelDiv" class="panel">
             <div class="panel-hdr panel-hdr-custom">
               <h2 th:text="#{title.userDetails}">Title</h2>
@@ -18,7 +18,7 @@
             <div class="panel-container show">
               <div class="panel-content">
                 <div class="row">
-                  <div class="col-xl-6">
+                  <div class="col-sm-6">
 		                <dl class="row">
 		                  <dt class="col-sm-3" th:text="#{name}">name</dt>
 		                  <dd class="col-sm-9" th:text="${user.displayName}">fn</dd>
@@ -32,7 +32,7 @@
                       <dd class="col-sm-9" th:text="${user.timeZone.iD}">GMT</dd>
                     </dl>
 		              </div>
-		              <div class="col-xl-6">
+		              <div class="col-sm-6">
 		                <dl class="row">
                       <dt class="col-sm-3" th:text="#{email}">email</dt>
                       <dd class="col-sm-9"><a th:text="${user.email}" th:href="'mailto:' + ${user.email}">abc@123.com</a></dd>
@@ -46,7 +46,7 @@
                       <dd class="col-sm-9" th:text="${{user.lastLoggedIn}}">00:00</dd>
                     </dl>
 		              </div>
-		              <div class="col-xl-6">
+		              <div class="col-sm-6">
 		                <dl class="row">
                       <dt class="col-sm-3" th:text="#{accountEnabled}">account enabled</dt>
                       <dd class="col-sm-9" th:text="${user.accountEnabled} ? #{yes} : #{no}">yes</dd>
