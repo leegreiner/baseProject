@@ -33,3 +33,10 @@
 .table-custom.dataTable thead .sorting_desc_disabled:after {
   bottom: 0.6em;
 }
+
+.was-validated .custom-select:invalid + .select2 .select2-selection {
+  border-color: #FC1349!important;
+}
+.was-validated .custom-select:valid + .select2 .select2-selection {
+  border-color: #69FB13!important;
+}

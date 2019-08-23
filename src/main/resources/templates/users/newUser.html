@@ -80,7 +80,7 @@
                    
                    <div class="col-md-5 mb-3">
                      <label class="form-label" th:for="timeZone" ><span th:text="#{timeZone}" th:remove="tag"></span> <span class="text-danger">*</span></label>
-                     <select class="form-control select2 w-100" th:field="*{timeZone}" required>
+                     <select class="form-control select2 custom-select w-100" th:field="*{timeZone}" required>
                        <option th:each= "tz: ${T(edu.duke.rs.baseProject.util.TimeZoneDisplay).getDisplayableTimeZones()}" th:value="${tz.zoneId}" th:utext="${tz.label}"></option>
                      </select>
                      
@@ -111,7 +111,7 @@
                     
                     <div class="col-md-5 mb-3">
                       <label class="form-label" th:for="roles" ><span th:text="#{roles}" th:remove="tag"></span> <span class="text-danger">*</span></label>
-                      <select class="form-control select2 w-100" th:field="*{roles}" multiple required>
+                      <select class="form-control select2 custom-select w-100" th:field="*{roles}" multiple required>
                        <option th:each= "role: ${roles}" th:value="${role.key}" th:utext="${role.value}"></option>
                       </select>
                       
