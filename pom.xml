@@ -129,8 +129,16 @@
       <artifactId>passay</artifactId>
       <version>${passay.version}</version>
     </dependency>
+    <dependency>
+      <groupId>de.codecentric</groupId>
+      <artifactId>spring-boot-admin-starter-client</artifactId>
+      <version>2.1.5</version>
+    </dependency>
+     <dependency>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpclient</artifactId>
+    </dependency>
     
-
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>

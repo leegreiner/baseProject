@@ -1,5 +1,15 @@
 spring:
   application:    name: @project.name@
+  boot:    admin:      client:        url: https://localhost:8449
+        username: 'admin'
+#       changeMe1
+        password: '{cipher}8595c9f67620ea4ed95370dca6c87ad9317f8bc4b035e9971b71d47a1632bd73'
+        
+        instance:          metadata:
+            user.name: mgmt_user
+#           changeMe1
+            user.password: '{cipher}8595c9f67620ea4ed95370dca6c87ad9317f8bc4b035e9971b71d47a1632bd73'
+
   datasource:
     initialization-mode: never
     platform: postgresql
@@ -99,6 +109,9 @@ saml:
     
 management:
   endpoints:    web:      exposure:        include: '*'
+  endpoint:
+    health:
+      show-details: always
     
 info:
   app:
@@ -107,6 +120,7 @@ info:
     version: @project.version@
     
 logging:  level:    edu.duke.rs: info
+#    org.apache.http.wire: debug
     
 app:
   defaultEmailFrom: abc@123.com
