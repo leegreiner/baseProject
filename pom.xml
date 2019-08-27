@@ -14,14 +14,6 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>Base Project</name>
   <description>Base Thymeleaf, JPA project</description>
-  
-  <repositories>
-    <repository>
-      <id>JitPack</id>
-      <name>JitPack</name>
-      <url>https://jitpack.io</url>
-    </repository>
-  </repositories>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
