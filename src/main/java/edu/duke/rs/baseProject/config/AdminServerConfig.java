@@ -9,6 +9,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.http.client.support.BasicAuthenticationInterceptor;
 import org.springframework.web.client.RestTemplate;
@@ -18,6 +19,7 @@ import de.codecentric.boot.admin.client.registration.ApplicationFactory;
 import de.codecentric.boot.admin.client.registration.ApplicationRegistrator;
 
 @Configuration
+@Profile("! test")
 public class AdminServerConfig {
   @Autowired
   private ClientProperties admin;

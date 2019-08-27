@@ -171,6 +171,14 @@ app:
 spring:
   profiles: test
   autoconfigure.exclude: org.springframework.boot.autoconfigure.session.SessionAutoConfiguration
+  boot:
+    admin:
+      client:
+        enabled: false
+        password: 
+        instance:
+          metadata:
+            user.password: 
   datasource:
     platform: h2
     url: jdbc:h2:mem:test;DB_CLOSE_ON_EXIT=FALSE
