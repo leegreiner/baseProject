@@ -1,7 +1,7 @@
-/*  THEME COLORs 2198F3
+/*  THEME COLORs
 ========================================================================== */
 /* Looks good on chrome default color profile */
-/* looks good in sRGB but washed up on chrome default
+/* looks good in sRGB but washed up on chrome default 
 $color-primary:						#826bb0;
 $color-success:						#31cb55;
 $color-info:						#5e93ec;
@@ -112,7 +112,6 @@ http://www.standardista.com/px-to-rem-conversion-if-root-font-size-is-16px/
 /* auto, letter */
 /*  Common Element Variables
 ========================================================================== */
-/*$page-bg:								desaturate(lighten($primary-500, 41.7%), 5%)  !default; */
 /* Z-index decleartion "birds eye view"
 ========================================================================== */
 /*  Components
@@ -120,7 +119,6 @@ http://www.standardista.com/px-to-rem-conversion-if-root-font-size-is-16px/
 /*  PAGE HEADER STUFF
 ========================================================================== */
 /* colors */
-/*$header-bg:								$white !default;*/
 /* height */
 /* logo */
 /* try not to go beywond the width of $main_nav_width value */
@@ -165,8 +163,6 @@ aside.page-sidebar ($nav-width, $nav-background)
 ========================================================================== */
 /* main navigation */
 /* left panel */
-/*$nav-background:						desaturate($primary-900, 7%) !default; */
-/*$nav-background-shade:					rgba(desaturate($info-500, 15%), 0.18) !default;*/
 /* nav parent level-0 */
 /* nav icon sizes */
 /* badge default */
@@ -199,6 +195,7 @@ aside.page-sidebar ($nav-width, $nav-background)
 /*   GLOBALS
 ========================================================================== */
 /* ACCESSIBILITIES */
+/* SHORTCUT BUTTON (appears on bottom right of the page) */
 .app-body-demo {
   height: 350px;
   max-width: 550px;

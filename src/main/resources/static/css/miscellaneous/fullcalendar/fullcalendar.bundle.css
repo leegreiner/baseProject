@@ -1,8 +1,4 @@
-/*!
-FullCalendar Core Package v4.2.0
-Docs & License: https://fullcalendar.io/
-(c) 2019 Adam Shaw
-*/
+@charset "UTF-8";
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900");
 .fc {
   direction: ltr;
@@ -20,12 +16,12 @@ body .fc {
 .fc-highlight {
   /* when user is selecting cells */
   background: #bce8f1;
-  opacity: .3; }
+  opacity: 0.3; }
 
 .fc-bgevent {
   /* default look for background events */
   background: #8fdf82;
-  opacity: .3; }
+  opacity: 0.3; }
 
 .fc-nonbusiness {
   /* default look for non-business-hours areas */
@@ -237,7 +233,7 @@ temporary rendered events).
   /* for resize handle and other inner positioning */
   display: block;
   /* make the <a> tag block */
-  font-size: .85em;
+  font-size: 0.85em;
   line-height: 1.4;
   border-radius: 3px;
   border: 1px solid #3788d8; }
@@ -316,7 +312,7 @@ temporary rendered events).
   left: -1px;
   /* darkening effect */
   background: #000;
-  opacity: .25; }
+  opacity: 0.25; }
 
 /* Event Dragging
 --------------------------------------------------------------------------------------------------*/
@@ -325,7 +321,7 @@ temporary rendered events).
           box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3); }
 
 .fc-event.fc-dragging:not(.fc-selected) {
-  opacity: .75; }
+  opacity: 0.75; }
 
 /* Horizontal Events
 --------------------------------------------------------------------------------------------------*/
@@ -452,7 +448,7 @@ tr:first-child > td > .fc-day-grid-event {
 /* "more" link that represents hidden events */
 a.fc-more {
   margin: 1px 3px;
-  font-size: .85em;
+  font-size: 0.85em;
   cursor: pointer;
   text-decoration: none; }
 
@@ -521,21 +517,21 @@ TODO: more distinction between this file and common.css
 
 .fc-unthemed .fc-disabled-day {
   background: #d7d7d7;
-  opacity: .3; }
+  opacity: 0.3; }
 
 /* Icons
 --------------------------------------------------------------------------------------------------
 from https://feathericons.com/ and built with IcoMoon
 */
 @font-face {
-  font-family: 'fcicons';
+  font-family: "fcicons";
   src: url("data:application/x-font-ttf;charset=utf-8;base64,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") format("truetype");
   font-weight: normal;
   font-style: normal; }
 
 .fc-icon {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'fcicons' !important;
+  font-family: "fcicons" !important;
   speak: none;
   font-style: normal;
   font-weight: normal;
@@ -547,25 +543,25 @@ from https://feathericons.com/ and built with IcoMoon
   -moz-osx-font-smoothing: grayscale; }
 
 .fc-icon-chevron-left:before {
-  content: "\e900"; }
+  content: ""; }
 
 .fc-icon-chevron-right:before {
-  content: "\e901"; }
+  content: ""; }
 
 .fc-icon-chevrons-left:before {
-  content: "\e902"; }
+  content: ""; }
 
 .fc-icon-chevrons-right:before {
-  content: "\e903"; }
+  content: ""; }
 
 .fc-icon-minus-square:before {
-  content: "\e904"; }
+  content: ""; }
 
 .fc-icon-plus-square:before {
-  content: "\e905"; }
+  content: ""; }
 
 .fc-icon-x:before {
-  content: "\e906"; }
+  content: ""; }
 
 .fc-icon {
   display: inline-block;
@@ -733,7 +729,7 @@ Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
 
 /* inner content */
 .fc-toolbar > * > :not(:first-child) {
-  margin-left: .75em; }
+  margin-left: 0.75em; }
 
 .fc-toolbar h2 {
   font-size: 1.75em;
@@ -892,11 +888,6 @@ Lots taken from Flatly (MIT): https://bootswatch.com/4/flatly/bootstrap.css
     display: none;
     /* don't display any button-related controls */ } }
 
-/*!
-FullCalendar Day Grid Plugin v4.2.0
-Docs & License: https://fullcalendar.io/
-(c) 2019 Adam Shaw
-*/
 /* DayGridView
 --------------------------------------------------------------------------------------------------*/
 /* day row structure */
@@ -962,11 +953,6 @@ Docs & License: https://fullcalendar.io/
   display: inline-block;
   min-width: 1.25em; }
 
-/*!
-FullCalendar List View Plugin v4.2.0
-Docs & License: https://fullcalendar.io/
-(c) 2019 Adam Shaw
-*/
 /* List View
 --------------------------------------------------------------------------------------------------*/
 /* possibly reusable */
@@ -1064,11 +1050,6 @@ Docs & License: https://fullcalendar.io/
   /* theme will provide own background */
   background-color: #eee; }
 
-/*!
-FullCalendar Time Grid Plugin v4.2.0
-Docs & License: https://fullcalendar.io/
-(c) 2019 Adam Shaw
-*/
 /* TimeGridView all-day area
 --------------------------------------------------------------------------------------------------*/
 .fc-timeGrid-view .fc-day-grid {
@@ -1241,7 +1222,7 @@ be a descendant of the grid when it is being dragged.
   padding: 0 1px; }
 
 .fc-time-grid-event .fc-time {
-  font-size: .85em;
+  font-size: 0.85em;
   white-space: nowrap; }
 
 /* short mode, where time and title are on the same line */
@@ -1264,11 +1245,11 @@ be a descendant of the grid when it is being dragged.
   /* ...instead, display only the start time */ }
 
 .fc-time-grid-event.fc-short .fc-time:after {
-  content: "\000A0-\000A0";
+  content: " - ";
   /* seperate with a dash, wrapped in nbsp's */ }
 
 .fc-time-grid-event.fc-short .fc-title {
-  font-size: .85em;
+  font-size: 0.85em;
   /* make the title text the same size as the time */
   padding: 0;
   /* undo padding from above */ }
@@ -1331,11 +1312,6 @@ be a descendant of the grid when it is being dragged.
   border-top-color: transparent;
   border-bottom-color: transparent; }
 
-/*!
-FullCalendar Bootstrap Plugin v4.2.0
-Docs & License: https://fullcalendar.io/
-(c) 2019 Adam Shaw
-*/
 .fc.fc-bootstrap a {
   text-decoration: none; }
 
@@ -1410,10 +1386,10 @@ Color brightness is determined by the following formula:
 /* generate theme button */
 /* #BASE - Base Variable file along with font library, and colors.
 ========================================================================== */
-/*  THEME COLORs 2198F3
+/*  THEME COLORs
 ========================================================================== */
 /* Looks good on chrome default color profile */
-/* looks good in sRGB but washed up on chrome default
+/* looks good in sRGB but washed up on chrome default 
 $color-primary:						#826bb0;
 $color-success:						#31cb55;
 $color-info:						#5e93ec;
@@ -1524,7 +1500,6 @@ http://www.standardista.com/px-to-rem-conversion-if-root-font-size-is-16px/
 /* auto, letter */
 /*  Common Element Variables
 ========================================================================== */
-/*$page-bg:								desaturate(lighten($primary-500, 41.7%), 5%)  !default; */
 /* Z-index decleartion "birds eye view"
 ========================================================================== */
 /*  Components
@@ -1532,7 +1507,6 @@ http://www.standardista.com/px-to-rem-conversion-if-root-font-size-is-16px/
 /*  PAGE HEADER STUFF
 ========================================================================== */
 /* colors */
-/*$header-bg:								$white !default;*/
 /* height */
 /* logo */
 /* try not to go beywond the width of $main_nav_width value */
@@ -1577,8 +1551,6 @@ aside.page-sidebar ($nav-width, $nav-background)
 ========================================================================== */
 /* main navigation */
 /* left panel */
-/*$nav-background:						desaturate($primary-900, 7%) !default; */
-/*$nav-background-shade:					rgba(desaturate($info-500, 15%), 0.18) !default;*/
 /* nav parent level-0 */
 /* nav icon sizes */
 /* badge default */
@@ -1611,6 +1583,7 @@ aside.page-sidebar ($nav-width, $nav-background)
 /*   GLOBALS
 ========================================================================== */
 /* ACCESSIBILITIES */
+/* SHORTCUT BUTTON (appears on bottom right of the page) */
 body {
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial;
   font-size: 0.8125rem;

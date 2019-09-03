@@ -224,17 +224,13 @@
 .select2-container--default .select2-selection--multiple .select2-selection__rendered li {
   list-style: none; }
 
-.select2-container--default .select2-selection--multiple .select2-selection__placeholder {
-  color: #999;
-  margin-top: 5px;
-  float: left; }
-
 .select2-container--default .select2-selection--multiple .select2-selection__clear {
   cursor: pointer;
   float: right;
   font-weight: bold;
   margin-top: 5px;
-  margin-right: 10px; }
+  margin-right: 10px;
+  padding: 1px; }
 
 .select2-container--default .select2-selection--multiple .select2-selection__choice {
   background-color: #e4e4e4;
@@ -256,7 +252,7 @@
 .select2-container--default .select2-selection--multiple .select2-selection__choice__remove:hover {
   color: #333; }
 
-.select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice, .select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__placeholder, .select2-container--default[dir="rtl"] .select2-selection--multiple .select2-search--inline {
+.select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice, .select2-container--default[dir="rtl"] .select2-selection--multiple .select2-search--inline {
   float: right; }
 
 .select2-container--default[dir="rtl"] .select2-selection--multiple .select2-selection__choice {
@@ -586,10 +582,10 @@ Color brightness is determined by the following formula:
 /* generate theme button */
 /* #BASE - Base Variable file along with font library, and colors.
 ========================================================================== */
-/*  THEME COLORs 2198F3
+/*  THEME COLORs
 ========================================================================== */
 /* Looks good on chrome default color profile */
-/* looks good in sRGB but washed up on chrome default
+/* looks good in sRGB but washed up on chrome default 
 $color-primary:						#826bb0;
 $color-success:						#31cb55;
 $color-info:						#5e93ec;
@@ -700,7 +696,6 @@ http://www.standardista.com/px-to-rem-conversion-if-root-font-size-is-16px/
 /* auto, letter */
 /*  Common Element Variables
 ========================================================================== */
-/*$page-bg:								desaturate(lighten($primary-500, 41.7%), 5%)  !default; */
 /* Z-index decleartion "birds eye view"
 ========================================================================== */
 /*  Components
@@ -708,7 +703,6 @@ http://www.standardista.com/px-to-rem-conversion-if-root-font-size-is-16px/
 /*  PAGE HEADER STUFF
 ========================================================================== */
 /* colors */
-/*$header-bg:								$white !default;*/
 /* height */
 /* logo */
 /* try not to go beywond the width of $main_nav_width value */
@@ -753,8 +747,6 @@ aside.page-sidebar ($nav-width, $nav-background)
 ========================================================================== */
 /* main navigation */
 /* left panel */
-/*$nav-background:						desaturate($primary-900, 7%) !default; */
-/*$nav-background-shade:					rgba(desaturate($info-500, 15%), 0.18) !default;*/
 /* nav parent level-0 */
 /* nav icon sizes */
 /* badge default */
@@ -787,6 +779,7 @@ aside.page-sidebar ($nav-width, $nav-background)
 /*   GLOBALS
 ========================================================================== */
 /* ACCESSIBILITIES */
+/* SHORTCUT BUTTON (appears on bottom right of the page) */
 body {
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial;
   font-size: 0.8125rem;

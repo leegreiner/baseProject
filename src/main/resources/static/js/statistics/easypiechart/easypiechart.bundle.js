@@ -371,7 +371,7 @@ document.addEventListener('DOMContentLoaded', function () {
 	$('.js-easy-pie-chart').each(function() {
 
 		var $this = $(this),
-			barcolor = $this.css('color') || myapp_get_color.primary_700,
+			barcolor = $this.css('color') || color.primary._700,
 			trackcolor = $this.data('trackcolor') || 'rgba(0,0,0,0.04)',
 			size = parseInt($this.data('piesize')) || 50,
 			scalecolor =   $this.data('scalecolor') || $this.css('color'),

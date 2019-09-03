@@ -46,10 +46,10 @@ Color brightness is determined by the following formula:
 /* generate theme button */
 /* #BASE - Base Variable file along with font library, and colors.
 ========================================================================== */
-/*  THEME COLORs 2198F3
+/*  THEME COLORs
 ========================================================================== */
 /* Looks good on chrome default color profile */
-/* looks good in sRGB but washed up on chrome default
+/* looks good in sRGB but washed up on chrome default 
 $color-primary:						#826bb0;
 $color-success:						#31cb55;
 $color-info:						#5e93ec;
@@ -160,7 +160,6 @@ http://www.standardista.com/px-to-rem-conversion-if-root-font-size-is-16px/
 /* auto, letter */
 /*  Common Element Variables
 ========================================================================== */
-/*$page-bg:								desaturate(lighten($primary-500, 41.7%), 5%)  !default; */
 /* Z-index decleartion "birds eye view"
 ========================================================================== */
 /*  Components
@@ -168,7 +167,6 @@ http://www.standardista.com/px-to-rem-conversion-if-root-font-size-is-16px/
 /*  PAGE HEADER STUFF
 ========================================================================== */
 /* colors */
-/*$header-bg:								$white !default;*/
 /* height */
 /* logo */
 /* try not to go beywond the width of $main_nav_width value */
@@ -213,8 +211,6 @@ aside.page-sidebar ($nav-width, $nav-background)
 ========================================================================== */
 /* main navigation */
 /* left panel */
-/*$nav-background:						desaturate($primary-900, 7%) !default; */
-/*$nav-background-shade:					rgba(desaturate($info-500, 15%), 0.18) !default;*/
 /* nav parent level-0 */
 /* nav icon sizes */
 /* badge default */
@@ -247,6 +243,7 @@ aside.page-sidebar ($nav-width, $nav-background)
 /*   GLOBALS
 ========================================================================== */
 /* ACCESSIBILITIES */
+/* SHORTCUT BUTTON (appears on bottom right of the page) */
 @import url("https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900");
 body {
   font-family: "Roboto", "Helvetica Neue", Helvetica, Arial;
@@ -444,9 +441,9 @@ RESULT:
 .nav-function-minify #mhni {
   position: relative; }
   .nav-mobile-slide-out #nmp .onoffswitch-title, .nav-mobile-slide-out #nmno .onoffswitch-title, .nav-function-top #mnl .onoffswitch-title, .nav-function-minify #mnl .onoffswitch-title, .mod-hide-nav-icons #mnl .onoffswitch-title, .nav-function-top #nfh .onoffswitch-title, .nav-function-top #mhni .onoffswitch-title, .nav-function-minify #mhni .onoffswitch-title {
-    color: #d58100 !important; }
+    color: var(--theme-warning-900) !important; }
   .nav-mobile-slide-out #nmp .onoffswitch-title-desc, .nav-mobile-slide-out #nmno .onoffswitch-title-desc, .nav-function-top #mnl .onoffswitch-title-desc, .nav-function-minify #mnl .onoffswitch-title-desc, .mod-hide-nav-icons #mnl .onoffswitch-title-desc, .nav-function-top #nfh .onoffswitch-title-desc, .nav-function-top #mhni .onoffswitch-title-desc, .nav-function-minify #mhni .onoffswitch-title-desc {
-    color: #ec9f28 !important; }
+    color: var(--theme-warning-900) !important; }
   .nav-mobile-slide-out #nmp:after,
   .nav-mobile-slide-out #nmno:after, .nav-function-top #mnl:after,
   .nav-function-minify #mnl:after,
@@ -538,11 +535,11 @@ RESULT:
 .nav-function-minify #mhni:after {
   display: block;
   position: absolute;
-  background: #ffd193;
+  background: var(--theme-warning-50);
   font-size: 10px;
   width: 65px;
   text-align: center;
-  border: 1px solid #df8000;
+  border: 1px solid var(--theme-warning-700);
   height: 22px;
   line-height: 20px;
   border-radius: 10px;
@@ -607,7 +604,7 @@ RESULT:
   -pie-background: linear-gradient(45deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.2) 75%, rgba(255, 255, 255, 0.2)) 0 0/60px, linear-gradient(135deg, rgba(255, 255, 255, 0.2) 25%, transparent 25%, transparent 75%, rgba(255, 255, 255, 0.2) 75%, rgba(255, 255, 255, 0.2)) 0 0/60px, #eee; }
 
 /* #FRAMEWORK - Structure and layout files. (**DO NOT** change order)
-                DOC: you can disable unused _modules
+                DOC: you can disable unused _modules (may brake the page)
 ========================================================================== */
 /* contains root variables to be used with css (see docs) */
 :root {
@@ -1165,7 +1162,8 @@ html body {
             align-items: center;
     -webkit-box-pack: center;
         -ms-flex-pack: center;
-            justify-content: center; }
+            justify-content: center;
+    color: #0061b5; }
     .nav-menu b.collapse-sign > [class*='fa-'],
     .nav-menu b.collapse-sign > .ni {
       font-size: inherit; }
@@ -1279,7 +1277,8 @@ html body {
         margin-right: 0.25rem;
         font-size: 1.125rem;
         width: 1.75rem;
-        color: #0087fc; }
+        color: #0087fc;
+        text-align: left; }
       .nav-menu li a > .nav-link-text {
         -webkit-box-flex: 1;
             -ms-flex: 1;
@@ -1643,18 +1642,18 @@ html body {
     .nav-function-top:not(.header-function-fixed) #nff {
       position: relative; }
       .nav-function-top:not(.header-function-fixed) #nff .onoffswitch-title {
-        color: #d58100; }
+        color: var(--theme-warning-900); }
       .nav-function-top:not(.header-function-fixed) #nff .onoffswitch-title-desc {
-        color: #ec9f28; }
+        color: var(--theme-warning-900); }
       .nav-function-top:not(.header-function-fixed) #nff:after {
         content: "DISABLED";
         display: block;
         position: absolute;
-        background: #ffd193;
+        background: var(--theme-warning-50);
         font-size: 10px;
         width: 65px;
         text-align: center;
-        border: 1px solid #df8000;
+        border: 1px solid var(--theme-warning-700);
         height: 22px;
         line-height: 20px;
         border-radius: 10px;
@@ -4005,6 +4004,12 @@ html body {
 .progress-xl {
   height: 30px; }
 
+/*$app-shortcut-btn-size: 49px;
+
+$menu-item-size: 45px;
+$menu-items:5;
+$menu-grid-icon: 5px;
+$menu-item-direction: 'top'; //top or left*/
 .menu-item,
 label.menu-open-button {
   background: #00539B;
@@ -6056,13 +6061,13 @@ input[type="checkbox"]:checked + .custom-control-label {
     .mobile-view-activated #nfh .onoffswitch-title,
     .mobile-view-activated #nft .onoffswitch-title,
     .mobile-view-activated #mmb .onoffswitch-title {
-      color: #d58100 !important; }
+      color: var(--theme-warning-900) !important; }
     .mobile-view-activated #nff .onoffswitch-title-desc,
     .mobile-view-activated #nfm .onoffswitch-title-desc,
     .mobile-view-activated #nfh .onoffswitch-title-desc,
     .mobile-view-activated #nft .onoffswitch-title-desc,
     .mobile-view-activated #mmb .onoffswitch-title-desc {
-      color: #ec9f28 !important; }
+      color: var(--theme-warning-900) !important; }
     .mobile-view-activated #nff:after,
     .mobile-view-activated #nfm:after,
     .mobile-view-activated #nfh:after,
@@ -6071,10 +6076,10 @@ input[type="checkbox"]:checked + .custom-control-label {
       content: "DISABLED";
       font-size: 10px;
       position: absolute;
-      background: #ffd193;
+      background: var(--theme-warning-50);
       width: 65px;
       text-align: center;
-      border: 1px solid #df8000;
+      border: 1px solid var(--theme-warning-700);
       height: 22px;
       line-height: 20px;
       border-radius: 10px;
@@ -6507,9 +6512,6 @@ body:not(.no-slimscroll) .custom-scroll {
   background: rgba(0, 83, 155, 0.6);
   background: radial-gradient(rgba(0, 83, 155, 0.2) 0, rgba(0, 83, 155, 0.3) 40%, rgba(0, 83, 155, 0.4) 50%, rgba(0, 83, 155, 0.5) 60%, rgba(0, 83, 155, 0) 70%); }
 
-/* #_plugins - Components imported in alphabetical order (remove plugins from directory if not needed)
-========================================================================== */
-/*@import '_plugins/_plugin-*.scss';*/
 /* #ANIMATION - CSS animations and keyframes
 ========================================================================== */
 @-webkit-keyframes seconds {
@@ -6912,18 +6914,18 @@ body:not(.no-slimscroll) .custom-scroll {
     .mod-main-boxed:not(.nav-function-top) #nff {
       position: relative; }
       .mod-main-boxed:not(.nav-function-top) #nff .onoffswitch-title {
-        color: #d58100; }
+        color: var(--theme-warning-900); }
       .mod-main-boxed:not(.nav-function-top) #nff .onoffswitch-title-desc {
-        color: #ec9f28; }
+        color: var(--theme-warning-900); }
       .mod-main-boxed:not(.nav-function-top) #nff:after {
         content: "DISABLED";
         display: block;
         position: absolute;
-        background: #ffd193;
+        background: var(--theme-warning-50);
         font-size: 0.625rem;
         width: 65px;
         text-align: center;
-        border: 1px solid #df8000;
+        border: 1px solid var(--theme-warning-700);
         height: 22px;
         line-height: 20px;
         border-radius: 10px;
@@ -7738,5 +7740,11 @@ body:not(.mobile-detected).modal-open .modal::-webkit-scrollbar-thumb:vertical:h
   .nav-function-top .page-header {
     background-color: #454545;
     background-image: none; } }
+
+.page-logo-text {
+  font-size: 1.5rem; }
+
+.modal-footer {
+  border-top: 1px solid #dee2e6; }
 
 /*# sourceMappingURL=app.bundle.css.map */

@@ -1,8 +1,8 @@
 @charset "UTF-8";
-/*  THEME COLORs 2198F3
+/*  THEME COLORs
 ========================================================================== */
 /* Looks good on chrome default color profile */
-/* looks good in sRGB but washed up on chrome default
+/* looks good in sRGB but washed up on chrome default 
 $color-primary:						#826bb0;
 $color-success:						#31cb55;
 $color-info:						#5e93ec;
@@ -113,7 +113,6 @@ http://www.standardista.com/px-to-rem-conversion-if-root-font-size-is-16px/
 /* auto, letter */
 /*  Common Element Variables
 ========================================================================== */
-/*$page-bg:								desaturate(lighten($primary-500, 41.7%), 5%)  !default; */
 /* Z-index decleartion "birds eye view"
 ========================================================================== */
 /*  Components
@@ -121,7 +120,6 @@ http://www.standardista.com/px-to-rem-conversion-if-root-font-size-is-16px/
 /*  PAGE HEADER STUFF
 ========================================================================== */
 /* colors */
-/*$header-bg:								$white !default;*/
 /* height */
 /* logo */
 /* try not to go beywond the width of $main_nav_width value */
@@ -166,8 +164,6 @@ aside.page-sidebar ($nav-width, $nav-background)
 ========================================================================== */
 /* main navigation */
 /* left panel */
-/*$nav-background:						desaturate($primary-900, 7%) !default; */
-/*$nav-background-shade:					rgba(desaturate($info-500, 15%), 0.18) !default;*/
 /* nav parent level-0 */
 /* nav icon sizes */
 /* badge default */
@@ -200,6 +196,7 @@ aside.page-sidebar ($nav-width, $nav-background)
 /*   GLOBALS
 ========================================================================== */
 /* ACCESSIBILITIES */
+/* SHORTCUT BUTTON (appears on bottom right of the page) */
 .swal2-styled,
 .swal2-content {
   font-weight: 400 !important; }
@@ -587,6 +584,7 @@ body.swal2-toast-column .swal2-toast {
   .swal2-popup.swal2-toast .swal2-actions {
     -ms-flex-preferred-size: auto !important;
         flex-basis: auto !important;
+    width: auto;
     height: auto;
     margin: 0 .3125em; }
   .swal2-popup.swal2-toast .swal2-styled {
@@ -661,8 +659,8 @@ body.swal2-toast-column .swal2-toast {
     -webkit-transform: translateY(0.3125em) rotateZ(2deg);
             transform: translateY(0.3125em) rotateZ(2deg); }
   100% {
-    -webkit-transform: translateY(0) rotateZ(0);
-            transform: translateY(0) rotateZ(0); } }
+    -webkit-transform: translateY(0) rotateZ(0deg);
+            transform: translateY(0) rotateZ(0deg); } }
 
 @keyframes swal2-toast-show {
   0% {
@@ -675,8 +673,8 @@ body.swal2-toast-column .swal2-toast {
     -webkit-transform: translateY(0.3125em) rotateZ(2deg);
             transform: translateY(0.3125em) rotateZ(2deg); }
   100% {
-    -webkit-transform: translateY(0) rotateZ(0);
-            transform: translateY(0) rotateZ(0); } }
+    -webkit-transform: translateY(0) rotateZ(0deg);
+            transform: translateY(0) rotateZ(0deg); } }
 
 @-webkit-keyframes swal2-toast-hide {
   100% {
@@ -1025,6 +1023,9 @@ body.swal2-no-backdrop .swal2-shown {
   word-wrap: break-word; }
 
 .swal2-actions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
   z-index: 1;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
@@ -1153,14 +1154,6 @@ body.swal2-no-backdrop .swal2-shown {
     background: transparent;
     color: #FC1349; }
 
-> .swal2-input,
-> .swal2-file,
-> .swal2-textarea,
-> .swal2-select,
-> .swal2-radio,
-> .swal2-checkbox {
-  display: none; }
-
 .swal2-content {
   z-index: 1;
   -webkit-box-pack: center;
@@ -1170,7 +1163,7 @@ body.swal2-no-backdrop .swal2-shown {
   padding: 0;
   color: #3e4c5d;
   font-size: 0.875em;
-  font-weight: 300;
+  font-weight: normal;
   line-height: normal;
   text-align: center;
   word-wrap: break-word; }

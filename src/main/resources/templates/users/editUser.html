@@ -127,8 +127,12 @@
                   </div>
 	   
 	                <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row">
-	                  <button type="submit" class="btn btn-primary ml-auto" th:text="#{submit}">submit</button>
-	                  <a th:href="@{'/users/' + ${user.id}}" class="btn btn-default ml-3" th:text="#{cancel}">cancel</a>
+	                  <button type="submit" class="btn btn-primary ml-auto">
+                     <i class="fa fa-check"></i> <span th:text="#{submit}">submit</span>
+                    </button>
+                    <a th:href="@{/users}" class="btn btn-default ml-3">
+                     <i class="fa fa-times"></i> <span th:text="#{cancel}">cancel</span>
+                    </a>
 	                </div>
 	              </form>
 	            </div>

@@ -9,7 +9,7 @@ var chart = c3.generate({
 		}
 	},
 	color: {
-        pattern: [myapp_get_color.primary_500, myapp_get_color.info_500, myapp_get_color.success_500, myapp_get_color.danger_500, myapp_get_color.warning_500]
+        pattern: [color.primary._500, color.info._500, color.success._500, color.danger._500, color.warning._500]
     },
 	grid: {
 		x: {

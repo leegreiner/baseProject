@@ -1,65 +1,3 @@
-var myapp_get_color = {
-	primary_50: '#ccbfdf',
-	primary_100: '#beaed7',
-	primary_200: '#b19dce',
-	primary_300: '#a38cc6',
-	primary_400: '#967bbd',
-	primary_500: '#886ab5',
-	primary_600: '#7a59ad',
-	primary_700: '#6e4e9e',
-	primary_800: '#62468d',
-	primary_900: '#563d7c',
-	success_50: '#7aece0',
-	success_100: '#63e9db',
-	success_200: '#4de5d5',
-	success_300: '#37e2d0',
-	success_400: '#21dfcb',
-	success_500: '#1dc9b7',
-	success_600: '#1ab3a3',
-	success_700: '#179c8e',
-	success_800: '#13867a',
-	success_900: '#107066',
-	info_50: '#9acffa',
-	info_100: '#82c4f8',
-	info_200: '#6ab8f7',
-	info_300: '#51adf6',
-	info_400: '#39a1f4',
-	info_500: '#2196F3',
-	info_600: '#0d8aee',
-	info_700: '#0c7cd5',
-	info_800: '#0a6ebd',
-	info_900: '#0960a5',
-	warning_50: '#ffebc1',
-	warning_100: '#ffe3a7',
-	warning_200: '#ffdb8e',
-	warning_300: '#ffd274',
-	warning_400: '#ffca5b',
-	warning_500: '#ffc241',
-	warning_600: '#ffba28',
-	warning_700: '#ffb20e',
-	warning_800: '#f4a500',
-	warning_900: '#da9400',	
-	danger_50: '#feb7d9',
-	danger_100: '#fe9ecb',
-	danger_200: '#fe85be',
-	danger_300: '#fe6bb0',
-	danger_400: '#fd52a3',
-	danger_500: '#fd3995',
-	danger_600: '#fd2087',
-	danger_700: '#fc077a',
-	danger_800: '#e7026e',
-	danger_900: '#ce0262',
-	fusion_50: '#909090',
-	fusion_100: '#838383',
-	fusion_200: '#767676',
-	fusion_300: '#dimgray',
-	fusion_400: '#5d5d5d',
-	fusion_500: '#505050',
-	fusion_600: '#434343',
-	fusion_700: '#363636',
-	fusion_800: '#2a2a2a',
-	fusion_900: '#1d1d1d'	
-}
 //--------------------------------------------------------------------------
 // HEADSUP!
 // Please be sure to re-run gulp again if you do not see the config changes
@@ -68,7 +6,7 @@ var myapp_config = {
 	/*
 	APP VERSION
 	*/
-	VERSION: '4.0.1',
+	VERSION: '4.0.2',
 	/*
 	SAVE INSTANCE REFERENCE
 	Save a reference to the global object (window in the browser)
@@ -138,6 +76,10 @@ var myapp_config = {
 	Lower rate reels faster expansion of nav childs
 	*/
 	navSpeed: 500, //ms
+	/*
+	Color profile reference hook (needed for getting CSS value for theme colors in charts and various graphs)
+	*/
+	mythemeColorProfileID: $('#js-color-profile'),
 	/*
 	Nav close and open signs
 	This uses the fontawesome css class
@@ -622,9 +564,9 @@ var initApp = (function(app) {
 		}).keyup( $.debounce( myapp_config.filterDelay, function (e) {
 
 			/* fire the above change event after every letter is typed with a delay of 250ms */
-		 	$(this).change();
+			$(this).change();
 
-		 	/*if(e.keyCode == 13) {
+			/*if(e.keyCode == 13) {
 				console.log( $(list).find(".filter-show:not(.filter-hide) > a") );
 			}*/
 
@@ -949,9 +891,9 @@ var initApp = (function(app) {
 	 **/
 	 app.checkNavigationOrientation = function() {
 
-	 	/**
-	 	 * DOC: add the plugin with the following rules: fixed navigation is selected, top navigation is not active, minify nav is not active, 
-	 	 * and the device is desktop. We do not need to activate the plugin when loading from a mobile phone as it is not needed for touch screens.
+		/**
+		 * DOC: add the plugin with the following rules: fixed navigation is selected, top navigation is not active, minify nav is not active, 
+		 * and the device is desktop. We do not need to activate the plugin when loading from a mobile phone as it is not needed for touch screens.
 		 **/
 		switch ( true ) {
 
@@ -987,8 +929,8 @@ var initApp = (function(app) {
 			case ( myapp_config.navAnchor.parent().hasClass('slimScrollDiv') && myapp_config.thisDevice === 'desktop' && typeof $.fn.slimScroll !== 'undefined' ):
 
 				/* destroy the plugin if it is in violation of rules above */
-	    		myapp_config.navAnchor.slimScroll({ destroy: true });
-	    		myapp_config.navAnchor.attr('style', '');
+				myapp_config.navAnchor.slimScroll({ destroy: true });
+				myapp_config.navAnchor.attr('style', '');
 
 				/* clear event listners (IE bug) */
 				events = jQuery._data( myapp_config.navAnchor[0], "events" );
@@ -1206,6 +1148,15 @@ var initApp = (function(app) {
 	 **/
 	app.domReadyMisc = function() {
 
+		/* Add file name path to input files */
+		$('.custom-file input').change(function (e) {
+			var files = [];
+			for (var i = 0; i < $(this)[0].files.length; i++) {
+				files.push($(this)[0].files[i].name);
+			}
+			$(this).next('.custom-file-label').html(files.join(', '));
+		});
+
 		/* Give modal backdrop an extra class to make it customizable */
 		$('.modal-backdrop-transparent').on('show.bs.modal', function (e) {
 			setTimeout(function(){
@@ -1322,7 +1273,7 @@ var initApp = (function(app) {
 		}*/
 
 		/* 
-         * Disable popper.js's forced hardware accelaration styles
+		 * Disable popper.js's forced hardware accelaration styles
 		 */
 		if( typeof($.fn.dropdown) !== 'undefined'){ 
 			Popper.Defaults.modifiers.computeStyle.gpuAcceleration = false;
@@ -1334,7 +1285,7 @@ var initApp = (function(app) {
 		 * Dropdowns will not close on click
 		 * doc: close dropdowns on click outside hit area
 		 **/
-		$(document).on('click', '.dropdown-menu', function (e) {
+		$(document).on('click', '.dropdown-menu:not(.js-auto-close)', function (e) {
 			e.stopPropagation();
 		});
 
@@ -1345,7 +1296,7 @@ var initApp = (function(app) {
 		if (window.Waves && myapp_config.rippleEffect) {
 
 			Waves.attach('.nav-menu:not(.js-waves-off) a, .btn:not(.js-waves-off):not(.btn-switch), .js-waves-on', ['waves-themed']);
-    		Waves.init();
+			Waves.init();
 
 			if (myapp_config.debugState)
 				console.log("%c✔ Waves plugin active", "color: #148f32");	
@@ -1432,9 +1383,9 @@ var initApp = (function(app) {
 
 						selectedPanel.children('.panel-container').collapse('toggle')
 						.on('show.bs.collapse', function() {
-						  	selectedPanel.removeClass("panel-collapsed");
+							selectedPanel.removeClass("panel-collapsed");
 
-						  	if (myapp_config.debugState)
+							if (myapp_config.debugState)
 								console.log( "panel id:" + selectedPanel.attr('id') + " | action: uncollapsed" );
 
 						}).on('hidden.bs.collapse', function(){
@@ -1633,7 +1584,7 @@ var initApp = (function(app) {
 					case ( actiontype === 'app-fullscreen' ):
 
 						/* NOTE: this may not work for all browsers if the browser security does not permit it 
-					 	   IE issues: http://stackoverflow.com/questions/33732805/fullscreen-not-working-in-ie */
+						   IE issues: http://stackoverflow.com/questions/33732805/fullscreen-not-working-in-ie */
 
 						if (!document.fullscreenElement && !document.mozFullScreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement ) {
 
@@ -1717,7 +1668,7 @@ var initApp = (function(app) {
 		 * DOC: only show this if debug state tree
 		 **/
 		 if (myapp_config.debugState)
-		 	console.log("%c✔ Finished app.init() v" + myapp_config.VERSION + '\n' + "---------------------------", "color: #148f32");	
+			console.log("%c✔ Finished app.init() v" + myapp_config.VERSION + '\n' + "---------------------------", "color: #148f32");	
 	};
 
 	return app;
@@ -1790,7 +1741,8 @@ $(window).on('scroll', initApp.windowScrollEvents);
  * DOC: Fire when DOM is ready
  * Do not change order a, b, c, d...
  **/
-jQuery(document).ready(function() {
+
+document.addEventListener('DOMContentLoaded', function() {
 
 	/**
 	 * detect desktop or mobile 
@@ -1870,3 +1822,78 @@ $(window).on("blur focus", function(e) {
 
     $(this).data("prevType", e.type);
 })
+
+var color = {
+	primary: {
+		_50:  rgb2hex(myapp_config.mythemeColorProfileID.find('.color-primary-50').css('color'))  || '#ccbfdf',
+		_100: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-primary-100').css('color')) || '#beaed7',
+		_200: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-primary-200').css('color')) || '#b19dce',
+		_300: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-primary-300').css('color')) || '#a38cc6',
+		_400: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-primary-400').css('color')) || '#967bbd',
+		_500: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-primary-500').css('color')) || '#886ab5',
+		_600: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-primary-600').css('color')) || '#7a59ad',
+		_700: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-primary-700').css('color')) || '#6e4e9e',
+		_800: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-primary-800').css('color')) || '#62468d',
+		_900: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-primary-900').css('color')) || '#563d7c'
+	},
+	success: {
+		_50:  rgb2hex(myapp_config.mythemeColorProfileID.find('.color-success-50').css('color'))  || '#7aece0',
+		_100: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-success-100').css('color')) || '#63e9db',
+		_200: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-success-200').css('color')) || '#4de5d5',
+		_300: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-success-300').css('color')) || '#37e2d0',
+		_400: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-success-400').css('color')) || '#21dfcb',
+		_500: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-success-500').css('color')) || '#1dc9b7',
+		_600: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-success-600').css('color')) || '#1ab3a3',
+		_700: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-success-700').css('color')) || '#179c8e',
+		_800: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-success-800').css('color')) || '#13867a',
+		_900: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-success-900').css('color')) || '#107066'
+	},
+	info: {
+		_50:  rgb2hex(myapp_config.mythemeColorProfileID.find('.color-info-50').css('color'))  || '#9acffa',
+		_100: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-info-100').css('color')) || '#82c4f8',
+		_200: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-info-200').css('color')) || '#6ab8f7',
+		_300: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-info-300').css('color')) || '#51adf6',
+		_400: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-info-400').css('color')) || '#39a1f4',
+		_500: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-info-500').css('color')) || '#2196F3',
+		_600: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-info-600').css('color')) || '#0d8aee',
+		_700: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-info-700').css('color')) || '#0c7cd5',
+		_800: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-info-800').css('color')) || '#0a6ebd',
+		_900: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-info-900').css('color')) || '#0960a5'
+	},
+	warning: {
+		_50:  rgb2hex(myapp_config.mythemeColorProfileID.find('.color-warning-50').css('color'))  || '#ffebc1',
+		_100: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-warning-100').css('color')) || '#ffe3a7',
+		_200: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-warning-200').css('color')) || '#ffdb8e',
+		_300: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-warning-300').css('color')) || '#ffd274',
+		_400: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-warning-400').css('color')) || '#ffca5b',
+		_500: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-warning-500').css('color')) || '#ffc241',
+		_600: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-warning-600').css('color')) || '#ffba28',
+		_700: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-warning-700').css('color')) || '#ffb20e',
+		_800: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-warning-800').css('color')) || '#f4a500',
+		_900: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-warning-900').css('color')) || '#da9400'
+	},
+	danger: {
+		_50:  rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-50').css('color'))  || '#feb7d9',
+		_100: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-100').css('color')) || '#fe9ecb',
+		_200: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-200').css('color')) || '#fe85be',
+		_300: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-300').css('color')) || '#fe6bb0',
+		_400: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-400').css('color')) || '#fd52a3',
+		_500: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-500').css('color')) || '#fd3995',
+		_600: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-600').css('color')) || '#fd2087',
+		_700: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-700').css('color')) || '#fc077a',
+		_800: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-800').css('color')) || '#e7026e',
+		_900: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-danger-900').css('color')) || '#ce0262'
+	},
+	fusion: {
+		_50:  rgb2hex(myapp_config.mythemeColorProfileID.find('.color-fusion-50').css('color'))  || '#909090',
+		_100: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-fusion-100').css('color')) || '#838383',
+		_200: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-fusion-200').css('color')) || '#767676',
+		_300: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-fusion-300').css('color')) || '#696969',
+		_400: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-fusion-400').css('color')) || '#5d5d5d',
+		_500: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-fusion-500').css('color')) || '#505050',
+		_600: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-fusion-600').css('color')) || '#434343',
+		_700: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-fusion-700').css('color')) || '#363636',
+		_800: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-fusion-800').css('color')) || '#2a2a2a',
+		_900: rgb2hex(myapp_config.mythemeColorProfileID.find('.color-fusion-900').css('color')) || '#1d1d1d'
+	}
+}

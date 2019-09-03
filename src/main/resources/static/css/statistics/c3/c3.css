@@ -52,6 +52,9 @@
   stroke-width: 1px; }
 
 /*-- Point --*/
+.c3-circle {
+  fill: currentColor; }
+
 .c3-circle._expanded_ {
   stroke-width: 1px;
   stroke: white; }
