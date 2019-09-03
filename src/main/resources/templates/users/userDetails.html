@@ -56,7 +56,10 @@
               </div>
 
               <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row">
-	              <a th:href="@{'/users/' + ${user.id}(action='edit')}" class="btn btn-primary ml-auto" th:classappend="${user.id == #authentication.getPrincipal().getUserId() ? 'disabled' : ''}" th:text="#{edit}">edit</a>
+	              <a th:href="@{/users/{userId}(userId=${user.id}, action='edit')}" class="btn btn-primary ml-auto"
+                 th:classappend="${user.id == #authentication.getPrincipal().getUserId() ? 'disabled' : ''}">
+                 <i class="fa fa-pen"></i> <span th:text="#{edit}">edit</span>
+                </a>
               </div>
             </div>
           </div>
