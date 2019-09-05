@@ -1,11 +1,13 @@
 package edu.duke.rs.baseProject.user;
 
 import static com.spencerwi.hamcrestJDK8Time.matchers.IsAfter.after;
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.collection.IsArrayContaining.hasItemInArray;
 import static org.junit.Assert.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
@@ -23,11 +25,18 @@ import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import com.icegreen.greenmail.util.GreenMail;
+import com.icegreen.greenmail.util.ServerSetup;
 
 import edu.duke.rs.baseProject.AbstractWebIntegrationTest;
 import edu.duke.rs.baseProject.UserDetailsBuilder;
@@ -38,6 +47,7 @@ import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.role.RoleRepository;
 
 public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
+  private GreenMail smtpServer;
   @Autowired
   private UserRepository userRepository;
   @Autowired
@@ -47,6 +57,13 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   @Before
   public void init() {
     role = roleRepository.save(new Role(RoleName.USER));
+    smtpServer = new GreenMail(new ServerSetup(25, null, "smtp"));
+    smtpServer.start();
+  }
+  
+  @After
+  public void tearDown() throws Exception {
+    smtpServer.stop();
   }
   
   @Test
@@ -151,6 +168,17 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     assertThat(actual.getTimeZone(), equalTo(expected.getTimeZone()));
     assertThat(actual.getUserName(), equalTo(expected.getUserName()));
     assertThat(actual.getVersion(), notNullValue());
+    
+    final MimeMessage[] receivedMessages = pollForEmail(smtpServer);
+    
+    assertThat(1, equalTo(receivedMessages.length));
+    final MimeMessage receivedMessage = receivedMessages[0];
+    
+    assertThat(1, equalTo(receivedMessages.length));
+    assertThat((String) receivedMessage.getContent(), containsString(actual.getPasswordChangeId().toString()));
+    assertThat(receivedMessage.getAllRecipients(), hasItemInArray(new InternetAddress(actual.getEmail())));
+    assertThat(receivedMessage.getSubject(),containsString("DTS"));
+    assertThat(receivedMessage.getFrom(), hasItemInArray(new InternetAddress(defaultMailFrom)));
   }
   
   @Test

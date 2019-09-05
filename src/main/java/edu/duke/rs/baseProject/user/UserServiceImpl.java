@@ -19,6 +19,7 @@ import edu.duke.rs.baseProject.role.RoleRepository;
 import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.security.password.PasswordGenerator;
+import edu.duke.rs.baseProject.user.passwordReset.PasswordResetService;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,14 +28,17 @@ public class UserServiceImpl implements UserService {
 	private transient final UserRepository userRepository;
 	private transient final RoleRepository roleRepository;
 	private transient final PasswordGenerator passwordGenerator;
+	private transient final PasswordResetService passwordResetService;
 	private transient final ApplicationEventPublisher eventPublisher;
 	
 	public UserServiceImpl(final UserRepository userRepository,
 	    final RoleRepository roleRepository, final PasswordGenerator passwordGenerator,
+	    final PasswordResetService passwordResetService,
 	    final ApplicationEventPublisher eventPublisher) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.passwordGenerator = passwordGenerator;
+		this.passwordResetService = passwordResetService;
 		this.eventPublisher = eventPublisher;
 	}
 	
@@ -118,6 +122,7 @@ public class UserServiceImpl implements UserService {
     user.setPassword(this.passwordGenerator.generate());
     user.setTimeZone(userDto.getTimeZone());
     user.setUserName(userDto.getUserName().trim());
+    passwordResetService.initiatePasswordReset(user);
     
     populateRoles(userDto, user);
     

@@ -15,10 +15,17 @@
 	          </div>
           </div>
           
+          <div th:if="${param.passwordResetInitiated}" class="alert alert-success alert-dismissible fade show" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true"><i class="fal fa-times"></i></span>
+            </button>
+            <span th:inline="text"><strong>[[#{success}]]</strong> [[#{message.passwordResetInitiated}]]</span>
+          </div>
+          
 			    <form th:action="@{/login}" method="post" id="loginForm" class="needs-validation" novalidate autocomplete="off">
 			      <div class="form-group">
 			        <label th:text="#{userName}" class="form-label" for="userName">User name</label>
-			        <input type="text" id="username" name="username" class="form-control form-control-lg" autofocus="autofocus" required>
+			        <input type="text" id="username" name="username" class="form-control form-control-lg" autofocus="autofocus" tabindex="1" required>
 			        <div class="invalid-feedback">
                 <th:block th:text="#{validation.required.userName}"></th:block>
               </div>
@@ -26,18 +33,18 @@
 			      
 			      <div class="form-group">
 			        <label th:text="#{password}" class="form-label" for="password">Pwd</label>
-			        <input type="password" id="password" name="password" class="form-control form-control-lg" required>
+			        <input type="password" id="password" name="password" class="form-control form-control-lg" tabindex="2" required>
 			        <div class="invalid-feedback">
                 <th:block th:text="#{validation.required.password}"></th:block>
               </div>
 			      </div>
 			      
 			      <div class="form-group">
-	            <a th:text="#{forgotYourPassword}"href="#">Forgot password?</a>
+	            <a th:text="#{forgotYourPassword}" th:href="@{/users/pwdreset}" tabindex="4">Forgot password?</a>
 	          </div>
 			      
 			      <div class="row no-gutters">
-			        <button th:text="#{login}" type="submit" class="btn btn-primary btn-block btn-lg">AAA</button>
+			        <button th:text="#{login}" type="submit" class="btn btn-primary btn-block btn-lg" tabindex="3">AAA</button>
 			      </div>
 			    </form>
 			  </div>

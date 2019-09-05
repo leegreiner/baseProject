@@ -9,27 +9,31 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
-import edu.duke.rs.baseProject.jobs.NoOpJob;
+import edu.duke.rs.baseProject.user.passwordReset.ExpirePasswordChangeIdsJob;
 
 @Configuration
 @Profile("!test")
 public class QuartzConfig {
 
   @Bean
-  public JobDetail noOpJobDetail() {
+  @Profile("!samlSecurity")
+  public JobDetail expirePasswordChangeIdsDetail() {
     return JobBuilder
-        .newJob(NoOpJob.class)
-        .withIdentity("NoOpJob")
+        .newJob(ExpirePasswordChangeIdsJob.class)
+        .withIdentity("ExpirePasswordChangeIdsJob")
         .storeDurably()
         .build();
   }
 
-  @Bean Trigger noOpJobTrigger(JobDetail noOpJobDetail) {
+  @Bean
+  @Profile("!samlSecurity")
+  public Trigger expirePasswordChangeIdsJobTrigger(JobDetail expirePasswordChangeIdsDetail) {
     return TriggerBuilder
         .newTrigger()
-        .forJob(noOpJobDetail)
-        .withIdentity("NoOpJobTrigger")
-        .withSchedule(CronScheduleBuilder.cronSchedule("0 * * * * ?"))
+        .forJob(expirePasswordChangeIdsDetail)
+        .withIdentity("ExpirePasswordChangeIdsJobTrigger")
+        // run hourly on the hour
+        .withSchedule(CronScheduleBuilder.cronSchedule("0 0 * ? * * *"))
         .build();
   }
 }

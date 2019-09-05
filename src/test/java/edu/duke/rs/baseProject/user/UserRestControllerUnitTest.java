@@ -39,7 +39,7 @@ import edu.duke.rs.baseProject.security.ErrorInfo;
 import edu.duke.rs.baseProject.util.HttpUtils;
 
 @WebMvcTest(UserRestController.class)
-public class UserRestControllerTest extends AbstractWebUnitTest {
+public class UserRestControllerUnitTest extends AbstractWebUnitTest {
   @MockBean
   private UserRepository userRepositoryMock;
   @Autowired

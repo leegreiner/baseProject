@@ -4,7 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum MessageType {
-  TEST("testEmail");
+  TEST("testEmail"),
+  PASSWORD_RESET_INITIATED("passwordResetInitiated"),
+  NEW_USER("newUser");
   
   private String name;
   

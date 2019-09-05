@@ -50,6 +50,7 @@ spring:
     
   quartz:    job-store-type: jdbc
     overwrite-existing-jobs: true
+    jdbc:      initialize-schema: always
     scheduler-name: baseProjectScheduler
     startup-delay: 20
     properties:      org:
@@ -94,18 +95,6 @@ server:  compression:    enabled: true
       request-attributes-enabled: true
       rotate: true
       suffix: .log
-
-saml:
-  sso:
-    default-success-url: /home
-    default-failure-url: /error?error=404
-    idp-selection-page-url: /idpselection
-    idp:
-      metadata-location: classpath:/security/idp-duke.xml
-    metadata-manager:
-      refresh-check-interval: 0
-    extended-metadata:
-      idp-discovery-enabled: false
     
 management:
   endpoints:    web:      exposure:        include: '*'
@@ -130,6 +119,8 @@ app:
     userName: mgmt_user
 # changeMe1
     password: '{cipher}8595c9f67620ea4ed95370dca6c87ad9317f8bc4b035e9971b71d47a1632bd73'
+  passwordExpirationDays: 90
+  resetPasswordExpirationDays: 2
   security:
     password:
       minLength: 8
@@ -138,14 +129,11 @@ app:
       numberUpperCase: 1
       numberDigits: 1
       numberSpecial: 0
+      
 ---
-spring:  profiles: local
-  resources:    cache:      cachecontrol:        no-cache: true
-  jpa:    show-sql: true
-    hibernate:      ddl-auto: create-drop
-    properties:      hibernate:
-        format_sql: true
-        show_sql: true
+spring:
+  profiles: samlSecurity
+  
 saml:
   sso:
     metadata-generator:
@@ -155,6 +143,15 @@ saml:
     key-manager:
       private-key-der-location: classpath:/security/private-local.der
       public-key-pem-location: classpath:/security/public-local.cert
+  
+---
+spring:  profiles: local
+  resources:    cache:      cachecontrol:        no-cache: true
+  jpa:    show-sql: true
+    hibernate:      ddl-auto: create-drop
+    properties:      hibernate:
+        format_sql: true
+        show_sql: true
     
 logging:
   level:
@@ -165,6 +162,7 @@ logging:
 app:
   google:
     analysicsTrackingId: UA-143586895-1
+  url: 'https://localhost:8443'
     
 ---
 
@@ -208,8 +206,11 @@ server:
     key-store-password:
     
 app:
+  google:
+    analysicsTrackingId: None
   management:
     userName: mgmt_user
     password: changeMe1
-  google:
-    analysicsTrackingId: None
+  passwordExpirationDays: 90
+  resetPasswordExpirationDays: 2
+  url: https://localhost

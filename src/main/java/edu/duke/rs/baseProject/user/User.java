@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -62,7 +63,7 @@ public class User extends BaseEntity implements Serializable {
 	@Column(name = "user_name", length = 30, nullable = false)
 	@NonNull
 	@NotBlank
-	@Size(min = 8, max = 30)
+	@Size(min = 4, max = 30)
 	@Include
 	private String userName;
 	
@@ -104,6 +105,16 @@ public class User extends BaseEntity implements Serializable {
 	
 	@Column(name = "last_logged_in")
 	private LocalDateTime lastLoggedIn;
+	
+	@Column(name = "last_password_change")
+  private LocalDateTime lastPasswordChange;
+	
+	@Column(name = "password_change_id", length = 36, nullable = true)
+	@Type(type = "uuid-char")
+	private UUID passwordChangeId;
+	
+	@Column(name = "password_chg_id_create_time", nullable = true)
+	private LocalDateTime passwordChangeIdCreationTime;
 	
 	@ManyToMany
 	@JoinTable(name = "users_to_roles",

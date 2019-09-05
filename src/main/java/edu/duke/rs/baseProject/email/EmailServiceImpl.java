@@ -47,7 +47,7 @@ public class EmailServiceImpl implements EmailService {
         messageHelper.setBcc(bcc.stream().toArray(String[]::new));
       }
       messageHelper.setSubject(subject);
-      messageHelper.setText(contentBuilder.build(messageType, content == null ? Collections.emptyMap() : content));
+      messageHelper.setText(contentBuilder.build(messageType, content == null ? Collections.emptyMap() : content), true);
     };
     
     try {

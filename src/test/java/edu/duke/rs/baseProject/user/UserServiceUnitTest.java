@@ -40,6 +40,7 @@ import edu.duke.rs.baseProject.role.RoleRepository;
 import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.security.password.PasswordGenerator;
+import edu.duke.rs.baseProject.user.passwordReset.PasswordResetService;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*"})
@@ -54,6 +55,8 @@ public class UserServiceUnitTest {
   @Mock
   private PasswordGenerator passwordGenerator;
   @Mock
+  private PasswordResetService passwordResetService;
+  @Mock
   private ApplicationEventPublisher eventPublisher;
   
   private UserServiceImpl service;
@@ -62,7 +65,7 @@ public class UserServiceUnitTest {
   public void init() {
     MockitoAnnotations.initMocks(this);
     mockStatic(SecurityUtils.class);
-    service = new UserServiceImpl(userRepository, roleRepository, passwordGenerator, eventPublisher);
+    service = new UserServiceImpl(userRepository, roleRepository, passwordGenerator, passwordResetService, eventPublisher);
   }
   
   @Test(expected = IllegalArgumentException.class)
@@ -292,10 +295,12 @@ public class UserServiceUnitTest {
     verify(roleRepository, times(1)).findByName(role.getName());
     verify(userRepository, times(1)).save(any(User.class));
     verify(passwordGenerator, times(1)).generate();
+    verify(passwordResetService, times(1)).initiatePasswordReset(any(User.class));
     verify(eventPublisher, times(1)).publishEvent(any(CreatedEvent.class));
     verifyNoMoreInteractions(userRepository);
     verifyNoMoreInteractions(roleRepository);
     verifyNoMoreInteractions(passwordGenerator);
+    verifyNoMoreInteractions(passwordResetService);
     verifyNoMoreInteractions(eventPublisher);
   }
   
