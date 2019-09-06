@@ -15,7 +15,7 @@ import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 
 public class LocalDateTimeStringSerializer extends JsonSerializer<LocalDateTime> {
-  private static final String DATE_FORMAT = "MM/dd/yyyy HH:mm z";
+  private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm";
   public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern(DATE_FORMAT);
   
   public LocalDateTimeStringSerializer() {

@@ -8,13 +8,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.format.Formatter;
 
 import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
+import edu.duke.rs.baseProject.util.DateUtils;
 
 public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
-  public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("dd/MMM/yyyy HH:mm z");
+  public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
   
   @Override
   public String print(LocalDateTime dateTime, Locale locale) {
@@ -38,6 +40,19 @@ public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
 
   @Override
   public LocalDateTime parse(String text, Locale locale) throws ParseException {
-    throw new ParseException("Formating not supported", 0);
+    if (StringUtils.isBlank(text)) {
+      return null;
+    }
+    
+    final Optional<AppPrincipal> currentUser = SecurityUtils.getPrincipal();
+    ZoneId zoneId;
+    
+    if (currentUser.isPresent()) {
+      zoneId = currentUser.get().getTimeZone().toZoneId();
+    } else {
+      zoneId = ZoneId.systemDefault();
+    }
+    
+    return DateUtils.convertToZone(LocalDateTime.parse(text, FORMATTER), zoneId, ZoneId.systemDefault());
   }
 }
