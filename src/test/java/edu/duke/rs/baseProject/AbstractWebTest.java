@@ -4,6 +4,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.fasterxml.jackson.module.mrbean.MrBeanModule;
 
 @RunWith(SpringRunner.class)
@@ -15,5 +16,6 @@ public abstract class AbstractWebTest extends AbstractBaseTest {
   static {
     mapper = new ObjectMapper();
     mapper.registerModule(new MrBeanModule());
+    mapper.registerModule(new JavaTimeModule());
   };
 }

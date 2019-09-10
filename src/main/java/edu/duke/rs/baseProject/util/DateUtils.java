@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -15,6 +16,9 @@ import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 
 public class DateUtils {
+  public static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
+  public static final DateTimeFormatter DEFAULT_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT);
+  
   public static void convertLocalDateTimeToCurrentUserTime(final Object object) {
     final ZoneId currentUserZoneId = getCurrentUserZoneId();
     

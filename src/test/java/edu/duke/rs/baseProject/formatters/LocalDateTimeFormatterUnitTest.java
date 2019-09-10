@@ -24,6 +24,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
 
 import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
+import edu.duke.rs.baseProject.util.DateUtils;
 
 @RunWith(PowerMockRunner.class)
 @PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*"})
@@ -55,7 +56,7 @@ public class LocalDateTimeFormatterUnitTest {
     
     final ZonedDateTime systemZonedDateTime = ZonedDateTime.of(now, ZoneId.systemDefault());
     
-    final String expected = LocalDateTimeFormatter.FORMATTER.format(systemZonedDateTime.withZoneSameInstant(ZoneId.systemDefault()));
+    final String expected = DateUtils.DEFAULT_DATE_TIME_FORMATTER.format(systemZonedDateTime.withZoneSameInstant(ZoneId.systemDefault()));
     
     assertThat(actual, equalTo(expected));
   }
@@ -71,7 +72,7 @@ public class LocalDateTimeFormatterUnitTest {
     
     final ZonedDateTime systemZonedDateTime = ZonedDateTime.of(now, ZoneId.systemDefault());
     
-    final String expected = LocalDateTimeFormatter.FORMATTER.format(systemZonedDateTime.withZoneSameInstant(ZONE_ID));
+    final String expected = DateUtils.DEFAULT_DATE_TIME_FORMATTER.format(systemZonedDateTime.withZoneSameInstant(ZONE_ID));
     
     assertThat(actual, equalTo(expected));
   }

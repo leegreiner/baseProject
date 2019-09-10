@@ -4,7 +4,6 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -16,8 +15,6 @@ import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.util.DateUtils;
 
 public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
-  public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
-  
   @Override
   public String print(LocalDateTime dateTime, Locale locale) {
     if (dateTime == null) {
@@ -35,7 +32,7 @@ public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
     
     final ZonedDateTime systemZonedDateTime = ZonedDateTime.of(dateTime, ZoneId.systemDefault());
     
-    return FORMATTER.format(systemZonedDateTime.withZoneSameInstant(zoneId));
+    return DateUtils.DEFAULT_DATE_TIME_FORMATTER.format(systemZonedDateTime.withZoneSameInstant(zoneId));
   }
 
   @Override
@@ -53,6 +50,6 @@ public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
       zoneId = ZoneId.systemDefault();
     }
     
-    return DateUtils.convertToZone(LocalDateTime.parse(text, FORMATTER), zoneId, ZoneId.systemDefault());
+    return DateUtils.convertToZone(LocalDateTime.parse(text, DateUtils.DEFAULT_DATE_TIME_FORMATTER), zoneId, ZoneId.systemDefault());
   }
 }
