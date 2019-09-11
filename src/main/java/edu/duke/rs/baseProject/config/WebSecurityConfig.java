@@ -116,7 +116,8 @@ public class WebSecurityConfig {
           .authorizeRequests()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
             .antMatchers("/", "/error/**", "/webfonts/**", "/img/**", "/loginPage", "/users/pwdreset").permitAll()
-            .anyRequest().hasAuthority(RoleName.USER.name())
+            .antMatchers("/users/**").hasRole(RoleName.ADMINISTRATOR.name())
+            .anyRequest().authenticated()
         .and()
           .formLogin()
             .loginProcessingUrl("/login")
@@ -141,10 +142,10 @@ public class WebSecurityConfig {
       final AjaxAwareExceptionMappingAuthenticationHandler handler = new AjaxAwareExceptionMappingAuthenticationHandler();
       final Map<String, String> failureMap = new HashMap<>();
       
-      failureMap.put(AccountExpiredException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountExpired");
-      failureMap.put(CredentialsExpiredException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=credentialsExpired");
-      failureMap.put(DisabledException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountDisabled");
-      failureMap.put(LockedException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountLocked");
+      failureMap.put(AccountExpiredException.class.getName(), ApplicationErrorController.ERROR_MAPPING + "?error=accountExpired");
+      failureMap.put(CredentialsExpiredException.class.getName(), ApplicationErrorController.ERROR_MAPPING + "?error=credentialsExpired");
+      failureMap.put(DisabledException.class.getName(), ApplicationErrorController.ERROR_MAPPING + "?error=accountDisabled");
+      failureMap.put(LockedException.class.getName(), ApplicationErrorController.ERROR_MAPPING + "?error=accountLocked");
       
       handler.setExceptionMappings(failureMap);
       handler.setDefaultFailureUrl(LOGIN_PAGE + "?error=true");
@@ -207,14 +208,14 @@ public class WebSecurityConfig {
       final AjaxAwareExceptionMappingAuthenticationHandler handler = new AjaxAwareExceptionMappingAuthenticationHandler();
       final Map<String, String> failureMap = new HashMap<>();
       
-      failureMap.put(AccountExpiredException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountExpired");
-      failureMap.put(CredentialsExpiredException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=credentialsExpired");
-      failureMap.put(DisabledException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountDisabled");
-      failureMap.put(LockedException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountLocked");
-      failureMap.put(UsernameNotFoundException.class.getName(), ApplicationErrorController.ERROR_PATH + "?error=accountNotFound");
+      failureMap.put(AccountExpiredException.class.getName(), ApplicationErrorController.ERROR_MAPPING + "?error=accountExpired");
+      failureMap.put(CredentialsExpiredException.class.getName(), ApplicationErrorController.ERROR_MAPPING + "?error=credentialsExpired");
+      failureMap.put(DisabledException.class.getName(), ApplicationErrorController.ERROR_MAPPING + "?error=accountDisabled");
+      failureMap.put(LockedException.class.getName(), ApplicationErrorController.ERROR_MAPPING + "?error=accountLocked");
+      failureMap.put(UsernameNotFoundException.class.getName(), ApplicationErrorController.ERROR_MAPPING + "?error=accountNotFound");
       
       handler.setExceptionMappings(failureMap);
-      handler.setDefaultFailureUrl(ApplicationErrorController.ERROR_PATH);
+      handler.setDefaultFailureUrl(ApplicationErrorController.ERROR_MAPPING);
       
       return handler;
     }
@@ -227,7 +228,7 @@ public class WebSecurityConfig {
 	
 	@Bean
   public static AccessDeniedHandler accessDeniedHandler() {
-    return new AjaxAwareAccessDeniedHandler(ApplicationErrorController.ERROR_PATH, HomeController.HOME_MAPPING);
+    return new AjaxAwareAccessDeniedHandler(ApplicationErrorController.ERROR_MAPPING + "?error=403", HomeController.HOME_MAPPING);
   }
 	
 	@Bean

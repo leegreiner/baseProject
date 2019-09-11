@@ -13,6 +13,7 @@ import edu.duke.rs.baseProject.user.User;
 
 public class AppPrincipal implements UserDetails {
 	private static final long serialVersionUID = 1L;
+	private static final String ROLE_PREFIX = "ROLE_";
 	private final User user;
 	private final boolean passwordExpired;
 	private final Collection<SimpleGrantedAuthority> authorities;
@@ -23,7 +24,7 @@ public class AppPrincipal implements UserDetails {
 		authorities = new ArrayList<SimpleGrantedAuthority>();
 		
 		for (final Role role : user.getRoles()) {
-			authorities.add(new SimpleGrantedAuthority(role.getName().name()));
+			authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + role.getName().name()));
 		}
 	}
 	

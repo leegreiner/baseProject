@@ -7,7 +7,6 @@ import java.util.Map;
 
 import javax.validation.Valid;
 
-import org.apache.commons.lang.WordUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -131,7 +130,7 @@ public class UserController extends BaseWebController {
 	  final List<Role> roles = this.userService.getRoles();
 	  final Map<String, String> roleMap = new HashMap<String, String>();
 	  
-	  roles.stream().forEach(r -> roleMap.put(r.getName().name(), WordUtils.capitalize(r.getName().name().toLowerCase())));
+	  roles.stream().forEach(r -> roleMap.put(r.getName().name(), r.getName().getName()));
 	  
 	  model.addAttribute(ROLES_MODEL_ATTRIBUTE, roleMap);
 	}

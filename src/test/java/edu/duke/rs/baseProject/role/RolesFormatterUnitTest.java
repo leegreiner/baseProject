@@ -8,12 +8,7 @@ import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import org.apache.commons.lang.WordUtils;
 import org.junit.Test;
-
-import edu.duke.rs.baseProject.role.Role;
-import edu.duke.rs.baseProject.role.RoleName;
-import edu.duke.rs.baseProject.role.RolesFormatter;
 
 public class RolesFormatterUnitTest {
   private static final RolesFormatter formatter = new RolesFormatter();
@@ -32,12 +27,13 @@ public class RolesFormatterUnitTest {
   public void whenRolesPassed_thenCommaSeparatedRoleNamesReturned() {
     final Set<Role> roles = new HashSet<Role>();
     final Role role1 = new Role(RoleName.USER);
+    final Role role2 = new Role(RoleName.ADMINISTRATOR);
     roles.add(role1);
+    roles.add(role2);
     
-    //TODO need to update test when more than one role
     final String actual = formatter.print(roles, Locale.getDefault());
     
-    assertThat(actual, equalTo(WordUtils.capitalize(role1.getName().name().toLowerCase())));
+    assertThat(actual, equalTo(RoleName.ADMINISTRATOR.getName() + ", " + RoleName.USER.getName()));
   }
   
   @Test(expected = ParseException.class)

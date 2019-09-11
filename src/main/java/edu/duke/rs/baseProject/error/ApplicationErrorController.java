@@ -15,11 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 public class ApplicationErrorController extends BaseWebController implements ErrorController {
-	public static final String ERROR_PATH = "/error";
+	public static final String ERROR_MAPPING = "/error";
 	public static final String BASE_ERROR_VIEW = "error";
 	public static final String ERROR_VIEW_PARAM = "error";
 
-	@GetMapping(ERROR_PATH)
+	@GetMapping(ERROR_MAPPING)
 	public String handleError(final HttpServletRequest request) {
 	  log.error("In handleError(): " + request.toString());
 		final Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
@@ -53,6 +53,6 @@ public class ApplicationErrorController extends BaseWebController implements Err
   }
 	
 	public String getErrorPath() {
-		return ERROR_PATH;
+		return ERROR_MAPPING;
 	}
 }

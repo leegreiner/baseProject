@@ -73,9 +73,9 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   }
   
   @Test
-  public void whenAuthenticated_thenUsersReturned() throws Exception {
+  public void whenAdminitrator_thenUsersReturned() throws Exception {
     this.mockMvc.perform(get(UserController.USERS_MAPPING)
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USERS_VIEW));
   }
@@ -86,9 +86,9 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
       .andExpect(status().isFound())
       .andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));
   }
-  
+
   @Test
-  public void whenAuthenticated_thenUserDetailsReturned() throws Exception { 
+  public void whenAdministrator_thenUserDetailsReturned() throws Exception { 
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
     
@@ -96,7 +96,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     user = userRepository.save(user);
     
     this.mockMvc.perform(get(UserController.USER_MAPPING, user.getId())
-      .with(user(UserDetailsBuilder.build(user.getId(), RoleName.USER))))
+      .with(user(UserDetailsBuilder.build(user.getId(), RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USER_DETAILS_VIEW))
       .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, equalTo(user)));
@@ -111,10 +111,10 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   }
   
   @Test
-  public void whenAuthenticated_thenNewUserDisplayReturned() throws Exception {    
+  public void whenAdministrator_thenNewUserDisplayReturned() throws Exception {    
     this.mockMvc.perform(get(UserController.USERS_MAPPING)
         .param(UserController.ACTION_REQUEST_PARAM, "new")
-      .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))
+      .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.NEW_USER_VIEW))
       .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
@@ -130,12 +130,12 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   }
   
   @Test
-  public void whenAuthenticated_thenNewUserCreatesUser() throws Exception {
+  public void whenAdministrator_thenNewUserCreatesUser() throws Exception {
     final UserDto expected = buildUserDto();
     
     final MvcResult result = this.mockMvc.perform(post(UserController.USERS_MAPPING)
         .with(csrf())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER)))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR)))
         .param("email", expected.getEmail())
         .param("firstName", expected.getFirstName())
         .param("lastName", expected.getLastName())
@@ -168,7 +168,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     assertThat(actual.getTimeZone(), equalTo(expected.getTimeZone()));
     assertThat(actual.getUserName(), equalTo(expected.getUserName()));
     assertThat(actual.getVersion(), notNullValue());
-    
+
     final MimeMessage[] receivedMessages = pollForEmail(smtpServer);
     
     assertThat(1, equalTo(receivedMessages.length));
@@ -190,7 +190,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   }
   
   @Test
-  public void whenAuthenticated_thenUpdateUserUpdatesUser() throws Exception {
+  public void whenAdministrator_thenUpdateUserUpdatesUser() throws Exception {
     final UserDto expected = buildUserDto();
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
@@ -203,7 +203,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     
     final MvcResult result = this.mockMvc.perform(put(UserController.USER_MAPPING, user.getId())
         .with(csrf())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER)))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR)))
         .param("email", expected.getEmail())
         .param("firstName", expected.getFirstName())
         .param("id", expected.getId().toString())

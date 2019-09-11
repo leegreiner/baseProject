@@ -5,7 +5,6 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang.WordUtils;
 import org.springframework.format.Formatter;
 
 public class RolesFormatter implements Formatter<Set<Role>> {
@@ -16,7 +15,10 @@ public class RolesFormatter implements Formatter<Set<Role>> {
     }
     
     return roles.stream()
-        .map(role -> WordUtils.capitalize(role.getName().name().toLowerCase()))
+      .sorted((r1, r2) -> r1.getName().getName().compareTo(r2.getName().getName()))
+      .collect(Collectors.toList())
+      .stream()
+        .map(role -> role.getName().getName())
         .collect(Collectors.joining(", "));
   }
 

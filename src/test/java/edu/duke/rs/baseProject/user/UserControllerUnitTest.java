@@ -33,7 +33,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.MessageSource;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -59,11 +58,37 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
       .andExpect(status().isFound())
       .andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));
   }
+  
+  @Test
+  public void whenNotAdministrator_thenUsersRedirectsToErrorPage() throws Exception {
+    final UserDto expected = buildUserDto();
+    
+    for (int i = 0; i < RoleName.values().length; i++) {
+      final RoleName roleName = RoleName.values()[i];
+      
+      if (roleName != RoleName.ADMINISTRATOR) {
+        final MvcResult result = this.mockMvc.perform(post(UserController.USERS_MAPPING)
+            .with(csrf())
+            .with(user(UserDetailsBuilder.build(Long.valueOf(1), roleName)))
+            .param("email", expected.getEmail())
+            .param("firstName", expected.getFirstName())
+            .param("lastName", expected.getLastName())
+            .param("middleInitial", expected.getMiddleInitial())
+            .param("roles", expected.getRoles().get(0))
+            .param("timeZone", expected.getTimeZone().getID())
+            .param("userName", expected.getUserName()))
+            .andExpect(status().isFound())
+            .andReturn();
+        
+        assertThat(result.getResponse().getRedirectedUrl(), equalTo(NOT_AUTORIZED_MAPPING));
+      }
+    }
+  }
 
   @Test
-  public void whenAuthenticated_thenUsersPagePresented() throws Exception {
+  public void whenAdministrator_thenUsersPagePresented() throws Exception {
     this.mockMvc.perform(get(UserController.USERS_MAPPING)
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USERS_VIEW));
   }
@@ -76,12 +101,29 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   }
   
   @Test
+  public void whenNotAdminitrator_thenUserDetailsRedirectsErrorPage() throws Exception {
+    for (int i = 0; i < RoleName.values().length; i++) {
+      final RoleName roleName = RoleName.values()[i];
+      
+      if (roleName != RoleName.ADMINISTRATOR) {
+        final MvcResult result = this.mockMvc.perform(get(UserController.USER_MAPPING, 1L)
+            .with(user(UserDetailsBuilder.build(1L, roleName))))
+        .andExpect(status().isFound())
+        .andExpect(status().isFound())
+        .andReturn();
+    
+        assertThat(result.getResponse().getRedirectedUrl(), equalTo(NOT_AUTORIZED_MAPPING));
+      }
+    }
+  }
+  
+  @Test
   public void whenAuthenticatedButRequestingNonexistantUser_thenExceptionErrorPageReturned() throws Exception {
     final Long userId = Long.valueOf(1);
     when(userService.getUser(userId)).thenThrow(new NotFoundException("error.principalNotFound", (Object[])null));
     
     this.mockMvc.perform(get(UserController.USER_MAPPING, userId)
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(ExceptionController.EXCEPTION_ERROR_VIEW))
       .andExpect(model().attribute(ExceptionController.EXCEPTION_MESSAGE_ATTRIBUTE, notNullValue()));
@@ -98,7 +140,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     when(userService.getUser(user.getId())).thenReturn(user);
     
     this.mockMvc.perform(get(UserController.USER_MAPPING, user.getId())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USER_DETAILS_VIEW))
       .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, equalTo(user)));
@@ -108,7 +150,6 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   }
   
   @Test
-  @WithMockUser(username = "test", authorities = { "USER" })
   public void whenUserDetailsThrowsApplicationException_thenErrorViewReturned() throws Exception {
     final User user = new User();
     user.setId(Long.valueOf(1));
@@ -117,7 +158,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     when(userService.getUser(user.getId())).thenThrow(new NotFoundException(errorMessage, (Object[])null));
     
     final MvcResult result = this.mockMvc.perform(get(UserController.USER_MAPPING, user.getId())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(ExceptionController.EXCEPTION_ERROR_VIEW))
       .andReturn();
@@ -127,7 +168,6 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   }
   
   @Test
-  @WithMockUser(username = "test", authorities = { "USER" })
   public void whenUserDetailsThrowsException_thenErrorViewReturned() throws Exception {
     final User user = new User();
     user.setId(Long.valueOf(1));
@@ -135,7 +175,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     when(userService.getUser(user.getId())).thenThrow(new NullPointerException());
     
     final MvcResult result = this.mockMvc.perform(get(UserController.USER_MAPPING, user.getId())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(ExceptionController.EXCEPTION_ERROR_VIEW))
       .andReturn();
@@ -145,7 +185,6 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   }
   
   @Test
-  @WithMockUser(username = "test", authorities = { "USER" })
   public void whenGetUserForUpdate_thenEditUserPageReturned() throws Exception {
     final Role role = new Role(RoleName.USER);
     final Set<Role> roles = new HashSet<Role>();
@@ -164,7 +203,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     when(userService.getUser(user.getId())).thenReturn(user);
     
     this.mockMvc.perform(get(UserController.USER_MAPPING, user.getId())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER)))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR)))
         .param(UserController.ACTION_REQUEST_PARAM, "new"))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.EDIT_USER_VIEW))
@@ -181,7 +220,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     
     this.mockMvc.perform(post(UserController.USERS_MAPPING)
         .with(csrf())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER)))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR)))
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
         .param("lastName", userDto.getLastName())
@@ -204,7 +243,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     
     this.mockMvc.perform(post(UserController.USERS_MAPPING)
         .with(csrf())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER)))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR)))
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
         .param("lastName", userDto.getLastName())
@@ -230,7 +269,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     
     final MvcResult result = this.mockMvc.perform(post(UserController.USERS_MAPPING)
         .with(csrf())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER)))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR)))
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
         .param("lastName", userDto.getLastName())
@@ -256,7 +295,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     
     this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
         .with(csrf())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER)))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR)))
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
         .param("id", userDto.getId().toString())
@@ -281,7 +320,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     
     this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
         .with(csrf())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER)))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR)))
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
         .param("id", userDto.getId().toString())
@@ -309,7 +348,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     
     final MvcResult result = this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
         .with(csrf())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER)))
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR)))
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
         .param("lastName", userDto.getLastName())

@@ -17,7 +17,7 @@
 	       </a>
 	     </li>
 	     
-	     <li>
+	     <li sec:authorize="hasRole('ROLE_ADMINISTRATOR')">
 	       <a href="#" th:title="#{search}" id="searchMenuOption">
 	         <i class="fal fa-search"></i>
 	         <span th:text="#{search}" class="nav-link-text">search</span>
@@ -32,7 +32,7 @@
 	       </ul>
 	     </li>
 	     
-	     <li>
+	     <li sec:authorize="hasRole('ROLE_ADMINISTRATOR')">
          <a href="#" th:title="#{new}" id="newMenuOption">
            <i class="fal fa-plus"></i>
            <span th:text="#{new}" class="nav-link-text">new</span>

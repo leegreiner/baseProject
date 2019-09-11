@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -36,9 +34,8 @@ public class Role extends BaseEntity implements Serializable {
   @SequenceGenerator(name="role_seq", sequenceName = "ROLE_SEQ", allocationSize = 1)
 	private Long id;
 	
-	@Column(name = "name", length = 20, unique = true, nullable = false)
+	@Column(name = "name", length = 30, unique = true, nullable = false)
 	@NonNull
-	@Enumerated(EnumType.STRING)
 	@Include
 	private RoleName name;
 }
