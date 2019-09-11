@@ -3,8 +3,6 @@ package edu.duke.rs.baseProject.user;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +15,7 @@ import edu.duke.rs.baseProject.BaseWebController;
 import edu.duke.rs.baseProject.home.HomeController;
 import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
+import edu.duke.rs.baseProject.util.HttpUtils;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -61,8 +60,8 @@ public class UserProfileController extends BaseWebController {
     }
     
     principal.setTimeZone(userProfile.getTimeZone());
-    // need to tickle the session to have Spring Session save the changes to the principal
-    httpSession.setAttribute(HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY, SecurityContextHolder.getContext());
+    
+    HttpUtils.notifySessionOfChange(httpSession);
     
     this.addFeedbackMessage(attributes, "message.userProfile.updated", (Object[])null);
     
