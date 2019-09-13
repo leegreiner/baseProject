@@ -51,8 +51,14 @@
       <appender-ref ref="CONSOLE" />
     </springProfile>
   </root>
+  
+  <springProfile name="local">
+    <logger name="edu.duke.rs.baseProject" level="DEBUG" additivity="false">
+      <appender-ref ref="CONSOLE" />
+    </logger>
+  </springProfile>
 
-  <springProfile name="local, dev, val">
+  <springProfile name="dev, val">
     <logger name="edu.duke.rs.baseProject" level="DEBUG" additivity="false">
       <appender-ref ref="APPLICATION" />
     </logger>

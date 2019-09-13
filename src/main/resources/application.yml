@@ -29,7 +29,16 @@ spring:
     hibernate:
       ddl-auto: none
     open-in-view: false
-    properties:      hibernate:
+    properties:
+      javax:
+        persistence:
+          sharedCache:
+            mode: ENABLE_SELECTIVE      hibernate:
+        cache:
+          region:
+            factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+          use_second_level_cache: true
+          use_query_cache: true
         connection:
           provider_disables_autocommit: true
         dialect: org.hibernate.dialect.PostgreSQL94Dialect
@@ -37,6 +46,10 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+        javax:
+          cache:
+            provider: org.ehcache.jsr107.EhcacheCachingProvider
+            uri: classpath:ehcache.xml
         show_sql: false
       org:
         hibernate:
@@ -187,9 +200,19 @@ spring:
     hibernate:
       ddl-auto: create-drop
     properties:
+      # need to disable caching until Hibernate 5.4 comes out and supports classpath:ehcache.xml
       hibernate:
+        cache:
+          region:
+            factory_class:
+          use_second_level_cache: false
+          use_query_cache: false
         dialect: org.hibernate.dialect.H2Dialect
         default_schema:
+        javax:
+          cache:
+            provider:
+            uri:
         
   mail:    host: localhost
     

@@ -2,6 +2,7 @@ package edu.duke.rs.baseProject.role;
 
 import java.io.Serializable;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.SequenceGenerator;
 
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.envers.Audited;
 
 import edu.duke.rs.baseProject.model.BaseEntity;
@@ -24,6 +26,8 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 @Entity
+@Cacheable
+@org.hibernate.annotations.Cache(region = "edu.duke.rs.baseProject.role.Role", usage = CacheConcurrencyStrategy.READ_ONLY)
 @Audited
 public class Role extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
