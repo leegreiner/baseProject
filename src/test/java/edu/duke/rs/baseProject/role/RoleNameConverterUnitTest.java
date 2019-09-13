@@ -14,7 +14,7 @@ public class RoleNameConverterUnitTest {
   
   @Test
   public void whenRoleNamePassedToConvertToDatabaseColumn_thenRolesNameIsReturned() {
-    assertThat(new RoleNameConverter().convertToDatabaseColumn(RoleName.ADMINISTRATOR), equalTo(RoleName.ADMINISTRATOR.getName()));
+    assertThat(new RoleNameConverter().convertToDatabaseColumn(RoleName.ADMINISTRATOR), equalTo(RoleName.ADMINISTRATOR.getValue()));
   }
   
   @Test
@@ -29,6 +29,6 @@ public class RoleNameConverterUnitTest {
   
   @Test
   public void whenRoleNamePassedToConvertToEntityAttribute_thenRolesNameIsReturned() {
-    assertThat(new RoleNameConverter().convertToEntityAttribute(RoleName.ADMINISTRATOR.getName()), equalTo(RoleName.ADMINISTRATOR));
+    assertThat(new RoleNameConverter().convertToEntityAttribute(RoleName.ADMINISTRATOR.getValue()), equalTo(RoleName.ADMINISTRATOR));
   }
 }

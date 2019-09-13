@@ -130,7 +130,7 @@ public class UserController extends BaseWebController {
 	  final List<Role> roles = this.userService.getRoles();
 	  final Map<String, String> roleMap = new HashMap<String, String>();
 	  
-	  roles.stream().forEach(r -> roleMap.put(r.getName().name(), r.getName().getName()));
+	  roles.stream().forEach(r -> roleMap.put(r.getName().name(), r.getName().getValue()));
 	  
 	  model.addAttribute(ROLES_MODEL_ATTRIBUTE, roleMap);
 	}

@@ -67,7 +67,7 @@ spring:
   resources:
     cache:
       cachecontrol:
-        max-age: 3600    
+        max-age: 8h    
          
   messages:    basename: i18n/messages
   session:    store-type: jdbc

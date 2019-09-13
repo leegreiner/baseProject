@@ -130,7 +130,7 @@
 	                  <button type="submit" class="btn btn-primary ml-auto">
                      <i class="fa fa-check"></i> <span th:text="#{submit}">submit</span>
                     </button>
-                    <a th:href="@{/users}" class="btn btn-default ml-3">
+                    <a th:href="@{'/users/' + ${user.id}}" class="btn btn-default ml-3">
                      <i class="fa fa-times"></i> <span th:text="#{cancel}">cancel</span>
                     </a>
 	                </div>

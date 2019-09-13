@@ -33,7 +33,7 @@ public class RolesFormatterUnitTest {
     
     final String actual = formatter.print(roles, Locale.getDefault());
     
-    assertThat(actual, equalTo(RoleName.ADMINISTRATOR.getName() + ", " + RoleName.USER.getName()));
+    assertThat(actual, equalTo(RoleName.ADMINISTRATOR.getValue() + ", " + RoleName.USER.getValue()));
   }
   
   @Test(expected = ParseException.class)

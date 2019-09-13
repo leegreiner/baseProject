@@ -9,7 +9,7 @@ import javax.persistence.Converter;
 public class RoleNameConverter implements AttributeConverter<RoleName, String> {
   @Override
   public String convertToDatabaseColumn(final RoleName roleName) {
-    return roleName == null ? null : roleName.getName();
+    return roleName == null ? null : roleName.getValue();
   }
 
   @Override
@@ -19,7 +19,7 @@ public class RoleNameConverter implements AttributeConverter<RoleName, String> {
     }
     
     return Stream.of(RoleName.values())
-        .filter(r -> r.getName().equals(name))
+        .filter(r -> r.getValue().equals(name))
         .findFirst()
         .orElseThrow(() -> new IllegalArgumentException("Unknown role name " + name));
   }

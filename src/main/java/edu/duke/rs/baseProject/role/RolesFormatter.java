@@ -15,10 +15,10 @@ public class RolesFormatter implements Formatter<Set<Role>> {
     }
     
     return roles.stream()
-      .sorted((r1, r2) -> r1.getName().getName().compareTo(r2.getName().getName()))
+      .sorted((r1, r2) -> r1.getName().getValue().compareTo(r2.getName().getValue()))
       .collect(Collectors.toList())
       .stream()
-        .map(role -> role.getName().getName())
+        .map(role -> role.getName().getValue())
         .collect(Collectors.joining(", "));
   }
 
