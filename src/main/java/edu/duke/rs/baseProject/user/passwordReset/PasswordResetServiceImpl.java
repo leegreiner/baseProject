@@ -75,6 +75,11 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     }
     
     final User user = userOptional.get();
+    final Optional<AppPrincipal> currentUserOptional = SecurityUtils.getPrincipal();
+    
+    if (currentUserOptional.isPresent() && ! currentUserOptional.get().getUserId().equals(user.getId())) {
+      throw new ConstraintViolationException("error.passwordReset.currentlyLoggedInAsDifferentUser", (Object[])null);
+    }
     
     if (! StringUtils.equalsIgnoreCase(user.getUserName(), passwordResetDto.getUserName())) {
       throw new ConstraintViolationException("error.passwordReset.invalidUserName", (Object[])null);

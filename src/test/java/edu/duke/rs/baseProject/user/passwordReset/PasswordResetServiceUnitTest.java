@@ -173,6 +173,22 @@ public class PasswordResetServiceUnitTest {
     this.service.processPasswordReset(dto);
   }
   
+  @Test(expected = ConstraintViolationException.class)
+  public void whenCurrentUserLoggedInAndChangingDifferntAccount_thenProcessPasswordResetThrowsConstraintViolationException() {
+    final PasswordResetDto dto = createPasswordResetDto();
+    final User user = new User();
+    user.setPasswordChangeIdCreationTime(LocalDateTime.now());
+    user.setUserName(dto.getUserName());
+    user.setPassword(dto.getPassword() + "a");
+    user.setId(Long.valueOf(1));
+    
+    when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.of(user));
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(appPrincipal.getUserId()).thenReturn(user.getId() + 1);
+    
+    this.service.processPasswordReset(dto);
+  }
+  
   @Test
   public void whenPasswordReset_thenNewPasswordCreatedAndResetFieldsCleared() {
     final PasswordResetDto dto = createPasswordResetDto();
@@ -180,8 +196,11 @@ public class PasswordResetServiceUnitTest {
     user.setPasswordChangeIdCreationTime(LocalDateTime.now());
     user.setUserName(dto.getUserName());
     user.setPassword(dto.getPassword() + "a");
+    user.setId(Long.valueOf(1));
     
     when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.of(user));
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(appPrincipal.getUserId()).thenReturn(user.getId());
     when(this.passwordEncoder.matches(dto.getPassword(), user.getPassword())).thenReturn(false);
     when(this.passwordEncoder.encode(dto.getPassword())).thenReturn(dto.getPassword() + "m");
     
