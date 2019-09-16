@@ -7,59 +7,34 @@
         http://www.ehcache.org/v3/jsr107 http://www.ehcache.org/schema/ehcache-107-ext-3.0.xsd">
 
   <service>
-    <jsr107:defaults enable-statistics="true" enable-management="false" default-template="defaultTemplate"/>
+    <jsr107:defaults enable-statistics="true" enable-management="true" default-template="defaultTemplate"/>
   </service>
   
   <cache-template name="defaultTemplate">
     <expiry>
       <ttl unit="minutes">720</ttl>
     </expiry>
-    <heap unit="entries">1000</heap>
+    <listeners>
+      <listener>
+        <class>edu.duke.rs.baseProject.config.CacheEventLogger</class>
+        <event-firing-mode>ASYNCHRONOUS</event-firing-mode>
+        <event-ordering-mode>UNORDERED</event-ordering-mode>
+        <events-to-fire-on>CREATED</events-to-fire-on>
+        <events-to-fire-on>UPDATED</events-to-fire-on>
+        <events-to-fire-on>EXPIRED</events-to-fire-on>
+        <events-to-fire-on>REMOVED</events-to-fire-on>
+        <events-to-fire-on>EVICTED</events-to-fire-on>
+      </listener>
+    </listeners>
+    <resources>
+      <heap>1000</heap>
+    </resources>
   </cache-template>
   
-  <cache alias="default-update-timestamps-region" uses-template="defaultTemplate">
-    <listeners>
-      <listener>
-        <class>edu.duke.rs.baseProject.config.CacheEventLogger</class>
-        <event-firing-mode>ASYNCHRONOUS</event-firing-mode>
-        <event-ordering-mode>UNORDERED</event-ordering-mode>
-        <events-to-fire-on>CREATED</events-to-fire-on>
-        <events-to-fire-on>UPDATED</events-to-fire-on>
-        <events-to-fire-on>EXPIRED</events-to-fire-on>
-        <events-to-fire-on>REMOVED</events-to-fire-on>
-        <events-to-fire-on>EVICTED</events-to-fire-on>
-      </listener>
-    </listeners>
+  <cache alias="roles" uses-template="defaultTemplate">
+    <expiry>
+      <none/>
+    </expiry>
+    <heap>50</heap>
   </cache>
-  
-  <cache alias="default-query-results-region" uses-template="defaultTemplate">
-    <listeners>
-      <listener>
-        <class>edu.duke.rs.baseProject.config.CacheEventLogger</class>
-        <event-firing-mode>ASYNCHRONOUS</event-firing-mode>
-        <event-ordering-mode>UNORDERED</event-ordering-mode>
-        <events-to-fire-on>CREATED</events-to-fire-on>
-        <events-to-fire-on>UPDATED</events-to-fire-on>
-        <events-to-fire-on>EXPIRED</events-to-fire-on>
-        <events-to-fire-on>REMOVED</events-to-fire-on>
-        <events-to-fire-on>EVICTED</events-to-fire-on>
-      </listener>
-    </listeners>
-  </cache>
-  
-  <cache alias="edu.duke.rs.baseProject.role.Role" uses-template="defaultTemplate">
-    <listeners>
-      <listener>
-        <class>edu.duke.rs.baseProject.config.CacheEventLogger</class>
-        <event-firing-mode>ASYNCHRONOUS</event-firing-mode>
-        <event-ordering-mode>UNORDERED</event-ordering-mode>
-        <events-to-fire-on>CREATED</events-to-fire-on>
-        <events-to-fire-on>UPDATED</events-to-fire-on>
-        <events-to-fire-on>EXPIRED</events-to-fire-on>
-        <events-to-fire-on>REMOVED</events-to-fire-on>
-        <events-to-fire-on>EVICTED</events-to-fire-on>
-      </listener>
-    </listeners>
-  </cache>
-
 </config>

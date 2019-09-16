@@ -85,10 +85,9 @@ public class PasswordResetControllerIntegrationTest extends AbstractWebIntegrati
     
     final MimeMessage[] receivedMessages = pollForEmail(smtpServer);
     
-    assertThat(1, equalTo(receivedMessages.length));
+    assertThat(receivedMessages.length, equalTo(1));
     final MimeMessage receivedMessage = receivedMessages[0];
     
-    assertThat(1, equalTo(receivedMessages.length));
     assertThat((String) receivedMessage.getContent(), containsString(updatedUser.getPasswordChangeId().toString()));
     assertThat(receivedMessage.getAllRecipients(), hasItemInArray(new InternetAddress(updatedUser.getEmail())));
     assertThat(receivedMessage.getSubject(),containsString("DTS"));

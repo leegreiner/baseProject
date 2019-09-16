@@ -351,20 +351,21 @@ public class UserServiceUnitTest {
   public void whenUpdatingUserWithValidInfo_thenUserIsUpdated() {
     final String password = "abcdef";
     final String userName = "jsmeith";
+    final Role role = new Role(RoleName.USER);
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
         .email("abc@123.com")
         .firstName("Joe")
         .lastName("Smith")
         .middleInitial("M")
-        .roles(List.of(RoleName.USER.name()))
+        .roles(List.of(role.getName().name()))
         .timeZone(TimeZone.getDefault())
         .userName("jsmith")
         .id(Long.valueOf(1))
         .build();
     final Set<Role> roles = new HashSet<Role>();
-    final Role role = new Role(RoleName.USER);
-    roles.add(role);         //TODO need to update when > 1 role
+    final Role currentRole = new Role(RoleName.ADMINISTRATOR);
+    roles.add(currentRole);         //TODO need to update when > 1 role
     final User foundUser = new User();
     foundUser.setId(userDto.getId());
     foundUser.setAccountEnabled(! userDto.isAccountEnabled());
@@ -398,6 +399,7 @@ public class UserServiceUnitTest {
     assertThat(actual.getLastName(), equalTo(userDto.getLastName()));
     assertThat(actual.getMiddleInitial(), equalTo(userDto.getMiddleInitial()));
     assertThat(actual.getPassword(), equalTo(password));
+    assertThat(actual.getRoles().size(), equalTo(1));
     assertThat(actual.getRoles(), contains(role));
     assertThat(actual.getTimeZone(), equalTo(userDto.getTimeZone()));
     assertThat(actual.getUserName(), equalTo(userName));
@@ -409,5 +411,6 @@ public class UserServiceUnitTest {
     verifyNoMoreInteractions(userRepository);
     verifyNoMoreInteractions(roleRepository);
     verifyNoMoreInteractions(passwordGenerator);
+    verifyNoMoreInteractions(eventPublisher);
   }
 }

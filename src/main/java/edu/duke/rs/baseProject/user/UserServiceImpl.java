@@ -1,8 +1,11 @@
 package edu.duke.rs.baseProject.user;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Sort;
@@ -136,15 +139,29 @@ public class UserServiceImpl implements UserService {
   private void populateRoles(final UserDto userDto, final User user) {
     if (user.getRoles() == null) {
       user.setRoles(new HashSet<Role>());
-    } else {
-      user.getRoles().clear();
     }
     
-    userDto.getRoles()
+    final Set<RoleName> inComingRoleNames = userDto.getRoles().stream().map(s -> RoleName.valueOf(s)).collect(Collectors.toSet());
+    final Set<RoleName> currentRoleNames = user.getRoles().stream().map(r -> r.getName()).collect(Collectors.toSet());
+    final Set<RoleName> rolesToRemove = new HashSet<RoleName>(currentRoleNames);
+    final Set<RoleName> rolesToAdd = new HashSet<RoleName>(inComingRoleNames);
+    
+    rolesToRemove.removeAll(inComingRoleNames);
+    rolesToAdd.removeAll(currentRoleNames);
+    
+    for (final Iterator<Role> iter = user.getRoles().iterator(); iter.hasNext();) {
+      final Role role = iter.next();
+      
+      if (rolesToRemove.contains(role.getName())) {
+        iter.remove();
+      }
+    }
+    
+    rolesToAdd
       .stream()
-      .forEach(r -> {
-        final Role role = roleRepository.findByName(RoleName.valueOf(r))
-            .orElseThrow(() -> new NotFoundException("error.roleNotFound", new Object[] {r}));
+      .forEach(roleName -> {
+        final Role role = roleRepository.findByName(roleName)
+            .orElseThrow(() -> new NotFoundException("error.roleNotFound", new Object[] {roleName}));
         user.getRoles().add(role);
       }
     );
