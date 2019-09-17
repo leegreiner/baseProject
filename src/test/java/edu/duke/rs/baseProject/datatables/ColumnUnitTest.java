@@ -15,4 +15,15 @@ public class ColumnUnitTest {
     assertThat("updatedSearch", equalTo(column.getSearch().getValue()));
     
   }
+  
+  @Test
+  public void whenSearchValueIsSet_thenColumnSearchContainsSearchValue() {
+    final Search search = new Search("d", false);
+    final Column column = new Column("abc", "", true, true, search);
+    
+    search.setValue(search.getValue() + "1");
+    column.setSearchValue(search.getValue());
+    
+    assertThat(column.getSearch().getValue(), equalTo(search.getValue()));
+  }
 }

@@ -48,7 +48,6 @@ spring:
         hibernate:
           envers:
             track_entities_changed_in_revision: true
-            global_with_modified_flag: true
             
   mail:
     default-encoding: UTF-8

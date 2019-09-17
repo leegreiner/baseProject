@@ -36,26 +36,28 @@ public class UserRevisionListenerUnitTest {
   public void whenPrincipalNotFound_thenAuditRevisionEntityUserIdNotChanged() {
     final AuditRevisionEntity are = new AuditRevisionEntity();
     when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
-    when(appPrincipal.getUserId()).thenReturn(Long.valueOf(1));
     
     final UserRevisionListener listener = new UserRevisionListener();
     
     listener.newRevision(are);
     
     assertThat(are.getUserId(), equalTo(null));
+    assertThat(are.getInitiator(), equalTo(UserRevisionListener.SYSTEM_USER));
   }
   
   @Test
-  public void whenPrincipalFoundAndIsAnAppPrincipal_thenAuditRevisionEntityUserIdSetToUsersId() {
+  public void whenPrincipalFoundAndIsAnAppPrincipal_thenAuditRevisionEntityUserIdAndInitiatorSetToUser() {
     final AuditRevisionEntity are = new AuditRevisionEntity();
     when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(appPrincipal.getUserId()).thenReturn(Long.valueOf(1));
+    when(appPrincipal.getDisplayName()).thenReturn("Joe Smith");
     
     final UserRevisionListener listener = new UserRevisionListener();
     
     listener.newRevision(are);
     
     assertThat(are.getUserId(), equalTo(appPrincipal.getUserId()));
+    assertThat(are.getInitiator(), equalTo(appPrincipal.getDisplayName()));
   }
 
 }

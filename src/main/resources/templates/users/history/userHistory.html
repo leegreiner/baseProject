@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html th:replace="~{layout/layout :: layout(~{::customCss}, ~{::breadCrumb}, ~{::content}, ~{::customJs})}"
+  xmlns:th="http://www.thymeleaf.org"
+  layout:decorate="~{layout/layout.html}">
+<body>
+  <customCss th:remove="tag">
+    <link rel="stylesheet" media="screen, print" th:href="@{/css/datagrid/datatables/datatables.bundle.css}">
+  </customCss>
+  
+  <breadCrumb th:remove="tag">
+    <li class="breadcrumb-item"><a th:href="@{/users}" th:text="#{users}">users</a></li>
+    <li class="breadcrumb-item"><a th:href="@{/users/{userId}(userId=${user.id})}" th:text="${user.displayName}">user details</a></li>
+    <li class="breadcrumb-item active" th:text="#{history}">history</li>
+  </breadCrumb>
+  
+  <content th:remove="tag">
+    <div class="col-sm-12">
+      <div id="panel-1" class="panel">
+        <div class="panel-hdr panel-hdr-custom">
+          <h2 th:text="#{title.user.history(${user.displayName})}">history</h2>
+        </div>
+        
+        <div class="panel-container show">
+          <div class="panel-content">
+            <table id="history" class="table table-bordered table-hover table-striped w-100 table-custom">
+              <thead class="thead-themed">
+                <tr>
+                  <th th:text="#{revision}">revision</th>
+                  <th th:text="#{revisionType}">type</th>
+                  <th th:text="#{time}">time</th>
+                  <th th:text="#{initiator}">initiator</th>
+                  <th th:text="#{id}">id</th>
+                  <th th:text="#{userName}">user name</th>
+                  <th th:text="#{firstName}">first name</th>
+                  <th th:text="#{initial}">middle initial</th>
+                  <th th:text="#{lastName}">last name</th>
+                  <th th:text="#{email}">email</th>
+                  <th th:text="#{accountEnabled}">enabled</th>
+                  <th th:text="#{timeZone}">time zone</th>
+                  <th th:text="#{lastLoggedIn}">last logged in</th>
+                  <th th:text="#{lastPasswordChange}">last password change</th>
+                  <th th:text="#{passwordChangeId}">password change id</th>
+                  <th th:text="#{passwordChangeIdTime}">password change id time</th>
+                  <th th:text="#{roles}">roles</th>
+                </tr>
+                </thead>
+                <tbody>
+	                 <tr th:each="history : ${history}">
+	                   <td nowrap th:text="${history.revision}">revision</td>
+	                   <td nowrap th:text="${history.revisionType}">revision type</td>
+	                   <td nowrap th:text="${{history.eventTime}}">time</td>
+	                   <td nowrap th:text="${history.initiator}">initiator</td>
+	                   <td nowrap th:text="${history.user.id}">id</td>
+	                   <td nowrap th:text="${history.user.userName}">user name</td>
+	                   <td nowrap th:text="${history.user.firstName}">first name</td>
+	                   <td nowrap th:text="${history.user.middleInitial}">initial</td>
+	                   <td nowrap th:text="${history.user.lastName}">last name</td>
+	                   <td nowrap th:text="${history.user.email}">email</td>
+	                   <td nowrap th:text="${history.user.accountEnabled} ? #{yes} : #{no}">enabled</td>
+	                   <td nowrap th:text="${history.user.timeZone.iD}">time zone</td>
+	                   <td nowrap th:text="${{history.user.lastLoggedIn}}">last logged in</td>
+	                   <td nowrap th:text="${{history.user.lastPasswordChange}}">last password change</td>
+	                   <td nowrap th:text="${history.user.passwordChangeId}">password change id</td>
+	                   <td nowrap th:text="${{history.user.passwordChangeIdCreationTime}}">last change id creation time</td>
+	                   <td nowrap th:text="${{history.user.roles}}">roles</td>
+	                 </tr>
+	               </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </content>
+  
+  <customJs th:remove="tag">
+    <script th:src="@{/js/dependency/moment/moment.js}"></script>
+    <script th:src="@{/js/datagrid/datatables/datatables.bundle.js}"></script>
+    <script th:src="@{/js/addon/datetime-moment.js}"></script>
+    <script th:src="@{/js/app/user/history/userHistory.js}" type="text/javascript"></script>
+  </customJs>
+</body>
+</html>
