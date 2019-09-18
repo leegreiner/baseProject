@@ -8,13 +8,18 @@ import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 
 public class UserRevisionListener implements RevisionListener {
- @Override
+  public static final String SYSTEM_USER = "System";
+  
+  @Override
   public void newRevision(Object revisionEntity) {
     final Optional<AppPrincipal> principal = SecurityUtils.getPrincipal();
+    final AuditRevisionEntity are = (AuditRevisionEntity) revisionEntity;
     
-    if (principal.isPresent()) {
-      AuditRevisionEntity are = (AuditRevisionEntity) revisionEntity;
+    if (principal.isPresent()) {    
       are.setUserId(principal.get().getUserId());
+      are.setInitiator(principal.get().getDisplayName());
+    } else {
+      are.setInitiator(SYSTEM_USER);
     }
   }
 

@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -44,11 +45,15 @@ import edu.duke.rs.baseProject.exception.NotFoundException;
 import edu.duke.rs.baseProject.login.LoginController;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
+import edu.duke.rs.baseProject.user.history.UserHistory;
+import edu.duke.rs.baseProject.user.history.UserHistoryRepository;
 
 @WebMvcTest(UserController.class)
 public class UserControllerUnitTest extends AbstractWebUnitTest {
   @MockBean
   private UserService userService;
+  @MockBean
+  private UserHistoryRepository userHistoryRepository;
   @Autowired
   private MessageSource messageSource;
   
@@ -364,6 +369,52 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
             .buildAndExpand(user.getId()).encode().toUriString()));
     
     verify(userService, times(1)).save(any(UserDto.class));
+  }
+  
+  @Test
+  public void whenNotAuthenticated_thenUserHistoryRedirectsToLogin() throws Exception {
+    this.mockMvc.perform(get(UserController.USER_HISTORY_MAPPING, Long.valueOf(1)))
+      .andExpect(status().isFound())
+      .andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));
+  }
+  
+  @Test
+  public void whenNotAdministrator_thenUserHistoryRedirectsToErrorPage() throws Exception {
+    for (int i = 0; i < RoleName.values().length; i++) {
+      final RoleName roleName = RoleName.values()[i];
+      
+      if (roleName != RoleName.ADMINISTRATOR) {
+        final MvcResult result = this.mockMvc.perform(get(UserController.USER_HISTORY_MAPPING, Long.valueOf(1))
+            .with(user(UserDetailsBuilder.build(Long.valueOf(1), roleName))))
+            .andExpect(status().isFound())
+            .andReturn();
+        
+        assertThat(result.getResponse().getRedirectedUrl(), equalTo(NOT_AUTORIZED_MAPPING));
+      }
+    }
+  }
+  
+  @Test
+  public void whenAdministratorRequestsUserHistory_thenUserHistoryReturned() throws Exception {
+    final User user = new User();
+    user.setId(Long.valueOf(1));
+    user.setUserName("abc");
+    final List<UserHistory> history = new ArrayList<UserHistory>();
+    
+    when(userService.getUser(user.getId())).thenReturn(user);
+    when(userHistoryRepository.listUserRevisions(user.getId())).thenReturn(history);
+    
+    this.mockMvc.perform(get(UserController.USER_HISTORY_MAPPING, user.getId())
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
+      .andExpect(status().isOk())
+      .andExpect(view().name(UserController.USER_HISTORY_VIEW))
+      .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, equalTo(user)))
+      .andExpect(model().attribute(UserController.USER_HISTORY_MODEL_ATTRIBUTE, equalTo(history)));
+    
+    verify(userService, times(1)).getUser(user.getId());
+    verify(userHistoryRepository, times(1)).listUserRevisions(user.getId());
+    verifyNoMoreInteractions(userService);
+    verifyNoMoreInteractions(userHistoryRepository);
   }
   
   private UserDto buildUserDto() {

@@ -23,6 +23,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 import edu.duke.rs.baseProject.BaseWebController;
 import edu.duke.rs.baseProject.exception.ApplicationException;
 import edu.duke.rs.baseProject.role.Role;
+import edu.duke.rs.baseProject.user.history.UserHistory;
+import edu.duke.rs.baseProject.user.history.UserHistoryRepository;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -34,13 +36,18 @@ public class UserController extends BaseWebController {
 	public static final String NEW_USER_VIEW = "/users/newUser";
 	public static final String USERS_MAPPING = "/users";
 	public static final String USER_MAPPING = USERS_MAPPING + "/{userId}";
+	public static final String USER_HISTORY_MAPPING = USER_MAPPING + "/history";
+	public static final String USER_HISTORY_VIEW = USERS_MAPPING + "/history/userHistory";
 	public static final String USER_MODEL_ATTRIBUTE = "user";
+	public static final String USER_HISTORY_MODEL_ATTRIBUTE = "history";
 	public static final String ROLES_MODEL_ATTRIBUTE = "roles";
 	public static final String ACTION_REQUEST_PARAM = "action";
 	private transient final UserService userService;
+	private transient final UserHistoryRepository userHistoryRepository;
 	
-	public UserController(final UserService userService) {
+	public UserController(final UserService userService, final UserHistoryRepository userHistoryRepository) {
 	  this.userService = userService;
+	  this.userHistoryRepository = userHistoryRepository;
 	}
 	
 	@GetMapping(USERS_MAPPING)
@@ -120,6 +127,18 @@ public class UserController extends BaseWebController {
     return UriComponentsBuilder.fromPath(REDIRECT_PREFIX + USER_MAPPING)
         .buildAndExpand(userId).encode().toUriString();
 	}
+	
+	@GetMapping(USER_HISTORY_MAPPING)
+  public String getHistory(@PathVariable("userId") final Long userId, Model model) {
+    log.debug("In getHistory: " + userId);
+    final User user = this.userService.getUser(userId);
+    final List<UserHistory> history = this.userHistoryRepository.listUserRevisions(userId);
+    
+    model.addAttribute(USER_MODEL_ATTRIBUTE, user);
+    model.addAttribute(USER_HISTORY_MODEL_ATTRIBUTE, history);
+    
+    return USER_HISTORY_VIEW;
+  }
 	
 	private void loadModelForNewOrEdit(final Model model, final User user) {  
 	  model.addAttribute(USER_MODEL_ATTRIBUTE, toUserDto(user));

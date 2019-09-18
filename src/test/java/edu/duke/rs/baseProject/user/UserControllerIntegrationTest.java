@@ -28,6 +28,7 @@ import java.util.TimeZone;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.hibernate.envers.RevisionType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -45,6 +46,8 @@ import edu.duke.rs.baseProject.login.LoginController;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.role.RoleRepository;
+import edu.duke.rs.baseProject.security.AppPrincipal;
+import edu.duke.rs.baseProject.user.history.UserHistory;
 
 public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   private GreenMail smtpServer;
@@ -237,6 +240,60 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     assertThat(actual.getTimeZone(), equalTo(expected.getTimeZone()));
     assertThat(actual.getUserName(), equalTo(user.getUserName()));
     assertThat(actual.getVersion(), equalTo(user.getVersion() + 1));
+  }
+  
+  @Test
+  public void whenUserCreated_thenRecordIsAddedToHistory() throws Exception {
+    final UserDto expected = buildUserDto();
+    final AppPrincipal userDetails = (AppPrincipal) UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR);
+    
+    this.mockMvc.perform(post(UserController.USERS_MAPPING)
+        .with(csrf())
+        .with(user(userDetails))
+        .param("email", expected.getEmail())
+        .param("firstName", expected.getFirstName())
+        .param("lastName", expected.getLastName())
+        .param("middleInitial", expected.getMiddleInitial())
+        .param("roles", expected.getRoles().get(0))
+        .param("timeZone", expected.getTimeZone().getID())
+        .param("userName", expected.getUserName()))
+        .andExpect(status().isFound());
+    
+    final User actual = userRepository.findByUserNameIgnoreCase(expected.getUserName())
+        .orElseThrow(() -> new NotFoundException());
+    
+    final MvcResult result = this.mockMvc.perform(get(UserController.USER_HISTORY_MAPPING, actual.getId())
+        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
+      .andExpect(status().isOk())
+      .andExpect(view().name(UserController.USER_HISTORY_VIEW))
+      .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, equalTo(actual)))
+      .andExpect(model().attribute(UserController.USER_HISTORY_MODEL_ATTRIBUTE, notNullValue()))
+      .andReturn();
+    
+    @SuppressWarnings("unchecked")
+    final List<UserHistory> histories = (List<UserHistory>) result.getModelAndView().getModel().get(UserController.USER_HISTORY_MODEL_ATTRIBUTE);
+    assertThat(histories.size(), equalTo(1));
+    final UserHistory history = histories.get(0);
+    assertThat(history.getEventTime(), notNullValue());
+    assertThat(history.getInitiator(), equalTo(userDetails.getDisplayName()));
+    assertThat(history.getRevision(), notNullValue());
+    assertThat(history.getRevisionType(), equalTo(RevisionType.ADD));
+    final User actualHistoryUser = history.getUser();
+    assertThat(actualHistoryUser, notNullValue());
+    assertThat(actualHistoryUser.getDisplayName(), equalTo(actual.getDisplayName()));
+    assertThat(actualHistoryUser.getEmail(), equalTo(actual.getEmail()));
+    assertThat(actualHistoryUser.getFirstName(), equalTo(actual.getFirstName()));
+    assertThat(actualHistoryUser.getId(), equalTo(actual.getId()));
+    assertThat(actualHistoryUser.getLastLoggedIn(), equalTo(actual.getLastLoggedIn()));
+    assertThat(actualHistoryUser.getLastName(), equalTo(actual.getLastName()));
+    assertThat(actualHistoryUser.getLastPasswordChange(), equalTo(actual.getLastPasswordChange()));
+    assertThat(actualHistoryUser.getMiddleInitial(), equalTo(actual.getMiddleInitial()));
+    assertThat(actualHistoryUser.getPasswordChangeId(), equalTo(actual.getPasswordChangeId()));
+    assertThat(actualHistoryUser.getPasswordChangeIdCreationTime(), equalTo(actual.getPasswordChangeIdCreationTime()));
+    assertThat(actualHistoryUser.getTimeZone(), equalTo(actual.getTimeZone()));
+    assertThat(actualHistoryUser.getUserName(), equalTo(actual.getUserName()));
+    assertThat(actualHistoryUser.isAccountEnabled(), equalTo(actual.isAccountEnabled()));
+    assertThat(actualHistoryUser.getRoles().size(), equalTo(actual.getRoles().size()));
   }
   
   private UserDto buildUserDto() {
