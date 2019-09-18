@@ -1,6 +1,6 @@
 var targetPageSetUp = function() {
 'use strict';
-  $.fn.dataTable.moment('YYYY-MM-DD HH:mm');
+  $.fn.dataTable.moment(BP_GLOBALS.getDateTimeFormat());
   
   $('#history').dataTable({
     paging:   false,
