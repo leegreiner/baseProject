@@ -40,8 +40,3 @@
 .was-validated .custom-select:valid + .select2 .select2-selection {
   border-color: #69FB13!important;
 }
-
-.history-link {
-  color: white;
-  font-weight: 100;
-}

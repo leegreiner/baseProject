@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html th:replace="~{layout/layout :: layout(~{}, ~{::breadCrumb}, ~{::content}, ~{})}"
+<html th:replace="~{layout/layout :: layout(~{}, ~{::breadCrumb}, ~{::content}, ~{::customJs})}"
 	xmlns:th="http://www.thymeleaf.org">
 	<body>
 	  <breadCrumb th:remove="tag">
@@ -13,11 +13,6 @@
           <div id="panelDiv" class="panel">
             <div class="panel-hdr panel-hdr-custom">
               <h2 th:text="#{title.userDetails}">Title</h2>
-              <div class="panel-toolbar">
-                <h2>
-                  <a th:href="@{/users/{userId}/history(userId=${user.id})}" th:text="#{history}" class="history-link">history</a>
-                </h2>
-              </div>
             </div>
             
             <div class="panel-container show">
@@ -71,5 +66,15 @@
         </div>
       </div>
 		</content>
+		
+		<customJs th:remove="tag">
+		  <script th:src="@{/js/addon/hotkeys.min.js}"></script>
+		  <script th:src="@{/js/app/user/userDetails.js}"></script>
+		  <script th:inline="javascript">
+		  /*<![CDATA[*/
+		    CONTEXT.setUserId(/*[[${user.id}]]*/ '1');
+		  /*]]>*/  
+		  </script>
+		</customJs>
 	</body>
 </html>
