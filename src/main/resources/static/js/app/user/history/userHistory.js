@@ -1,13 +1,11 @@
 var targetPageSetUp = function() {
-'use strict';
-  $.fn.dataTable.moment(BP_GLOBALS.getDateTimeFormat());
+  'use strict';
   
   $('#history').dataTable({
-    paging:   false,
+    paging: false,
     searching: false,
     fixedHeader: true,
     scrollX: true,
-    scrollY: "500px",
     scrollCollapse: true
   });
 }
