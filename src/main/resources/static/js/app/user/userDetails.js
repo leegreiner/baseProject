@@ -15,7 +15,7 @@ var CONTEXT = (function() {
 var targetPageSetUp = function() {
   'use strict';
   
-  hotkeys('alt+h', function(event, handler) {
+  hotkeys(BP_GLOBALS.getHistoryHotKeys(), function(event, handler) {
     window.location = "/users/" + CONTEXT.getUserId() + "/history";
   });
 }

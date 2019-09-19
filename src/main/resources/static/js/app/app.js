@@ -5,6 +5,10 @@ var BP_GLOBALS = (function() {
     return 'YYYY-MM-DD HH:mm';
   }
   
+  my.getHistoryHotKeys = function() {
+    return 'ctrl+alt+a';
+  }
+  
   return my;
 }());
 
