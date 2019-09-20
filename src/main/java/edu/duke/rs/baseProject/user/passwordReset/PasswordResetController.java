@@ -30,8 +30,8 @@ import lombok.extern.slf4j.Slf4j;
 @Profile("!samlSecurity")
 public class PasswordResetController extends BaseWebController {
   public static final String PASSWORD_RESET_INITIATE_MAPPING = UserController.USERS_MAPPING + "/pwdreset";
-  public static final String PASSWORD_RESET_INITIATE_VIEW = "/users/pwdreset/initiatePasswordReset";
-  public static final String PASSWORD_RESET_VIEW = "/users/pwdreset/passwordReset";
+  public static final String PASSWORD_RESET_INITIATE_VIEW = "users/pwdreset/initiatePasswordReset";
+  public static final String PASSWORD_RESET_VIEW = "users/pwdreset/passwordReset";
   public static final String PASSWORD_RESET_MODEL_ATTRIBUTE = "pwdreset";
   public static final String PASSWORD_RESET_ID_REQUEST_PARAM = "id";
   private transient final PasswordResetService passwordResetService;

@@ -9,7 +9,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 public class HomeController extends BaseWebController {
-	public static final String HOME_VIEW = "/home/home";
+	public static final String HOME_VIEW = "home/home";
 	public static final String HOME_MAPPING = "/home";
 	
 	@GetMapping(HOME_MAPPING)

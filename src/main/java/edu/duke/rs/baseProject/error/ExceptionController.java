@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @ControllerAdvice
 public class ExceptionController extends BaseWebController {
-  public static final String EXCEPTION_ERROR_VIEW = "/error/exceptionError";
+  public static final String EXCEPTION_ERROR_VIEW = "error/exceptionError";
   public static final String EXCEPTION_MESSAGE_ATTRIBUTE = "errorMessage";
   public static final String UNKNOWN_ERROR_PROPERTY = "unknownError";
   private transient final MessageSource messageSource;

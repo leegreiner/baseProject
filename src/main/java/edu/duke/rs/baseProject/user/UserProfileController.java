@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 public class UserProfileController extends BaseWebController {
-  public static final String USER_PROFILE_VIEW = "/users/userProfile";
+  public static final String USER_PROFILE_VIEW = "users/userProfile";
   public static final String USER_PROFILE_MAPPING = "/userProfile";
   public static final String USER_PROFILE_ATTRIBUTE = "userProfile";
   private transient final UserService userService;

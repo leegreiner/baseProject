@@ -30,14 +30,14 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 public class UserController extends BaseWebController {
-	public static final String USERS_VIEW =  "/users/users";
-	public static final String USER_DETAILS_VIEW = "/users/userDetails";
-	public static final String EDIT_USER_VIEW = "/users/editUser";
-	public static final String NEW_USER_VIEW = "/users/newUser";
+	public static final String USERS_VIEW =  "users/users";
+	public static final String USER_DETAILS_VIEW = "users/userDetails";
+	public static final String EDIT_USER_VIEW = "users/editUser";
+	public static final String NEW_USER_VIEW = "users/newUser";
 	public static final String USERS_MAPPING = "/users";
 	public static final String USER_MAPPING = USERS_MAPPING + "/{userId}";
 	public static final String USER_HISTORY_MAPPING = USER_MAPPING + "/history";
-	public static final String USER_HISTORY_VIEW = USERS_MAPPING + "/history/userHistory";
+	public static final String USER_HISTORY_VIEW = "users/history/userHistory";
 	public static final String USER_MODEL_ATTRIBUTE = "user";
 	public static final String USER_HISTORY_MODEL_ATTRIBUTE = "history";
 	public static final String ROLES_MODEL_ATTRIBUTE = "roles";
