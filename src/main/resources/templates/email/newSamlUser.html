@@ -1,0 +1,9 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head></head>
+<body>
+  <p th:text="#{email.newSamlUser.welcome}">welcome</p>
+  <p th:utext="#{email.newUser.userName(${userName})}">user name</p>
+  <p><a th:href="${url}" th:text="#{email.newSamlUser.accessSystem}">URL</a><p>
+</body>
+</html>

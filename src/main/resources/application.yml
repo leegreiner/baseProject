@@ -141,10 +141,19 @@ spring:
   
 saml:
   sso:
-    metadata-generator:
-      entity-id: https://wearables-local.dcri.duke.edu
+    default-success-url: /home
+    default-failure-url: /error?error=404
+    idp-selection-page-url: /idpselection
+    idp:
+      metadata-location: classpath:/security/idp-duke.xml
     logout:
       default-target-url: https://shib.oit.duke.edu/cgi-bin/logout.pl?returnto=http://www.yahoo.com
+    metadata-generator:
+      entity-id: https://wearables-local.dcri.duke.edu
+    metadata-manager:
+      refresh-check-interval: 0
+    extended-metadata:
+      idp-discovery-enabled: false
     key-manager:
       private-key-der-location: classpath:/security/private-local.der
       public-key-pem-location: classpath:/security/public-local.cert

@@ -200,7 +200,7 @@ public class WebSecurityConfig {
           .authorizeRequests()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
             .antMatchers("/", "/error/**", "/webfonts/**", "/img/**").permitAll()
-            .anyRequest().hasAuthority(RoleName.USER.name());
+            .anyRequest().hasRole(RoleName.ADMINISTRATOR.name());
     }
     
     @Bean
