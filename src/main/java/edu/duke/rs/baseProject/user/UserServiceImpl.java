@@ -86,6 +86,10 @@ public class UserServiceImpl implements UserService {
   }
   
   private User saveUser(final UserDto userDto) {
+    if (this.getCurrentUser().getUserId().equals(userDto.getId())) {
+      throw new ConstraintViolationException("error.cantUpdateOwnAccount", (Object[]) null);
+    }
+    
     final Optional<User> userWithEmail = this.userRepository.findByEmailIgnoreCase(userDto.getEmail());
     
     if (userWithEmail.isPresent() && ! userWithEmail.get().getId().equals(userDto.getId())) {

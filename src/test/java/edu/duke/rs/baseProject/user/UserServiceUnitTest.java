@@ -305,6 +305,27 @@ public class UserServiceUnitTest {
   }
   
   @Test(expected = ConstraintViolationException.class)
+  public void whenUpdatingOwnAccount_thenConstraintViolationExceptionThrown() {
+    final UserDto userDto = UserDto.builder()
+        .accountEnabled(true)
+        .email("abc@123.com")
+        .firstName("Joe")
+        .lastName("Smith")
+        .middleInitial("M")
+        .roles(List.of(RoleName.USER.name()))
+        .timeZone(TimeZone.getDefault())
+        .userName("jsmith")
+        .id(Long.valueOf(1))
+        .build();
+    userDto.setId(Long.valueOf(1));
+
+    when(appPrincipal.getUserId()).thenReturn(userDto.getId());
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    
+    service.save(userDto);
+  }
+  
+  @Test(expected = ConstraintViolationException.class)
   public void whenUpdatingUserWithDuplicateEmail_thenConstraintViolationExceptionThrown() {
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
@@ -320,6 +341,8 @@ public class UserServiceUnitTest {
     final User foundUser = new User();
     foundUser.setId(userDto.getId() + 1);
 
+    when(appPrincipal.getUserId()).thenReturn(userDto.getId() + 1);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.of(foundUser));
     
     service.save(userDto);
@@ -341,6 +364,8 @@ public class UserServiceUnitTest {
     final User foundUser = new User();
     foundUser.setId(userDto.getId() + 1);
 
+    when(appPrincipal.getUserId()).thenReturn(userDto.getId() + 1);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.empty());
     when(userRepository.findById(userDto.getId())).thenReturn(Optional.empty());
     
@@ -378,6 +403,8 @@ public class UserServiceUnitTest {
     foundUser.setTimeZone(TimeZone.getDefault());
     foundUser.setUserName(userName);
 
+    when(appPrincipal.getUserId()).thenReturn(userDto.getId() + 1);
+    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.empty());
     when(userRepository.findById(userDto.getId())).thenReturn(Optional.of(foundUser));
     when(roleRepository.findByName(role.getName())).thenReturn(Optional.of(role));
