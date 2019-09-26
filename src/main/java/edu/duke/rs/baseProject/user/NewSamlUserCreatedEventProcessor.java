@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -24,13 +26,17 @@ import lombok.extern.slf4j.Slf4j;
 @Profile("samlSecurity")
 public class NewSamlUserCreatedEventProcessor {
   public static final String USER_NAME_KEY = "userName";
+  public static final String NEW_USER_SUBJECT_CODE = "email.newUser.subject";
   public static final String URL_KEY = "url";
   @Value("${app.url}")
   private String applicationUrl;
   private transient final EmailService emailService;
+  private transient final MessageSource messageSource;
 
-  public NewSamlUserCreatedEventProcessor(final EmailService emailService) {
+  public NewSamlUserCreatedEventProcessor(final EmailService emailService,
+      final MessageSource messageSource) {
     this.emailService = emailService;
+    this.messageSource = messageSource;
   }
   
   @Async(EventConfig.ASYNC_TASK_EXECUTOR_BEAN)
@@ -44,7 +50,7 @@ public class NewSamlUserCreatedEventProcessor {
     content.put(URL_KEY,  UriComponentsBuilder.fromHttpUrl(applicationUrl).build());
     
     this.emailService.send(MessageType.NEW_SAML_USER, user.getEmail(),
-        "Your Duke Reading Center Data Transmission System(DTS) account has been created", content);
+        messageSource.getMessage(NEW_USER_SUBJECT_CODE, (Object[]) null, LocaleContextHolder.getLocale()), content);
   }
 
 }

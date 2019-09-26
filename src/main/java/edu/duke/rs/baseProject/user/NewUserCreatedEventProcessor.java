@@ -4,7 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionPhase;
@@ -24,6 +26,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Profile("!samlSecurity")
 public class NewUserCreatedEventProcessor {
+  public static final String NEW_USER_SUBJECT_CODE = "email.newUser.subject";
   public static final String USER_NAME_KEY = "userName";
   public static final String EXPIRE_DAYS_KEY = "expireDays";
   public static final String URL_KEY = "url";
@@ -32,9 +35,12 @@ public class NewUserCreatedEventProcessor {
   private String applicationUrl;
   @Value("${app.resetPasswordExpirationDays}")
   private Long resetPasswordExpirationDays;
+  private transient final MessageSource messageSource;
   
-  public NewUserCreatedEventProcessor(final EmailService emailService) {
+  public NewUserCreatedEventProcessor(final EmailService emailService,
+      final MessageSource messageSource) {
     this.emailService = emailService;
+    this.messageSource = messageSource;
   }
   
   @Async(EventConfig.ASYNC_TASK_EXECUTOR_BEAN)
@@ -50,6 +56,6 @@ public class NewUserCreatedEventProcessor {
         .queryParam(PasswordResetController.PASSWORD_RESET_ID_REQUEST_PARAM, user.getPasswordChangeId().toString()).build());
     
     this.emailService.send(MessageType.NEW_USER, user.getEmail(),
-        "Your Duke Reading Center Data Transmission System(DTS) account has been created", content);
+        messageSource.getMessage(NEW_USER_SUBJECT_CODE, (Object[]) null, LocaleContextHolder.getLocale()), content);
   }
 }

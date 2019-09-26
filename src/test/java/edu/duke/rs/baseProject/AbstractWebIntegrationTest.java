@@ -40,7 +40,7 @@ public abstract class AbstractWebIntegrationTest extends AbstractWebTest {
       
       if (receivedMessages.length == 0) {
         try {
-          Thread.sleep(1000);
+          Thread.sleep(1100);
         } catch (final InterruptedException te) {}
       }
     }
