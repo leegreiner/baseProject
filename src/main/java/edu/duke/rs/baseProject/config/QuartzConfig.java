@@ -14,7 +14,12 @@ import edu.duke.rs.baseProject.user.passwordReset.ExpirePasswordChangeIdsJob;
 @Configuration
 @Profile("!test")
 public class QuartzConfig {
-
+  private transient final JobProperties jobProperties;
+  
+  public QuartzConfig(final JobProperties jobProperties) {
+    this.jobProperties = jobProperties;
+  }
+  
   @Bean
   @Profile("!samlSecurity")
   public JobDetail expirePasswordChangeIdsDetail() {
@@ -32,8 +37,7 @@ public class QuartzConfig {
         .newTrigger()
         .forJob(expirePasswordChangeIdsDetail)
         .withIdentity("ExpirePasswordChangeIdsJobTrigger")
-        // run hourly on the hour
-        .withSchedule(CronScheduleBuilder.cronSchedule("0 0 * ? * * *"))
+        .withSchedule(CronScheduleBuilder.cronSchedule(jobProperties.getExpirePasswordChangeIdsCronSchedule()))
         .build();
   }
 }

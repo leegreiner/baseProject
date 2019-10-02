@@ -65,7 +65,7 @@ spring:
             driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
             isClustered: true
           scheduler:
-            instanceID: AUTO
+            instanceId: AUTO
     
   main:
     banner-mode: 'off'
@@ -119,7 +119,10 @@ logging:  level:    edu.duke.rs: info
 app:
   defaultEmailFrom: abc@123.com
   google:
-    analysicsTrackingId: None	
+    analysicsTrackingId: None
+  jobs:
+#   hourly on the hour
+    expirePasswordChangeIdsCronSchedule: '0 0 * ? * * *'
   management:
     userName: mgmt_user
 # changeMe1

@@ -1,5 +1,6 @@
 package edu.duke.rs.baseProject.user.passwordReset;
 
+import org.quartz.DisallowConcurrentExecution;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -7,6 +8,7 @@ import org.quartz.JobExecutionException;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
+@DisallowConcurrentExecution
 public class ExpirePasswordChangeIdsJob implements Job {
   private transient final PasswordResetService passwordResetService;
   
