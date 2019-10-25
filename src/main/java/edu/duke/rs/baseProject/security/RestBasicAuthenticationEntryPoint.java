@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,7 +17,7 @@ public class RestBasicAuthenticationEntryPoint extends BasicAuthenticationEntryP
   
   @Override
   public void commence(HttpServletRequest request, HttpServletResponse response,
-      AuthenticationException authException) throws IOException, ServletException {
+      AuthenticationException authException) throws IOException {
     final Map<String, Object> data = new HashMap<>();
     data.put("error", new ErrorInfo(authException.getMessage(), request.getRequestURL().toString()));
     
@@ -27,7 +26,7 @@ public class RestBasicAuthenticationEntryPoint extends BasicAuthenticationEntryP
   }
   
   @Override
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet() {
     setRealmName("management realm");
     super.afterPropertiesSet();
   }

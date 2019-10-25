@@ -75,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public List<Role> getRoles() {
-    return roleRepository.findAll(new Sort(Sort.Direction.ASC, "name"));
+    return roleRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
   }
 
   @Override

@@ -3,7 +3,7 @@ package edu.duke.rs.baseProject.datatables;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
-import static org.hamcrest.collection.IsIn.isIn;
+import static org.hamcrest.collection.IsIn.in;
 
 import java.util.List;
 import java.util.Map;
@@ -68,7 +68,7 @@ public class DataTablesInputUnitTest {
     input.addColumn(column1.getData(), column1.getSearchable(), column1.getOrderable(), column1.getSearch().getValue());
     input.getColumns().add(column2);
     
-    assertThat(column1, isIn(input.getColumns()));
+    assertThat(column1, in(input.getColumns()));
   }
   
   @Test

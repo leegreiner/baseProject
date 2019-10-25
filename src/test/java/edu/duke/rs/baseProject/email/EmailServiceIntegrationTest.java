@@ -2,8 +2,8 @@ package edu.duke.rs.baseProject.email;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.collection.IsArrayContaining.hasItemInArray;
-import static org.hamcrest.collection.IsIn.isIn;
+import static org.hamcrest.collection.ArrayMatching.hasItemInArray;
+import static org.hamcrest.collection.IsIn.in;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
@@ -102,7 +102,7 @@ public class EmailServiceIntegrationTest extends AbstractWebIntegrationTest {
     
     assertThat((String) receivedMessage.getContent(), containsString(expectedContent));
     for (final Address recipient : allRecipients) {
-      assertThat(recipient, isIn(Arrays.asList(receivedMessage.getAllRecipients())));
+      assertThat(recipient, in(Arrays.asList(receivedMessage.getAllRecipients())));
     }
     assertThat(receivedMessage.getSubject(),equalTo(expectedSubject));
     assertThat(receivedMessage.getFrom().length, equalTo(1));

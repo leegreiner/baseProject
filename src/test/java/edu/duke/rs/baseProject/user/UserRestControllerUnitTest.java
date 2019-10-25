@@ -1,6 +1,6 @@
 package edu.duke.rs.baseProject.user;
 
-import static org.hamcrest.text.IsEqualIgnoringWhiteSpace.equalToIgnoringWhiteSpace;
+import static org.hamcrest.text.IsEqualCompressingWhiteSpace.equalToCompressingWhiteSpace;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -114,7 +114,7 @@ public class UserRestControllerUnitTest extends AbstractWebUnitTest {
     final Map<String, Object> expected = new HashMap<String, Object>();
     expected.put("error", errorInfo);
     
-    assertThat(result.getResponse().getContentAsString(), equalToIgnoringWhiteSpace(mapper.writeValueAsString(expected)));
+    assertThat(result.getResponse().getContentAsString(), equalToCompressingWhiteSpace(mapper.writeValueAsString(expected)));
   }
   
   @Test
@@ -143,6 +143,6 @@ public class UserRestControllerUnitTest extends AbstractWebUnitTest {
     final Map<String, Object> expected = new HashMap<String, Object>();
     expected.put("error", errorInfo);
     
-    assertThat(result.getResponse().getContentAsString(), equalToIgnoringWhiteSpace(mapper.writeValueAsString(expected)));
+    assertThat(result.getResponse().getContentAsString(), equalToCompressingWhiteSpace(mapper.writeValueAsString(expected)));
   }
 }
