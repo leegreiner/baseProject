@@ -41,7 +41,7 @@ public class NewSamlUserCreatedEventProcessorUnitTest {
   public void whenEventTriggered_thenEmailIsSent() {
     final String subject = "subject";
     final User user = new User();
-    user.setUserName(USER_NAME);
+    user.setUsername(USER_NAME);
     user.setEmail(USER_EMAIL);
     
     when(messageSource.getMessage(eq(NewSamlUserCreatedEventProcessor.NEW_USER_SUBJECT_CODE), eq(null), any(Locale.class))).thenReturn(subject);

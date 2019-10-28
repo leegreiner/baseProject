@@ -31,7 +31,7 @@ public class PasswordResetDto {
   
   @NonNull
   @NotBlank(message = "${validation.required.userName}")
-  private String userName;
+  private String username;
   
   @NonNull
   @NotBlank(message = "${validation.password}")

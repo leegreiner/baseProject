@@ -38,7 +38,7 @@ public class PasswordResetInititatedProcessorUnitTest {
   @Test
   public void whenEventTriggered_thenEmailIsSent() {
     final User user = new User();
-    user.setUserName(USER_NAME);
+    user.setUsername(USER_NAME);
     user.setEmail(USER_EMAIL);
     user.setPasswordChangeId(UUID.randomUUID());
     

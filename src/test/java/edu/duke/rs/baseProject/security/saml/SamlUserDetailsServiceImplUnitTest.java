@@ -59,7 +59,7 @@ public class SamlUserDetailsServiceImplUnitTest {
   public void whenUserAttributeNotFound_thenUsernameNotFoundExceptionThrown() throws Exception {
     when(credential.getAttribute(SamlUserDetailsServiceImpl.UID_ATTRIBUTE)).thenReturn(null);
     when(uidAttribute.getAttributeValues()).thenReturn(Collections.singletonList(createXSStringAttributeValue()));
-    when(userRepository.findByUserNameIgnoreCase(any(String.class))).thenReturn(Optional.empty());
+    when(userRepository.findByUsernameIgnoreCase(any(String.class))).thenReturn(Optional.empty());
     
     samlUserDetailsService.loadUserBySAML(credential);
   }
@@ -68,7 +68,7 @@ public class SamlUserDetailsServiceImplUnitTest {
   public void whenUserIdValueNotFound_thenUsernameNotFoundExceptionThrown() throws Exception {
     when(credential.getAttribute(SamlUserDetailsServiceImpl.UID_ATTRIBUTE)).thenReturn(uidAttribute);
     when(uidAttribute.getAttributeValues()).thenReturn(Collections.singletonList(createXSBooleanAttributeValue()));
-    when(userRepository.findByUserNameIgnoreCase(any(String.class))).thenReturn(Optional.empty());
+    when(userRepository.findByUsernameIgnoreCase(any(String.class))).thenReturn(Optional.empty());
     
     samlUserDetailsService.loadUserBySAML(credential);
   }
@@ -77,7 +77,7 @@ public class SamlUserDetailsServiceImplUnitTest {
   public void whenUserNotFound_thenUsernameNotFoundExceptionThrown() throws Exception {
     when(credential.getAttribute(SamlUserDetailsServiceImpl.UID_ATTRIBUTE)).thenReturn(uidAttribute);
     when(uidAttribute.getAttributeValues()).thenReturn(Collections.singletonList(createXSStringAttributeValue()));
-    when(userRepository.findByUserNameIgnoreCase(any(String.class))).thenReturn(Optional.empty());
+    when(userRepository.findByUsernameIgnoreCase(any(String.class))).thenReturn(Optional.empty());
     
     samlUserDetailsService.loadUserBySAML(credential);
   }
@@ -87,7 +87,7 @@ public class SamlUserDetailsServiceImplUnitTest {
     when(credential.getAttribute(SamlUserDetailsServiceImpl.UID_ATTRIBUTE)).thenReturn(uidAttribute);
     when(uidAttribute.getAttributeValues()).thenReturn(Collections.singletonList(createXSStringAttributeValue()));
     when(user.isAccountEnabled()).thenReturn(false);
-    when(userRepository.findByUserNameIgnoreCase(any(String.class))).thenReturn(Optional.of(user));
+    when(userRepository.findByUsernameIgnoreCase(any(String.class))).thenReturn(Optional.of(user));
     
     samlUserDetailsService.loadUserBySAML(credential);
   }
@@ -97,15 +97,15 @@ public class SamlUserDetailsServiceImplUnitTest {
     when(credential.getAttribute(SamlUserDetailsServiceImpl.UID_ATTRIBUTE)).thenReturn(uidAttribute);
     when(uidAttribute.getAttributeValues()).thenReturn(Collections.singletonList(createXSStringAttributeValue()));
     when(user.isAccountEnabled()).thenReturn(true);
-    when(user.getUserName()).thenReturn(USER_NAME);
-    when(userRepository.findByUserNameIgnoreCase(any(String.class))).thenReturn(Optional.of(user));
+    when(user.getUsername()).thenReturn(USER_NAME);
+    when(userRepository.findByUsernameIgnoreCase(any(String.class))).thenReturn(Optional.of(user));
     
     final Object principal = samlUserDetailsService.loadUserBySAML(credential);
     
     assertThat(principal,instanceOf(AppPrincipal.class));
     final AppPrincipal appPrincipal = (AppPrincipal) principal;
     assertThat(appPrincipal.getUsername(), equalTo(USER_NAME));
-    verify(userRepository, times(1)).findByUserNameIgnoreCase(USER_NAME);
+    verify(userRepository, times(1)).findByUsernameIgnoreCase(USER_NAME);
     verify(user, times(1)).setLastLoggedIn(any());
   }
   
@@ -114,15 +114,15 @@ public class SamlUserDetailsServiceImplUnitTest {
     when(credential.getAttribute(SamlUserDetailsServiceImpl.UID_ATTRIBUTE)).thenReturn(uidAttribute);
     when(uidAttribute.getAttributeValues()).thenReturn(Collections.singletonList(createXSAnyAttributeValue()));
     when(user.isAccountEnabled()).thenReturn(true);
-    when(user.getUserName()).thenReturn(USER_NAME);
-    when(userRepository.findByUserNameIgnoreCase(any(String.class))).thenReturn(Optional.of(user));
+    when(user.getUsername()).thenReturn(USER_NAME);
+    when(userRepository.findByUsernameIgnoreCase(any(String.class))).thenReturn(Optional.of(user));
     
     final Object principal = samlUserDetailsService.loadUserBySAML(credential);
     
     assertThat(principal,instanceOf(AppPrincipal.class));
     final AppPrincipal appPrincipal = (AppPrincipal) principal;
     assertThat(appPrincipal.getUsername(), equalTo(USER_NAME));
-    verify(userRepository, times(1)).findByUserNameIgnoreCase(USER_NAME);
+    verify(userRepository, times(1)).findByUsernameIgnoreCase(USER_NAME);
     verify(user, times(1)).setLastLoggedIn(any());
   }
   

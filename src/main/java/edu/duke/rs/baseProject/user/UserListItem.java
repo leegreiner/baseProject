@@ -4,7 +4,7 @@ public interface UserListItem {
 	Long getId();
 	String getFirstName();
 	String getLastName();
-	String getUserName();
+	String getUsername();
 	String getEmail();
 	boolean getAccountEnabled();
 }

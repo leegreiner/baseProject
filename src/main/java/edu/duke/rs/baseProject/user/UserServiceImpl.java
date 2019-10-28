@@ -111,8 +111,8 @@ public class UserServiceImpl implements UserService {
   }
   
   private User createUser(final UserDto userDto) {
-    if (this.userRepository.findByUserNameIgnoreCase(userDto.getUserName()).isPresent()) {
-      throw new ConstraintViolationException("error.duplicateUserName", new Object[] {userDto.getUserName()});
+    if (this.userRepository.findByUsernameIgnoreCase(userDto.getUsername()).isPresent()) {
+      throw new ConstraintViolationException("error.duplicateUserName", new Object[] {userDto.getUsername()});
     }
     
     if (this.userRepository.findByEmailIgnoreCase(userDto.getEmail()).isPresent()) {
@@ -128,7 +128,7 @@ public class UserServiceImpl implements UserService {
     user.setLastName(userDto.getLastName().trim());
     user.setPassword(this.passwordGenerator.generate());
     user.setTimeZone(userDto.getTimeZone());
-    user.setUserName(userDto.getUserName().trim());
+    user.setUsername(userDto.getUsername().trim());
     passwordResetService.initiatePasswordReset(user);
     
     populateRoles(userDto, user);

@@ -145,11 +145,11 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
         .param("middleInitial", expected.getMiddleInitial())
         .param("roles", expected.getRoles().get(0))
         .param("timeZone", expected.getTimeZone().getID())
-        .param("userName", expected.getUserName()))
+        .param("username", expected.getUsername()))
         .andExpect(status().isFound())
         .andReturn();
     
-    final User actual = userRepository.findByUserNameIgnoreCase(expected.getUserName())
+    final User actual = userRepository.findByUsernameIgnoreCase(expected.getUsername())
         .orElseThrow(() -> new NotFoundException());
 
     assertThat(result.getResponse().getRedirectedUrl(),
@@ -169,7 +169,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     assertThat(actual.getPassword(), notNullValue());
     assertThat(actual.getRoles(), contains(role));
     assertThat(actual.getTimeZone(), equalTo(expected.getTimeZone()));
-    assertThat(actual.getUserName(), equalTo(expected.getUserName()));
+    assertThat(actual.getUsername(), equalTo(expected.getUsername()));
     assertThat(actual.getVersion(), notNullValue());
 
     final MimeMessage[] receivedMessages = pollForEmail(smtpServer);
@@ -197,7 +197,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     final UserDto expected = buildUserDto();
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
-    User user = new User(expected.getUserName() + "A", "password", expected.getFirstName() + "B", expected.getLastName() + "C",
+    User user = new User(expected.getUsername() + "A", "password", expected.getFirstName() + "B", expected.getLastName() + "C",
          "D" + expected.getEmail(), roles);
     user.setAccountEnabled(false);
     user = userRepository.save(user);
@@ -214,7 +214,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
         .param("middleInitial", expected.getMiddleInitial())
         .param("roles", expected.getRoles().get(0))
         .param("timeZone", expected.getTimeZone().getID())
-        .param("userName", expected.getUserName()))
+        .param("username", expected.getUsername()))
         .andExpect(status().isFound())
         .andReturn();
     
@@ -238,7 +238,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     assertThat(actual.getPassword(), equalTo(user.getPassword()));
     assertThat(actual.getRoles(), contains(role));
     assertThat(actual.getTimeZone(), equalTo(expected.getTimeZone()));
-    assertThat(actual.getUserName(), equalTo(user.getUserName()));
+    assertThat(actual.getUsername(), equalTo(user.getUsername()));
     assertThat(actual.getVersion(), equalTo(user.getVersion() + 1));
   }
   
@@ -256,10 +256,10 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
         .param("middleInitial", expected.getMiddleInitial())
         .param("roles", expected.getRoles().get(0))
         .param("timeZone", expected.getTimeZone().getID())
-        .param("userName", expected.getUserName()))
+        .param("username", expected.getUsername()))
         .andExpect(status().isFound());
     
-    final User actual = userRepository.findByUserNameIgnoreCase(expected.getUserName())
+    final User actual = userRepository.findByUsernameIgnoreCase(expected.getUsername())
         .orElseThrow(() -> new NotFoundException());
     
     final MvcResult result = this.mockMvc.perform(get(UserController.USER_HISTORY_MAPPING, actual.getId())
@@ -291,7 +291,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     assertThat(actualHistoryUser.getPasswordChangeId(), equalTo(actual.getPasswordChangeId()));
     assertThat(actualHistoryUser.getPasswordChangeIdCreationTime(), equalTo(actual.getPasswordChangeIdCreationTime()));
     assertThat(actualHistoryUser.getTimeZone(), equalTo(actual.getTimeZone()));
-    assertThat(actualHistoryUser.getUserName(), equalTo(actual.getUserName()));
+    assertThat(actualHistoryUser.getUsername(), equalTo(actual.getUsername()));
     assertThat(actualHistoryUser.isAccountEnabled(), equalTo(actual.isAccountEnabled()));
     assertThat(actualHistoryUser.getRoles().size(), equalTo(actual.getRoles().size()));
   }
@@ -305,7 +305,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
         .middleInitial("M")
         .roles(List.of(RoleName.USER.name()))
         .timeZone(TimeZone.getTimeZone("Brazil/East"))
-        .userName("johnsmith")
+        .username("johnsmith")
         .build();
 
     return user;

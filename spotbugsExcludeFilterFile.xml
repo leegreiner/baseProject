@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FindBugsFilter>
+  <Match>
+    <Class name="edu.duke.rs.baseProject.formatters.LocalDateTimeFormatter" />
+    <Method name="parse" />
+    <Bug pattern="NP_NONNULL_RETURN_VIOLATION"/>
+  </Match>
+</FindBugsFilter>

@@ -81,7 +81,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
             .param("middleInitial", expected.getMiddleInitial())
             .param("roles", expected.getRoles().get(0))
             .param("timeZone", expected.getTimeZone().getID())
-            .param("userName", expected.getUserName()))
+            .param("username", expected.getUsername()))
             .andExpect(status().isFound())
             .andReturn();
         
@@ -141,7 +141,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   public void whenAuthenticated_thenUserDetailsReturned() throws Exception {
     final User user = new User();
     user.setId(Long.valueOf(1));
-    user.setUserName("abc");
+    user.setUsername("abc");
     when(userService.getUser(user.getId())).thenReturn(user);
     
     this.mockMvc.perform(get(UserController.USER_MAPPING, user.getId())
@@ -158,7 +158,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   public void whenUserDetailsThrowsApplicationException_thenErrorViewReturned() throws Exception {
     final User user = new User();
     user.setId(Long.valueOf(1));
-    user.setUserName("abc");
+    user.setUsername("abc");
     final String errorMessage = "error.principalNotFound";
     when(userService.getUser(user.getId())).thenThrow(new NotFoundException(errorMessage, (Object[])null));
     
@@ -176,7 +176,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   public void whenUserDetailsThrowsException_thenErrorViewReturned() throws Exception {
     final User user = new User();
     user.setId(Long.valueOf(1));
-    user.setUserName("abc");
+    user.setUsername("abc");
     when(userService.getUser(user.getId())).thenThrow(new NullPointerException());
     
     final MvcResult result = this.mockMvc.perform(get(UserController.USER_MAPPING, user.getId())
@@ -203,7 +203,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     user.setLastName("Smith");
     user.setRoles(roles);
     user.setTimeZone(TimeZone.getDefault());
-    user.setUserName("johnsmith");
+    user.setUsername("johnsmith");
     
     when(userService.getUser(user.getId())).thenReturn(user);
     
@@ -232,7 +232,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .param("middleInitial", userDto.getMiddleInitial())
         .param("roles", userDto.getRoles().get(0))
         .param("timeZone", userDto.getTimeZone().getID())
-        .param("userName", userDto.getUserName()))
+        .param("username", userDto.getUsername()))
         .andExpect(view().name(UserController.NEW_USER_VIEW))
         .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
         .andExpect(model().attribute(UserController.ROLES_MODEL_ATTRIBUTE, not(nullValue())))
@@ -255,7 +255,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .param("middleInitial", userDto.getMiddleInitial())
         .param("roles", userDto.getRoles().get(0))
         .param("timeZone", userDto.getTimeZone().getID())
-        .param("userName", userDto.getUserName()))
+        .param("username", userDto.getUsername()))
         .andExpect(view().name(UserController.NEW_USER_VIEW))
         .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
         .andExpect(model().attribute(UserController.ROLES_MODEL_ATTRIBUTE, not(nullValue())))
@@ -281,7 +281,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .param("middleInitial", userDto.getMiddleInitial())
         .param("roles", userDto.getRoles().get(0))
         .param("timeZone", userDto.getTimeZone().getID())
-        .param("userName", userDto.getUserName()))
+        .param("username", userDto.getUsername()))
         .andExpect(flash().attribute(BaseWebController.FLASH_FEEDBACK_MESSAGE, not(nullValue())))
         .andReturn();
     
@@ -308,7 +308,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .param("middleInitial", userDto.getMiddleInitial())
         .param("roles", userDto.getRoles().get(0))
         .param("timeZone", userDto.getTimeZone().getID())
-        .param("userName", userDto.getUserName()))
+        .param("username", userDto.getUsername()))
         .andExpect(view().name(UserController.EDIT_USER_VIEW))
         .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
         .andExpect(model().attribute(UserController.ROLES_MODEL_ATTRIBUTE, not(nullValue())))
@@ -333,7 +333,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .param("middleInitial", userDto.getMiddleInitial())
         .param("roles", userDto.getRoles().get(0))
         .param("timeZone", userDto.getTimeZone().getID())
-        .param("userName", userDto.getUserName()))
+        .param("username", userDto.getUsername()))
         .andExpect(view().name(UserController.EDIT_USER_VIEW))
         .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
         .andExpect(model().attribute(UserController.ROLES_MODEL_ATTRIBUTE, not(nullValue())))
@@ -360,7 +360,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .param("middleInitial", userDto.getMiddleInitial())
         .param("roles", userDto.getRoles().get(0))
         .param("timeZone", userDto.getTimeZone().getID())
-        .param("userName", userDto.getUserName()))
+        .param("username", userDto.getUsername()))
         .andExpect(flash().attribute(BaseWebController.FLASH_FEEDBACK_MESSAGE, not(nullValue())))
         .andReturn();
     
@@ -398,7 +398,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   public void whenAdministratorRequestsUserHistory_thenUserHistoryReturned() throws Exception {
     final User user = new User();
     user.setId(Long.valueOf(1));
-    user.setUserName("abc");
+    user.setUsername("abc");
     final List<UserHistory> history = new ArrayList<UserHistory>();
     
     when(userService.getUser(user.getId())).thenReturn(user);
@@ -426,7 +426,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .middleInitial("M")
         .roles(List.of(RoleName.USER.name()))
         .timeZone(TimeZone.getTimeZone("Brazil/East"))
-        .userName("johnsmith")
+        .username("johnsmith")
         .build();
 
     return user;

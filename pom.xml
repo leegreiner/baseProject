@@ -316,7 +316,15 @@
           <threshold>Low</threshold>
           <effort>Max</effort>
           <debug>true</debug>
+          <excludeFilterFile>spotbugsExcludeFilterFile.xml</excludeFilterFile>
         </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

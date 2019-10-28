@@ -155,7 +155,7 @@ public class UserServiceUnitTest {
   public void whenUserNotFound_thenGetUserThrowsNotFoundException() {
     final User user = new User();
     user.setId(Long.valueOf(1));
-    user.setUserName("abc");
+    user.setUsername("abc");
     when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
     
     service.getUser(user.getId());
@@ -165,7 +165,7 @@ public class UserServiceUnitTest {
   public void whenUserFound_thenGetUserReturnsUser() {
     final User user = new User();
     user.setId(Long.valueOf(1));
-    user.setUserName("abc");
+    user.setUsername("abc");
     when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
     
     final User retrievedUser = service.getUser(user.getId());
@@ -197,10 +197,10 @@ public class UserServiceUnitTest {
         .middleInitial("M")
         .roles(List.of(RoleName.USER.name()))
         .timeZone(TimeZone.getDefault())
-        .userName("jsmith")
+        .username("jsmith")
         .build();
 
-    when(userRepository.findByUserNameIgnoreCase(userDto.getUserName())).thenReturn(Optional.of(new User()));
+    when(userRepository.findByUsernameIgnoreCase(userDto.getUsername())).thenReturn(Optional.of(new User()));
     
     service.save(userDto);
   }
@@ -215,10 +215,10 @@ public class UserServiceUnitTest {
         .middleInitial("M")
         .roles(List.of(RoleName.USER.name()))
         .timeZone(TimeZone.getDefault())
-        .userName("jsmith")
+        .username("jsmith")
         .build();
 
-    when(userRepository.findByUserNameIgnoreCase(userDto.getUserName())).thenReturn(Optional.empty());
+    when(userRepository.findByUsernameIgnoreCase(userDto.getUsername())).thenReturn(Optional.empty());
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.of(new User()));
     
     service.save(userDto);
@@ -236,10 +236,10 @@ public class UserServiceUnitTest {
         .middleInitial("M")
         .roles(List.of(role.getName().name()))
         .timeZone(TimeZone.getTimeZone(ZoneId.of("Brazil/East")))
-        .userName("jsmith")
+        .username("jsmith")
         .build();
 
-    when(userRepository.findByUserNameIgnoreCase(userDto.getUserName())).thenReturn(Optional.empty());
+    when(userRepository.findByUsernameIgnoreCase(userDto.getUsername())).thenReturn(Optional.empty());
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.empty());
     when(passwordGenerator.generate()).thenReturn(password);
     when(roleRepository.findByName(role.getName())).thenReturn(Optional.empty());
@@ -260,10 +260,10 @@ public class UserServiceUnitTest {
         .middleInitial("M")
         .roles(List.of(role.getName().name()))
         .timeZone(TimeZone.getTimeZone(ZoneId.of("Brazil/East")))
-        .userName("jsmith")
+        .username("jsmith")
         .build();
 
-    when(userRepository.findByUserNameIgnoreCase(userDto.getUserName())).thenReturn(Optional.empty());
+    when(userRepository.findByUsernameIgnoreCase(userDto.getUsername())).thenReturn(Optional.empty());
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.empty());
     when(passwordGenerator.generate()).thenReturn(password);
     when(roleRepository.findByName(role.getName())).thenReturn(Optional.of(role));
@@ -288,9 +288,9 @@ public class UserServiceUnitTest {
     assertThat(actual.getPassword(), equalTo(password));
     assertThat(actual.getRoles(), contains(role));
     assertThat(actual.getTimeZone(), equalTo(userDto.getTimeZone()));
-    assertThat(actual.getUserName(), equalTo(userDto.getUserName()));
+    assertThat(actual.getUsername(), equalTo(userDto.getUsername()));
     
-    verify(userRepository, times(1)).findByUserNameIgnoreCase(userDto.getUserName());
+    verify(userRepository, times(1)).findByUsernameIgnoreCase(userDto.getUsername());
     verify(userRepository, times(1)).findByEmailIgnoreCase(userDto.getEmail());
     verify(roleRepository, times(1)).findByName(role.getName());
     verify(userRepository, times(1)).save(any(User.class));
@@ -314,7 +314,7 @@ public class UserServiceUnitTest {
         .middleInitial("M")
         .roles(List.of(RoleName.USER.name()))
         .timeZone(TimeZone.getDefault())
-        .userName("jsmith")
+        .username("jsmith")
         .id(Long.valueOf(1))
         .build();
     userDto.setId(Long.valueOf(1));
@@ -335,7 +335,7 @@ public class UserServiceUnitTest {
         .middleInitial("M")
         .roles(List.of(RoleName.USER.name()))
         .timeZone(TimeZone.getDefault())
-        .userName("jsmith")
+        .username("jsmith")
         .id(Long.valueOf(1))
         .build();
     final User foundUser = new User();
@@ -358,7 +358,7 @@ public class UserServiceUnitTest {
         .middleInitial("M")
         .roles(List.of(RoleName.USER.name()))
         .timeZone(TimeZone.getDefault())
-        .userName("jsmith")
+        .username("jsmith")
         .id(Long.valueOf(1))
         .build();
     final User foundUser = new User();
@@ -375,7 +375,7 @@ public class UserServiceUnitTest {
   @Test
   public void whenUpdatingUserWithValidInfo_thenUserIsUpdated() {
     final String password = "abcdef";
-    final String userName = "jsmeith";
+    final String username = "jsmeith";
     final Role role = new Role(RoleName.USER);
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
@@ -385,7 +385,7 @@ public class UserServiceUnitTest {
         .middleInitial("M")
         .roles(List.of(role.getName().name()))
         .timeZone(TimeZone.getDefault())
-        .userName("jsmith")
+        .username("jsmith")
         .id(Long.valueOf(1))
         .build();
     final Set<Role> roles = new HashSet<Role>();
@@ -401,7 +401,7 @@ public class UserServiceUnitTest {
     foundUser.setPassword(password);
     foundUser.setRoles(roles);
     foundUser.setTimeZone(TimeZone.getDefault());
-    foundUser.setUserName(userName);
+    foundUser.setUsername(username);
 
     when(appPrincipal.getUserId()).thenReturn(userDto.getId() + 1);
     when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
@@ -429,7 +429,7 @@ public class UserServiceUnitTest {
     assertThat(actual.getRoles().size(), equalTo(1));
     assertThat(actual.getRoles(), contains(role));
     assertThat(actual.getTimeZone(), equalTo(userDto.getTimeZone()));
-    assertThat(actual.getUserName(), equalTo(userName));
+    assertThat(actual.getUsername(), equalTo(username));
     
     verify(userRepository, times(1)).findByEmailIgnoreCase(userDto.getEmail());
     verify(userRepository, times(1)).findById(userDto.getId());

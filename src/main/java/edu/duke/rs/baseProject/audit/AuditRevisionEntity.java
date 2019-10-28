@@ -7,6 +7,7 @@ import org.hibernate.envers.DefaultTrackingModifiedEntitiesRevisionEntity;
 import org.hibernate.envers.RevisionEntity;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,6 +15,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
+@EqualsAndHashCode(callSuper = true, of = {"userId"})
 @NoArgsConstructor
 @AllArgsConstructor
 @RevisionEntity(UserRevisionListener.class)

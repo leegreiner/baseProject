@@ -1,11 +1,14 @@
 package edu.duke.rs.baseProject.util;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.util.Comparator;
 
-public class ZoneComparator implements Comparator<ZoneId>{ 
+public class ZoneComparator implements Comparator<ZoneId>, Serializable { 
+  private static final long serialVersionUID = 1L;
+
   @Override
   public int compare(final ZoneId zoneId1, final ZoneId zoneId2) {
     final LocalDateTime now = LocalDateTime.now();

@@ -3,7 +3,7 @@
 <head></head>
 <body>
   <p th:text="#{email.newUser.welcome(${expireDays})}">welcome</p>
-  <p th:utext="#{email.newUser.userName(${userName})}">user name</p>
+  <p th:utext="#{email.newUser.userName(${username})}">user name</p>
   <p><a th:href="${url}" th:text="#{email.newUser.resetPassword}">URL</a><p>
 </body>
 </html>

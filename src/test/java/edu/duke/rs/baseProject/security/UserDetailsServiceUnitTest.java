@@ -45,7 +45,7 @@ public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 	
 	@Test(expected = UsernameNotFoundException.class)
 	public void whenUserNotFound_thenUsernameNotFoundExceptionThrown() {
-		when(userRepository.findByUserNameIgnoreCase(any(String.class)))
+		when(userRepository.findByUsernameIgnoreCase(any(String.class)))
 			.thenReturn(Optional.empty());
 		
 		userDetailsService.loadUserByUsername("abc");
@@ -57,17 +57,17 @@ public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 		final Set<Role> roles = new HashSet<Role>();
 		roles.add(role);
 		final User user = new User("johnsmith", "johnspassword", "John", "Smith","johnSmith@gmail.com", roles);
-		when(userRepository.findByUserNameIgnoreCase(user.getUserName()))
+		when(userRepository.findByUsernameIgnoreCase(user.getUsername()))
 			.thenReturn(Optional.of(user));
 		
-		final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUserName());
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(user.getUsername());
 		
-		assertThat(userDetails.getUsername(), equalToIgnoringCase(user.getUserName()));
+		assertThat(userDetails.getUsername(), equalToIgnoringCase(user.getUsername()));
 		assertThat(userDetails.getPassword(), equalToIgnoringCase(user.getPassword()));
 		assertThat(userDetails.getAuthorities().size(), equalTo(1));
 		assertThat(user.getLastLoggedIn(), notNullValue());
 		
-		verify(userRepository, times(1)).findByUserNameIgnoreCase(user.getUserName());
+		verify(userRepository, times(1)).findByUsernameIgnoreCase(user.getUsername());
 		verifyNoMoreInteractions(userRepository);
 	}
 }

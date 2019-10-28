@@ -22,7 +22,7 @@ public class UserHistoryUnitTest {
     final RevisionType revisionType = RevisionType.ADD;
     final User user = new User();
     user.setId(Long.valueOf(auditRevisionEntity.getId() + 1));
-    user.setUserName("abc123Abc");
+    user.setUsername("abc123Abc");
     
     final UserHistory entityHistory = new UserHistory(user, auditRevisionEntity, revisionType);
     

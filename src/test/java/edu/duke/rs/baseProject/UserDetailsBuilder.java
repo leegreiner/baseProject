@@ -28,7 +28,7 @@ public class UserDetailsBuilder {
     user.setFirstName("John");
     user.setId(userId);
     user.setLastName("Smith");
-    user.setUserName("johnsmith");
+    user.setUsername("johnsmith");
     user.setEmail("johnSmith@gmail.com");
     user.setRoles(roleEntities);
     user.setTimeZone(TimeZone.getTimeZone("UTC"));

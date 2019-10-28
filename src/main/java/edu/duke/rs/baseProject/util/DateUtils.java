@@ -1,7 +1,9 @@
 package edu.duke.rs.baseProject.util;
 
+import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -18,6 +20,8 @@ import edu.duke.rs.baseProject.security.SecurityUtils;
 public class DateUtils {
   public static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
   public static final DateTimeFormatter DEFAULT_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT);
+  
+  private DateUtils() {}
   
   public static void convertLocalDateTimeToCurrentUserTime(final Object object) {
     final ZoneId currentUserZoneId = getCurrentUserZoneId();
@@ -40,7 +44,8 @@ public class DateUtils {
             setter.invoke(object, convertToZone((LocalDateTime) getter.invoke(object),
                 ZoneId.systemDefault(), currentUserZoneId));
           }
-        } catch (final Exception e) {
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | IntrospectionException e) {
+          ;;
         }
       });
   }
@@ -66,7 +71,9 @@ public class DateUtils {
             setter.invoke(object, convertToZone((LocalDateTime) getter.invoke(object),
                 currentUserZoneId, ZoneId.systemDefault()));
           }
-        } catch (final Exception e) {}
+        } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | IntrospectionException e) {
+          ;;
+        }
       });
   }
   

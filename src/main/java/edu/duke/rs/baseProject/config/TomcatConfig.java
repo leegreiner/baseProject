@@ -12,13 +12,15 @@ public class TomcatConfig {
   @Bean
   public ConfigurableServletWebServerFactory webServerFactory() {
     final TomcatServletWebServerFactory factory = new TomcatServletWebServerFactory();
-    factory.addConnectorCustomizers(new TomcatConnectorCustomizer() {
-        @Override
-        public void customize(Connector connector) {
-            connector.setProperty("relaxedQueryChars", "|{}[]");
-        }
-    });
+    factory.addConnectorCustomizers(new CustomTomcatConnectorCustomizer());
     
     return factory;
+  }
+  
+  private static class CustomTomcatConnectorCustomizer implements TomcatConnectorCustomizer {
+    @Override
+    public void customize(Connector connector) {
+        connector.setProperty("relaxedQueryChars", "|{}[]");
+    }
   }
 }

@@ -28,10 +28,10 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	
 	@Override
 	@Transactional
-	public UserDetails loadUserByUsername(String userName) throws UsernameNotFoundException {
-		log.debug("Logging in user " + userName);
-		final User user = this.userRepository.findByUserNameIgnoreCase(userName)
-				.orElseThrow(() -> new UsernameNotFoundException("User " + userName + " not found"));
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		log.debug("Logging in user " + username);
+		final User user = this.userRepository.findByUsernameIgnoreCase(username)
+				.orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
 
 		user.setLastLoggedIn(LocalDateTime.now());
 		

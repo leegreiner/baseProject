@@ -10,7 +10,7 @@ public abstract class ApplicationException extends RuntimeException {
   
   public ApplicationException(final String message, final Object[] messageArguments) {
     super(message);
-    this.messageArguments = messageArguments;
+    this.messageArguments = messageArguments == null ? null : messageArguments.clone();
   }
 
   public ApplicationException(final Throwable cause) {
@@ -19,17 +19,17 @@ public abstract class ApplicationException extends RuntimeException {
 
   public ApplicationException(final String message, final Throwable cause, final Object[] messageArguments) {
     super(message, cause);
-    this.messageArguments = messageArguments;
+    this.messageArguments = messageArguments == null ? null : messageArguments.clone();
   }
 
   public ApplicationException(final String message, final Throwable cause, final boolean enableSuppression,
       final boolean writableStackTrace, final Object[] messageArguments) {
     super(message, cause, enableSuppression, writableStackTrace);
-    this.messageArguments = messageArguments;
+    this.messageArguments = messageArguments == null ? null : messageArguments.clone();
     
   }
   
   public Object[] getMessageArguments() {
-    return this.messageArguments;
+    return messageArguments == null ? null : messageArguments.clone();
   }
 }

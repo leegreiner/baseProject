@@ -104,7 +104,7 @@ public class PasswordResetControllerIntegrationTest extends AbstractWebIntegrati
     final MvcResult result = this.mockMvc.perform(put(PasswordResetController.PASSWORD_RESET_INITIATE_MAPPING)
         .with(csrf())
         .param("passwordChangeId", user.getPasswordChangeId().toString())
-        .param("userName", user.getUserName())
+        .param("username", user.getUsername())
         .param("password", USER_PASSWORD + "A")
         .param("confirmPassword", USER_PASSWORD + "A"))
         .andExpect(flash().attribute(BaseWebController.FLASH_FEEDBACK_MESSAGE, not(nullValue())))
@@ -130,7 +130,7 @@ public class PasswordResetControllerIntegrationTest extends AbstractWebIntegrati
     user.setPassword(passwordEncoder.encode(USER_PASSWORD));
     user.setRoles(Set.of(role));
     user.setTimeZone(TimeZone.getDefault());
-    user.setUserName("joesmith");
+    user.setUsername("joesmith");
     
     return user;
   }

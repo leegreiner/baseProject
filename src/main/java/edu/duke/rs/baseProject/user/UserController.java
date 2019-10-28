@@ -171,7 +171,7 @@ public class UserController extends BaseWebController {
         .accountEnabled(user.isAccountEnabled())
         .lastLoggedIn(user.getLastLoggedIn())
         .roles(roles)
-        .userName(user.getUserName());
+        .username(user.getUsername());
 	  }
 	  
 	  return builder.build();

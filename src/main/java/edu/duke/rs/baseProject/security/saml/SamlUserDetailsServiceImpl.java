@@ -46,7 +46,7 @@ public class SamlUserDetailsServiceImpl implements SAMLUserDetailsService {
     
     log.debug("Received credentials for " + userName);
     
-    final User user = this.userRepository.findByUserNameIgnoreCase(userName)
+    final User user = this.userRepository.findByUsernameIgnoreCase(userName)
         .orElseThrow(() -> new UsernameNotFoundException("User " + userName + " not found"));
     
     if (! user.isAccountEnabled()) {

@@ -15,10 +15,10 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-	Page<UserListItem> findByLastNameStartingWithIgnoreCase(String userName, Pageable pageable);
+	Page<UserListItem> findByLastNameStartingWithIgnoreCase(String lastName, Pageable pageable);
 	Page<UserListItem> findAllBy(Pageable pageable);
 	@EntityGraph("user.userAndRoles")
-	Optional<User> findByUserNameIgnoreCase(String userName);
+	Optional<User> findByUsernameIgnoreCase(String username);
 	Optional<User> findByEmailIgnoreCase(String email);
 	@EntityGraph("user.userAndRoles")
   Optional<User> findById(Long id);

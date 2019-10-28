@@ -37,7 +37,7 @@ public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
 	@Test
 	public void whenFindByUserNameStartingWithIgnoreCaseNoUsers_thenReturnNoUsers() {
 		final Page<UserListItem> page = userRepository.findByLastNameStartingWithIgnoreCase(
-				"j", PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "userName")));
+				"j", PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "username")));
 		
 		final List<UserListItem> users = page.getContent();
 		

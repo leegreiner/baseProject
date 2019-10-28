@@ -148,11 +148,11 @@ public class PasswordResetServiceUnitTest {
   }
   
   @Test(expected = ConstraintViolationException.class)
-  public void whenUserNameEnteredDoesntMatchUser_thenProcessPasswordResetThrowsConstraintViolationException() {
+  public void whenUsernameEnteredDoesntMatchUser_thenProcessPasswordResetThrowsConstraintViolationException() {
     final PasswordResetDto dto = createPasswordResetDto();
     final User user = new User();
     user.setPasswordChangeIdCreationTime(LocalDateTime.now());
-    user.setUserName(dto.getUserName() + "m");
+    user.setUsername(dto.getUsername() + "m");
     
     when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.of(user));
     
@@ -164,7 +164,7 @@ public class PasswordResetServiceUnitTest {
     final PasswordResetDto dto = createPasswordResetDto();
     final User user = new User();
     user.setPasswordChangeIdCreationTime(LocalDateTime.now());
-    user.setUserName(dto.getUserName());
+    user.setUsername(dto.getUsername());
     user.setPassword(dto.getPassword());
     
     when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.of(user));
@@ -178,7 +178,7 @@ public class PasswordResetServiceUnitTest {
     final PasswordResetDto dto = createPasswordResetDto();
     final User user = new User();
     user.setPasswordChangeIdCreationTime(LocalDateTime.now());
-    user.setUserName(dto.getUserName());
+    user.setUsername(dto.getUsername());
     user.setPassword(dto.getPassword() + "a");
     user.setId(Long.valueOf(1));
     
@@ -194,7 +194,7 @@ public class PasswordResetServiceUnitTest {
     final PasswordResetDto dto = createPasswordResetDto();
     final User user = new User();
     user.setPasswordChangeIdCreationTime(LocalDateTime.now());
-    user.setUserName(dto.getUserName());
+    user.setUsername(dto.getUsername());
     user.setPassword(dto.getPassword() + "a");
     user.setId(Long.valueOf(1));
     
@@ -242,7 +242,7 @@ public class PasswordResetServiceUnitTest {
     dto.setConfirmPassword("abc123ABC");
     dto.setPassword(dto.getConfirmPassword());
     dto.setPasswordChangeId(UUID.randomUUID());
-    dto.setUserName("johnsmith");
+    dto.setUsername("johnsmith");
     
     return dto;
   }

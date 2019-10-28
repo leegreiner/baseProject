@@ -25,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Profile("samlSecurity")
 public class NewSamlUserCreatedEventProcessor {
-  public static final String USER_NAME_KEY = "userName";
+  public static final String USER_NAME_KEY = "username";
   public static final String NEW_USER_SUBJECT_CODE = "email.newUser.subject";
   public static final String URL_KEY = "url";
   @Value("${app.url}")
@@ -46,7 +46,7 @@ public class NewSamlUserCreatedEventProcessor {
     log.debug("Received CreatedEvent for " + user.toString());
     final Map<String, Object> content = new HashMap<String, Object>();
     
-    content.put(USER_NAME_KEY, user.getUserName());
+    content.put(USER_NAME_KEY, user.getUsername());
     content.put(URL_KEY,  UriComponentsBuilder.fromHttpUrl(applicationUrl).build());
     
     this.emailService.send(MessageType.NEW_SAML_USER, user.getEmail(),

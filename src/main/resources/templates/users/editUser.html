@@ -24,7 +24,7 @@
               <div class="panel-content">
 	              <form id="userForm" th:action="@{'/users/' + ${user.id}}" th:object="${user}" th:method="put" class="needs-validation" novalidate autocomplete="off">
 	                <input type="hidden" th:field="*{id}"/>
-	                <input type="hidden" th:field="*{userName}"/>
+	                <input type="hidden" th:field="*{username}"/>
 	                
 	                <div class="form-row">
 	                 <div class="col-sm-5 mb-3">

@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
 @Profile("!samlSecurity")
 public class NewUserCreatedEventProcessor {
   public static final String NEW_USER_SUBJECT_CODE = "email.newUser.subject";
-  public static final String USER_NAME_KEY = "userName";
+  public static final String USER_NAME_KEY = "username";
   public static final String EXPIRE_DAYS_KEY = "expireDays";
   public static final String URL_KEY = "url";
   private transient final EmailService emailService;
@@ -50,7 +50,7 @@ public class NewUserCreatedEventProcessor {
     log.debug("Received CreatedEvent for " + user.toString());
     final Map<String, Object> content = new HashMap<String, Object>();
     
-    content.put(USER_NAME_KEY, user.getUserName());
+    content.put(USER_NAME_KEY, user.getUsername());
     content.put(EXPIRE_DAYS_KEY, resetPasswordExpirationDays);
     content.put(URL_KEY,  UriComponentsBuilder.fromHttpUrl(applicationUrl + PasswordResetController.PASSWORD_RESET_INITIATE_MAPPING)
         .queryParam(PasswordResetController.PASSWORD_RESET_ID_REQUEST_PARAM, user.getPasswordChangeId().toString()).build());

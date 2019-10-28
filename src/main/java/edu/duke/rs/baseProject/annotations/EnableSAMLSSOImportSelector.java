@@ -17,13 +17,23 @@ public class EnableSAMLSSOImportSelector implements ImportSelector, EnvironmentA
   
   @Override
   public String[] selectImports(AnnotationMetadata importingClassMetadata) {
+    String[] result = new String[0];
+    
+    if (environment == null) {
+      return result;
+    }
+    
     final AnnotationAttributes attributes = AnnotationAttributes.fromMap(
         importingClassMetadata.getAnnotationAttributes(
             EnableSAMLSSOWhenProfileActive.class.getName(), false));
+    
+    if (attributes == null) {
+      return result;
+    }
+    
     final String profile = attributes.getString("value");
     final List<String> activeProfiles = new ArrayList<String>();
     Collections.addAll(activeProfiles, environment.getActiveProfiles());
-    String[] result = new String[0];
     
     if (activeProfiles.contains(profile)) {
       result = new String[] {SAMLServiceProviderSecurityConfiguration.class.getName()};

@@ -169,8 +169,8 @@ public class PasswordResetControllerUnitTest extends AbstractWebUnitTest {
     
     this.mockMvc.perform(put(PasswordResetController.PASSWORD_RESET_INITIATE_MAPPING)
         .with(csrf())
-        .param("passwordChangeId", dto.getUserName())
-        .param("userName", dto.getUserName())
+        .param("passwordChangeId", dto.getUsername())
+        .param("username", dto.getUsername())
         .param("password", dto.getPassword())
         .param("confirmPassword", dto.getConfirmPassword()))
         .andExpect(view().name(PasswordResetController.PASSWORD_RESET_VIEW))
@@ -184,14 +184,14 @@ public class PasswordResetControllerUnitTest extends AbstractWebUnitTest {
     dto.setConfirmPassword("abcAbc123");
     dto.setPassword(dto.getConfirmPassword());
     dto.setPasswordChangeId(UUID.randomUUID());
-    dto.setUserName("johnSmith");
+    dto.setUsername("johnSmith");
     
     doThrow(NotFoundException.class).when(this.passwordResetService).processPasswordReset(any(PasswordResetDto.class));
     
     this.mockMvc.perform(put(PasswordResetController.PASSWORD_RESET_INITIATE_MAPPING)
         .with(csrf())
         .param("passwordChangeId", dto.getPasswordChangeId().toString())
-        .param("userName", dto.getUserName())
+        .param("username", dto.getUsername())
         .param("password", dto.getPassword())
         .param("confirmPassword", dto.getConfirmPassword()))
         .andExpect(view().name(PasswordResetController.PASSWORD_RESET_VIEW))
@@ -210,7 +210,7 @@ public class PasswordResetControllerUnitTest extends AbstractWebUnitTest {
     dto.setConfirmPassword("abcAbc123");
     dto.setPassword(dto.getConfirmPassword());
     dto.setPasswordChangeId(UUID.randomUUID());
-    dto.setUserName("johnSmith");
+    dto.setUsername("johnSmith");
     final ConstraintViolationException exception = new ConstraintViolationException("error.unrecoverableException", (Object[])null);
     
     doThrow(exception)
@@ -219,7 +219,7 @@ public class PasswordResetControllerUnitTest extends AbstractWebUnitTest {
     this.mockMvc.perform(put(PasswordResetController.PASSWORD_RESET_INITIATE_MAPPING)
         .with(csrf())
         .param("passwordChangeId", dto.getPasswordChangeId().toString())
-        .param("userName", dto.getUserName())
+        .param("username", dto.getUsername())
         .param("password", dto.getPassword())
         .param("confirmPassword", dto.getConfirmPassword()))
         .andExpect(view().name(PasswordResetController.PASSWORD_RESET_VIEW))
@@ -238,12 +238,12 @@ public class PasswordResetControllerUnitTest extends AbstractWebUnitTest {
     dto.setConfirmPassword("abcAbc123");
     dto.setPassword(dto.getConfirmPassword());
     dto.setPasswordChangeId(UUID.randomUUID());
-    dto.setUserName("johnSmith");
+    dto.setUsername("johnSmith");
     
     final MvcResult result = this.mockMvc.perform(put(PasswordResetController.PASSWORD_RESET_INITIATE_MAPPING)
         .with(csrf())
         .param("passwordChangeId", dto.getPasswordChangeId().toString())
-        .param("userName", dto.getUserName())
+        .param("username", dto.getUsername())
         .param("password", dto.getPassword())
         .param("confirmPassword", dto.getConfirmPassword()))
         .andExpect(flash().attribute(BaseWebController.FLASH_FEEDBACK_MESSAGE, 
@@ -264,13 +264,13 @@ public class PasswordResetControllerUnitTest extends AbstractWebUnitTest {
     dto.setConfirmPassword("abcAbc123");
     dto.setPassword(dto.getConfirmPassword());
     dto.setPasswordChangeId(UUID.randomUUID());
-    dto.setUserName("johnSmith");
+    dto.setUsername("johnSmith");
     
     final MvcResult result = this.mockMvc.perform(put(PasswordResetController.PASSWORD_RESET_INITIATE_MAPPING)
         .with(csrf())
         .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER)))
         .param("passwordChangeId", dto.getPasswordChangeId().toString())
-        .param("userName", dto.getUserName())
+        .param("username", dto.getUsername())
         .param("password", dto.getPassword())
         .param("confirmPassword", dto.getConfirmPassword()))
         .andExpect(flash().attribute(BaseWebController.FLASH_FEEDBACK_MESSAGE, 
