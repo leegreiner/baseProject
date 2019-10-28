@@ -254,6 +254,7 @@
             <exclude>edu/duke/rs/baseProject/jobs/NoOpJob.*</exclude>
             <exclude>edu/duke/rs/baseProject/**/*Exception*</exclude>
             <exclude>edu/duke/rs/baseProject/config/*</exclude>
+            <exclude>edu/duke/rs/baseProject/user/passwordReset/DoNothingPasswordResetService.*</exclude>
           </excludes>
         </configuration>
         <executions>
@@ -298,6 +299,24 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+      
+      <plugin>
+        <groupId>com.github.spotbugs</groupId>
+        <artifactId>spotbugs-maven-plugin</artifactId>
+        <version>3.1.12.2</version>
+        <dependencies>
+          <dependency>
+            <groupId>com.github.spotbugs</groupId>
+            <artifactId>spotbugs</artifactId>
+            <version>4.0.0-beta4</version>
+          </dependency>
+        </dependencies>
+        <configuration>
+          <threshold>Low</threshold>
+          <effort>Max</effort>
+          <debug>true</debug>
+        </configuration>
       </plugin>
     </plugins>
   </build>
