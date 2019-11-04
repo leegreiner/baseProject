@@ -60,6 +60,7 @@
 		      </div>
 
 		      <div class="dropdown-divider m-0"></div>
+		      
 		      <a href="#" class="dropdown-item" data-action="app-fullscreen">
 		        <span th:text="#{fullScreen}">Fullscreen</span>
 		        <i class="float-right text-muted fw-n">F11</i>
@@ -70,7 +71,12 @@
 		        <i class="float-right text-muted fw-n">Ctrl + P</i>
 		      </a>
 		      
+		      <a href="#" class="dropdown-item" data-action="toggle" data-class="nav-function-top">
+            <span th:text="#{toggleMenuOnTop}">Toggle Menu on Top</span>
+          </a>
+		      
 		      <div class="dropdown-divider m-0"></div>
+		      
 		      <a class="dropdown-item" th:href="@{/users/pwdreset}">
             <span th:text="#{changePassword}">Change Password</span>
           </a>
