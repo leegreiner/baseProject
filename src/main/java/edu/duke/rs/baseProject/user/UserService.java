@@ -16,4 +16,5 @@ public interface UserService {
   User getUser(@NotNull Long userId);
   List<Role> getRoles();
   User save(@Valid UserDto userDto);
+  void disableUnusedAccounts();
 }

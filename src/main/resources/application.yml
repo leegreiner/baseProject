@@ -127,6 +127,8 @@ app:
   google:
     analysicsTrackingId: None
   jobs:
+#   daily at 3AM
+    disableUnusedAccountsCronSchedule: '0 0 3 ? * * *'
 #   hourly on the hour
     expirePasswordChangeIdsCronSchedule: '0 0 * ? * * *'
   management:

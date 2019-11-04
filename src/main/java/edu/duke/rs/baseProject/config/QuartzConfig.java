@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 
+import edu.duke.rs.baseProject.user.DisableUnusedAccountsJob;
 import edu.duke.rs.baseProject.user.passwordReset.ExpirePasswordChangeIdsJob;
 
 @Configuration
@@ -38,6 +39,25 @@ public class QuartzConfig {
         .forJob(expirePasswordChangeIdsDetail)
         .withIdentity("ExpirePasswordChangeIdsJobTrigger")
         .withSchedule(CronScheduleBuilder.cronSchedule(jobProperties.getExpirePasswordChangeIdsCronSchedule()))
+        .build();
+  }
+  
+  @Bean
+  public JobDetail disableUnusedAccountsDetail() {
+    return JobBuilder
+        .newJob(DisableUnusedAccountsJob.class)
+        .withIdentity("DisableUnusedAccountsJob")
+        .storeDurably()
+        .build();
+  }
+
+  @Bean
+  public Trigger disableUnusedAccountsJobTrigger(JobDetail disableUnusedAccountsDetail) {
+    return TriggerBuilder
+        .newTrigger()
+        .forJob(disableUnusedAccountsDetail)
+        .withIdentity("DisableUnusedAccountsJobsTrigger")
+        .withSchedule(CronScheduleBuilder.cronSchedule(jobProperties.getDisableUnusedAccountsCronSchedule()))
         .build();
   }
 }

@@ -11,5 +11,6 @@ import lombok.Setter;
 @Configuration
 @ConfigurationProperties(prefix = "app.jobs")
 public class JobProperties {
+  private String disableUnusedAccountsCronSchedule;
   private String expirePasswordChangeIdsCronSchedule;
 }

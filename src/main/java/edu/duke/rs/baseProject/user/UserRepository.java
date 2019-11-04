@@ -9,7 +9,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
@@ -17,13 +16,19 @@ import org.springframework.stereotype.Repository;
 public interface UserRepository extends JpaRepository<User, Long> {
 	Page<UserListItem> findByLastNameStartingWithIgnoreCase(String lastName, Pageable pageable);
 	Page<UserListItem> findAllBy(Pageable pageable);
+	
 	@EntityGraph("user.userAndRoles")
 	Optional<User> findByUsernameIgnoreCase(String username);
 	Optional<User> findByEmailIgnoreCase(String email);
-	@EntityGraph("user.userAndRoles")
-  Optional<User> findById(Long id);
 	Optional<User> findByPasswordChangeId(UUID passwordChangeId);
+	 
+	@EntityGraph("user.userAndRoles")
+  @Override
+  Optional<User> findById(Long id);
+	
 	@Modifying
-	@Query("update User user set user.passwordChangeId = null, user.passwordChangeIdCreationTime = null where user.passwordChangeIdCreationTime < :time")
 	void expirePasswordChangeIds(@Param("time") LocalDateTime time);
+	
+	@Modifying
+  void disableUnusedAccounts(@Param("date") LocalDateTime lastLoggedIn);
 }

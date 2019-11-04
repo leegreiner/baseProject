@@ -17,6 +17,8 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedEntityGraphs;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -50,6 +52,15 @@ import lombok.ToString;
 	@NamedEntityGraph(name = "user.userAndRoles", attributeNodes = {
 			@NamedAttributeNode("roles")
 	})
+})
+@NamedQueries({
+  @NamedQuery(
+      name = "User.expirePasswordChangeIds",
+      query = "update User user set user.passwordChangeId = null, user.passwordChangeIdCreationTime = null where user.passwordChangeIdCreationTime < :time"),
+  @NamedQuery(
+      name = "User.disableUnusedAccounts",
+      query = "update User user set user.accountEnabled = false where user.accountEnabled = true and user.lastLoggedIn < :date")
+  
 })
 public class User extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;

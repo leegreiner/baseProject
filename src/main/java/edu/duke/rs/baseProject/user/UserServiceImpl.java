@@ -1,5 +1,6 @@
 package edu.duke.rs.baseProject.user;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -78,6 +79,12 @@ public class UserServiceImpl implements UserService {
     return roleRepository.findAll(Sort.by(Sort.Direction.ASC, "name"));
   }
 
+  @Override
+  @Transactional
+  public void disableUnusedAccounts() {
+    this.userRepository.disableUnusedAccounts(LocalDateTime.now().minusYears(1));
+  }
+  
   @Override
   @Transactional(propagation = Propagation.REQUIRED)
   public User save(final UserDto userDto) {

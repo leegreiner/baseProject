@@ -12,13 +12,13 @@
   </appender>
 
   <appender name="APPLICATION" class="ch.qos.logback.core.rolling.RollingFileAppender">
-    <file>/opt/apps/dts/logs/application.log</file>
+    <file>/opt/apps/baseProject/logs/application.log</file>
     <encoder>
       <pattern>-%d{${LOG_DATEFORMAT_PATTERN:-yyyy-MM-dd HH:mm:ss.SSS}} ${LOG_LEVEL_PATTERN:-%5p} ${PID:- } --- [%t] %-40.40logger:%line{39} : %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}</pattern>
     </encoder>
 
     <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-      <fileNamePattern>/opt/apps/dts/logs/application.%d{yyyy-MM-dd}.%i.log.gz
+      <fileNamePattern>/opt/apps/baseProject/logs/application.%d{yyyy-MM-dd}.%i.log.gz
       </fileNamePattern>
       <maxHistory>365</maxHistory>
       <cleanHistoryOnStart>true</cleanHistoryOnStart>
@@ -33,13 +33,13 @@
   </root>
 
   <springProfile name="local">
-    <logger name="edu.duke.drc.dts" level="DEBUG" additivity="false">
+    <logger name="edu.duke.rs.baseProject" level="DEBUG" additivity="false">
       <appender-ref ref="CONSOLE" />
     </logger>
   </springProfile>
 
   <springProfile name="docker, dev, val">
-    <logger name="edu.duke.drc.dts" level="DEBUG" additivity="false">
+    <logger name="edu.duke.rs.baseProject" level="DEBUG" additivity="false">
       <appender-ref ref="APPLICATION" />
     </logger>
     <!--
@@ -56,7 +56,7 @@
   </springProfile>
 
   <springProfile name="prod">
-    <logger name="edu.duke.drc.dts" level="INFO" additivity="false">
+    <logger name="edu.duke.rs.baseProject" level="INFO" additivity="false">
       <appender-ref ref="APPLICATION" />
     </logger>
   </springProfile>
