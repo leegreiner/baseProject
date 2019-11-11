@@ -1,6 +1,7 @@
 package edu.duke.rs.baseProject.security;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,11 +18,11 @@ public class InMemoryAuditEventRepository implements AuditEventRepository {
   // Circular buffer of the event with tail pointing to the last element.
   private AuditEvent[] events;
   private volatile int tail = -1;
-  private final String managementUserName;
+  private List<String> ignoredPrincipals = new ArrayList<String>(List.of("anonymousUser"));
   
   public InMemoryAuditEventRepository(@Value("${app.management.userName}") final String managementUserName) {
     this.events = new AuditEvent[DEFAULT_CAPACITY];
-    this.managementUserName = managementUserName;
+    ignoredPrincipals.add(managementUserName);
   }
 
   /**
@@ -38,7 +39,7 @@ public class InMemoryAuditEventRepository implements AuditEventRepository {
   public void add(final AuditEvent event) {
     Assert.notNull(event, "AuditEvent must not be null");
     
-    if (managementUserName.equals(event.getPrincipal())) {
+    if (ignoredPrincipals.contains(event.getPrincipal())) {
       // ignore management user login requests as admin server logs in frequently
       return;
     }
