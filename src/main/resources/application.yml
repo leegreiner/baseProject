@@ -1,5 +1,5 @@
 spring:
-  application:    name: @project.name@
+  application:    name: "@project.name@"
     
   cache:
     jcache:
@@ -33,7 +33,6 @@ spring:
       pool-name: applicationPool
     
   jpa:
-    jpa:
     show-sql: false
     hibernate:
       ddl-auto: none
@@ -118,9 +117,9 @@ management:
     
 info:
   app:
-    name: @project.name@
+    name: "@project.name@"
     description: Base Project description
-    version: @project.version@
+    version: "@project.version@"
     
 logging:  level:    edu.duke.rs: info
 #    org.apache.http.wire: debug
@@ -234,7 +233,6 @@ logging:
     org.springframework: off
     
 server:
-  port:
   ssl:
     enabled: false   
     key-store-password:
