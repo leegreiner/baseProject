@@ -28,37 +28,39 @@ public class TomcatConfig {
   
   @Bean
   public ServletWebServerFactory servletContainer() {
-      TomcatServletWebServerFactory tomcat = new TomcatServletWebServerFactory() {
-          @Override
-          protected void postProcessContext(Context context) {
-              SecurityConstraint securityConstraint = new SecurityConstraint();
-              securityConstraint.setUserConstraint("CONFIDENTIAL");
-              SecurityCollection collection = new SecurityCollection();
-              collection.addPattern("/*");
-              securityConstraint.addCollection(collection);
-              context.addConstraint(securityConstraint);
-          }
-      };
-      tomcat.addConnectorCustomizers(new RelaxedQueryTomcatCustomizer());
-      tomcat.addAdditionalTomcatConnectors(redirectConnector());
-      return tomcat;
+    final TomcatServletWebServerFactory tomcat = new CustomTomcatServletWebServerFactory();
+
+    tomcat.addConnectorCustomizers(new RelaxedQueryTomcatCustomizer());
+    tomcat.addAdditionalTomcatConnectors(redirectConnector());
+    return tomcat;
   }
 
+  private static class CustomTomcatServletWebServerFactory extends TomcatServletWebServerFactory {
+    @Override
+    protected void postProcessContext(Context context) {
+      SecurityConstraint securityConstraint = new SecurityConstraint();
+      securityConstraint.setUserConstraint("CONFIDENTIAL");
+      SecurityCollection collection = new SecurityCollection();
+      collection.addPattern("/*");
+      securityConstraint.addCollection(collection);
+      context.addConstraint(securityConstraint);
+    }
+  }
   
   private static class RelaxedQueryTomcatCustomizer implements TomcatConnectorCustomizer {
     @Override
     public void customize(final Connector connector) {
-        connector.setProperty("relaxedQueryChars", "|{}[]");
+      connector.setProperty("relaxedQueryChars", "|{}[]");
     }
   }
   
   private Connector redirectConnector() {
-    Connector connector
+    final Connector connector
             = new Connector("org.apache.coyote.http11.Http11NioProtocol");
     connector.setScheme("http");
-    connector.setSecure(false);
-    connector.setPort(8080);
-    connector.setRedirectPort(serverPort);
-    return connector;
- }
+      connector.setSecure(false);
+      connector.setPort(8080);
+      connector.setRedirectPort(serverPort);
+      return connector;
+  }
 }
