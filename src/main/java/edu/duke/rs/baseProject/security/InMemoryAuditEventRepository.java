@@ -12,12 +12,12 @@ import org.springframework.util.Assert;
 
 @Component
 public class InMemoryAuditEventRepository implements AuditEventRepository {
-  private String managementUserName;
   private static final int DEFAULT_CAPACITY = 1000;
   private final Object monitor = new Object();
   // Circular buffer of the event with tail pointing to the last element.
   private AuditEvent[] events;
   private volatile int tail = -1;
+  private final String managementUserName;
   
   public InMemoryAuditEventRepository(@Value("${app.management.userName}") final String managementUserName) {
     this.events = new AuditEvent[DEFAULT_CAPACITY];
@@ -35,7 +35,7 @@ public class InMemoryAuditEventRepository implements AuditEventRepository {
   }
 
   @Override
-  public void add(AuditEvent event) {
+  public void add(final AuditEvent event) {
     Assert.notNull(event, "AuditEvent must not be null");
     
     if (managementUserName.equals(event.getPrincipal())) {
@@ -50,11 +50,11 @@ public class InMemoryAuditEventRepository implements AuditEventRepository {
   }
 
   @Override
-  public List<AuditEvent> find(String principal, Instant after, String type) {
-    LinkedList<AuditEvent> events = new LinkedList<>();
+  public List<AuditEvent> find(final String principal, final Instant after, final String type) {
+    final LinkedList<AuditEvent> events = new LinkedList<>();
     synchronized (this.monitor) {
       for (int i = 0; i < this.events.length; i++) {
-        AuditEvent event = resolveTailEvent(i);
+        final AuditEvent event = resolveTailEvent(i);
         if (event != null && isMatch(principal, after, type, event)) {
           events.addFirst(event);
         }
@@ -63,7 +63,7 @@ public class InMemoryAuditEventRepository implements AuditEventRepository {
     return events;
   }
 
-  private boolean isMatch(String principal, Instant after, String type, AuditEvent event) {
+  private boolean isMatch(final String principal, final Instant after, final String type, final AuditEvent event) {
     boolean match = (principal == null || event.getPrincipal().equals(principal));
     match = match && (after == null || event.getTimestamp().isAfter(after));
     match = match && (type == null || event.getType().equals(type));
