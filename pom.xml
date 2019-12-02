@@ -19,7 +19,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>11</java.version>
-    <spring-cloud.version>2.1.4.RELEASE</spring-cloud.version>
+    <spring-cloud.version>2.2.0.RELEASE</spring-cloud.version>
     <spring.boot.saml.version>1.17</spring.boot.saml.version>
     <passay.version>1.5.0</passay.version>
     <jacoco.version>0.8.5</jacoco.version>
@@ -320,6 +320,29 @@
           </execution>
         </executions>
       </plugin>
+      
+      <!--
+      <plugin>
+        <groupId>org.owasp</groupId>
+        <artifactId>dependency-check-maven</artifactId>
+        <version>5.2.4</version>
+        <configuration>
+          <suppressionFiles>
+             <suppressionFile>owasp-suppressions.xml</suppressionFile>
+          </suppressionFiles>
+          <failBuildOnCVSS>8</failBuildOnCVSS>
+          <assemblyAnalyzerEnabled>false</assemblyAnalyzerEnabled>
+          <failOnError>true</failOnError>
+        </configuration>
+        <executions>
+          <execution>
+             <goals>
+                <goal>check</goal>
+             </goals>
+          </execution>
+        </executions>
+      </plugin>
+      -->
     </plugins>
   </build>
 

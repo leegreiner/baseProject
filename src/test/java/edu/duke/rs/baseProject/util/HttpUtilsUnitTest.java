@@ -32,6 +32,7 @@ public class HttpUtilsUnitTest {
   @Test
   public void whenAjaxHeaderNotPresent_thenIsAjaxRequestIsFalse() {
     when(request.getHeader(HttpUtils.AJAX_REQUEST_HEADER)).thenReturn(null);
+    when(request.getHeader(HttpUtils.ACCEPT_HEADER)).thenReturn(null);
     
     assertThat(HttpUtils.isAjaxRequest(request), equalTo(false));
   }
@@ -39,6 +40,12 @@ public class HttpUtilsUnitTest {
   @Test
   public void whenAjaxHeaderPresentAndNotAjaxValue_thenIsAjaxRequestIsFalse() {
     when(request.getHeader(HttpUtils.AJAX_REQUEST_HEADER)).thenReturn("oops");
+    when(request.getHeader(HttpUtils.ACCEPT_HEADER)).thenReturn(null);
+    
+    assertThat(HttpUtils.isAjaxRequest(request), equalTo(false));
+    
+    when(request.getHeader(HttpUtils.AJAX_REQUEST_HEADER)).thenReturn(null);
+    when(request.getHeader(HttpUtils.ACCEPT_HEADER)).thenReturn("oops");
     
     assertThat(HttpUtils.isAjaxRequest(request), equalTo(false));
   }
@@ -46,6 +53,17 @@ public class HttpUtilsUnitTest {
   @Test
   public void whenAjaxHeaderPresentAndNotAjax_thenIsAjaxRequestIsFalse() {
     when(request.getHeader(HttpUtils.AJAX_REQUEST_HEADER)).thenReturn(HttpUtils.AJAX_REQUEST_HEADER_VALUE);
+    when(request.getHeader(HttpUtils.ACCEPT_HEADER)).thenReturn(null);
+    
+    assertThat(HttpUtils.isAjaxRequest(request), equalTo(true));
+    
+    when(request.getHeader(HttpUtils.AJAX_REQUEST_HEADER)).thenReturn(null);
+    when(request.getHeader(HttpUtils.ACCEPT_HEADER)).thenReturn("application/json");
+    
+    assertThat(HttpUtils.isAjaxRequest(request), equalTo(true));
+    
+    when(request.getHeader(HttpUtils.AJAX_REQUEST_HEADER)).thenReturn(HttpUtils.AJAX_REQUEST_HEADER_VALUE);
+    when(request.getHeader(HttpUtils.ACCEPT_HEADER)).thenReturn("application/json");
     
     assertThat(HttpUtils.isAjaxRequest(request), equalTo(true));
   }

@@ -15,7 +15,6 @@ spring:
 #           changeMe1
             user.password: '{cipher}8595c9f67620ea4ed95370dca6c87ad9317f8bc4b035e9971b71d47a1632bd73'
 
-
   datasource:
     initialization-mode: never
     platform: postgresql
@@ -26,10 +25,10 @@ spring:
 # select 1 from dual for Oracle
       connection-test-query: select 1
       connection-timeout: 30000
-      idle-timeout: 30000
-      max-lifetime: 1200000
-      maximum-pool-size: 20
-      minimum-idle: 5
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      maximum-pool-size: 8
+      minimum-idle: 2
       pool-name: applicationPool
     
   jpa:
