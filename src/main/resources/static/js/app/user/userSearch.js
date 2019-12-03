@@ -9,7 +9,7 @@ var targetPageSetUp = function() {
       'beforeSend': function (request) {
           ga('send', 'event', 'User', 'search');
         },
-      'error': AjaxUtil.onLoadError
+      'error': AjaxUtil.ajaxError
     },
     'columns': [
       { 'data': 'lastName' },

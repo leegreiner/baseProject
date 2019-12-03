@@ -1,17 +1,16 @@
 var AjaxUtil = {
-  ajaxError: function(jqXHR, textStatus, errorThrown, text) {
-    console.log(textStatus + ", " + jqXHR.status);
-    console.log(jqXHR.getAllResponseHeaders());
+  ajaxError: function(xhr, textStatus, error) {
+    console.log(error + ", " + xhr.status);
+    console.log(xhr.getAllResponseHeaders());
     
-    if (jqXHR.status === 0 || jqXHR.status === 302 || jqXHR.status === 401) {
+    if (xhr.status === 302 || xhr.status === 401) {
       AjaxUtil.directToIndex();
     } else {
-      $.alert({
-        icon: 'glyphicon glyphicon-exclamation-sign',
-        title: 'Error',
-        content: text,
-        type: 'red',
-        columnClass: 'medium'
+      var json = JSON.parse(xhr.responseText);
+      
+      bootbox.alert( {
+        title: "<span style='color: red'>An error has occurred</span>",
+        message: json.error.message
       });
     }
   },
