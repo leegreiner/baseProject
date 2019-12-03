@@ -9,7 +9,7 @@ var AjaxUtil = {
       var message = "An unknown error has occurred (" + xhr.status + ")";
       
       if (AjaxUtil.isJson(xhr.responseText)) {
-        message = JSON.parse(xhr.responseText).error.message;
+        message = JSON.parse(xhr.responseText).message;
       }
       
       bootbox.alert( {
