@@ -111,10 +111,8 @@ public class UserRestControllerUnitTest extends AbstractWebUnitTest {
     final ErrorInfo errorInfo = new ErrorInfo(messageSource.getMessage(errorMessage, (Object[])null,Locale.getDefault()),
         AbstractWebTest.LOCAL_HOST + AbstractWebTest.API + UserController.USERS_MAPPING);
     final ObjectMapper mapper = new ObjectMapper();
-    final Map<String, Object> expected = new HashMap<String, Object>();
-    expected.put("error", errorInfo);
     
-    assertThat(result.getResponse().getContentAsString(), equalToCompressingWhiteSpace(mapper.writeValueAsString(expected)));
+    assertThat(result.getResponse().getContentAsString(), equalToCompressingWhiteSpace(mapper.writeValueAsString(errorInfo)));
   }
   
   @Test
@@ -140,9 +138,7 @@ public class UserRestControllerUnitTest extends AbstractWebUnitTest {
     
     final ErrorInfo errorInfo = new ErrorInfo(errorMessage, AbstractWebTest.LOCAL_HOST + AbstractWebTest.API + UserController.USERS_MAPPING);
     final ObjectMapper mapper = new ObjectMapper();
-    final Map<String, Object> expected = new HashMap<String, Object>();
-    expected.put("error", errorInfo);
     
-    assertThat(result.getResponse().getContentAsString(), equalToCompressingWhiteSpace(mapper.writeValueAsString(expected)));
+    assertThat(result.getResponse().getContentAsString(), equalToCompressingWhiteSpace(mapper.writeValueAsString(errorInfo)));
   }
 }
