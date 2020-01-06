@@ -16,11 +16,13 @@ public class AppPrincipal implements UserDetails {
 	private static final String ROLE_PREFIX = "ROLE_";
 	private final User user;
 	private final boolean passwordExpired;
+	private final boolean accountLocked;
 	private final Collection<SimpleGrantedAuthority> authorities;
 	
-	public AppPrincipal(final User user,final boolean passwordExpired) {
+	public AppPrincipal(final User user, final boolean passwordExpired, final boolean accountLocked) {
 		this.user = user;
 		this.passwordExpired = passwordExpired;
+		this.accountLocked = accountLocked;
 		authorities = new ArrayList<SimpleGrantedAuthority>();
 		
 		for (final Role role : user.getRoles()) {
@@ -45,7 +47,7 @@ public class AppPrincipal implements UserDetails {
 
 	@Override
 	public boolean isAccountNonLocked() {
-		return user.isAccountEnabled();
+		return ! accountLocked;
 	}
 
 	@Override

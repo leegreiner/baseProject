@@ -34,6 +34,8 @@ public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 	private UserRepository userRepository;
 	@Mock
 	private PasswordExpirationStrategy passwordExpirationStrategy;
+	@Mock
+	private LoginAttemptService loginAttemptService;
 	@InjectMocks
 	private UserDetailsServiceImpl userDetailsService;
 	
@@ -65,7 +67,6 @@ public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 		assertThat(userDetails.getUsername(), equalToIgnoringCase(user.getUsername()));
 		assertThat(userDetails.getPassword(), equalToIgnoringCase(user.getPassword()));
 		assertThat(userDetails.getAuthorities().size(), equalTo(1));
-		assertThat(user.getLastLoggedIn(), notNullValue());
 		
 		verify(userRepository, times(1)).findByUsernameIgnoreCase(user.getUsername());
 		verifyNoMoreInteractions(userRepository);

@@ -117,6 +117,12 @@ public class User extends BaseEntity implements Serializable {
 	@Column(name = "last_logged_in")
 	private LocalDateTime lastLoggedIn;
 	
+	@Column(name = "last_invalid_login_attempt")
+	private LocalDateTime lastInvalidLoginAttempt;
+	
+	@Column(name = "invalid_login_attempts")
+	private Integer invalidLoginAttempts;
+	
 	@Column(name = "last_password_change")
   private LocalDateTime lastPasswordChange;
 	

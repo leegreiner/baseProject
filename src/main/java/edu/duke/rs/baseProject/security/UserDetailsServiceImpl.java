@@ -1,7 +1,5 @@
 package edu.duke.rs.baseProject.security;
 
-import java.time.LocalDateTime;
-
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,10 +18,13 @@ import lombok.extern.slf4j.Slf4j;
 public class UserDetailsServiceImpl implements UserDetailsService {
 	private transient final UserRepository userRepository;
 	private transient final PasswordExpirationStrategy passwordExpirationStrategy;
+	private transient final LoginAttemptService loginAttemptService;
 	
-	public UserDetailsServiceImpl(final UserRepository userRepository,final PasswordExpirationStrategy passwordExpirationStrategy) {
+	public UserDetailsServiceImpl(final UserRepository userRepository,final PasswordExpirationStrategy passwordExpirationStrategy,
+	    final LoginAttemptService loginAttemptService) {
 		this.userRepository = userRepository;
 		this.passwordExpirationStrategy = passwordExpirationStrategy;
+		this.loginAttemptService = loginAttemptService;
 	}
 	
 	@Override
@@ -32,9 +33,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 		log.debug("Logging in user " + username);
 		final User user = this.userRepository.findByUsernameIgnoreCase(username)
 				.orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
-
-		user.setLastLoggedIn(LocalDateTime.now());
 		
-		return new AppPrincipal(user, passwordExpirationStrategy.isPasswordExpired(user));
+		return new AppPrincipal(user, passwordExpirationStrategy.isPasswordExpired(user), loginAttemptService.isBlocked(user));
 	}
 }

@@ -33,6 +33,6 @@ public class UserDetailsBuilder {
     user.setRoles(roleEntities);
     user.setTimeZone(TimeZone.getTimeZone("UTC"));
     
-    return new AppPrincipal(user, false);
+    return new AppPrincipal(user, false, false);
   }
 }

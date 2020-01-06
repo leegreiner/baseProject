@@ -16,18 +16,20 @@ public class AppPrinicipalUnitTest {
   public void whenPasswordExpired_thenIsCredentialsNonExpiredIsFalse() {
     final User user = new User();
     user.setRoles(new HashSet<Role>());
-    final AppPrincipal appPrincipal = new AppPrincipal(user, true);
+    final AppPrincipal appPrincipal = new AppPrincipal(user, true, true);
     
     assertThat(appPrincipal.isCredentialsNonExpired(), equalTo(false));
+    assertThat(appPrincipal.isAccountNonLocked(), equalTo(false));
   }
   
   @Test
   public void whenPasswordNotExpired_thenIsCredentialsNonExpiredIsTrue() {
     final User user = new User();
     user.setRoles(new HashSet<Role>());
-    final AppPrincipal appPrincipal = new AppPrincipal(user, false);
+    final AppPrincipal appPrincipal = new AppPrincipal(user, false, false);
     
     assertThat(appPrincipal.isCredentialsNonExpired(), equalTo(true));
+    assertThat(appPrincipal.isAccountNonLocked(), equalTo(true));
   }
   
   @Test
@@ -35,7 +37,7 @@ public class AppPrinicipalUnitTest {
     final User user = new User();
     user.setRoles(new HashSet<Role>());
     user.setId(Long.valueOf(1));
-    final AppPrincipal appPrincipal = new AppPrincipal(user, false);
+    final AppPrincipal appPrincipal = new AppPrincipal(user, false, false);
     
     assertThat(appPrincipal.getUserId(), equalTo(user.getId()));
   }
@@ -47,7 +49,7 @@ public class AppPrinicipalUnitTest {
     user.getRoles().add(new Role(RoleName.USER));
     user.setAccountEnabled(true);
     
-    AppPrincipal appPrincipal = new AppPrincipal(user, false);
+    AppPrincipal appPrincipal = new AppPrincipal(user, false, false);
     
     assertThat(appPrincipal.isEnabled(), equalTo(true));
     assertThat(appPrincipal.isAccountNonLocked(), equalTo(true));
@@ -55,7 +57,7 @@ public class AppPrinicipalUnitTest {
     
     user.setAccountEnabled(false);
     
-    appPrincipal = new AppPrincipal(user, true);
+    appPrincipal = new AppPrincipal(user, true, true);
     assertThat(appPrincipal.isEnabled(), equalTo(false));
     assertThat(appPrincipal.isAccountNonLocked(), equalTo(false));
     assertThat(appPrincipal.isAccountNonExpired(), equalTo(true));

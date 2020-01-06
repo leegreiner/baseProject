@@ -120,7 +120,7 @@ info:
     description: Base Project description
     version: "@project.version@"
     
-logging:  level:    edu.duke.rs: info
+logging:  level:    edu.duke.rs: debug
 #    org.apache.http.wire: debug
     
 app:
@@ -139,6 +139,8 @@ app:
   passwordExpirationDays: 90
   resetPasswordExpirationDays: 2
   security:
+    numberOfLoginAttemptFailuresBeforeTemporaryLock: 3
+    temporaryLockSeconds: 300
     password:
       minLength: 8
       maxLength: 16

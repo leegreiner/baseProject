@@ -55,7 +55,7 @@ public class SamlUserDetailsServiceImpl implements SAMLUserDetailsService {
 
     user.setLastLoggedIn(LocalDateTime.now());
     
-    return new AppPrincipal(user, false);
+    return new AppPrincipal(user, false, false);
   }
   
   private Optional<String> getSamlAttribute(final SAMLCredential credential, final String attrName) {

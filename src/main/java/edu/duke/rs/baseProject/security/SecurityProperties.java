@@ -11,6 +11,8 @@ import lombok.Setter;
 @Configuration
 @ConfigurationProperties(prefix = "app.security")
 public class SecurityProperties {
+  private int numberOfLoginAttemptFailuresBeforeTemporaryLock;
+  private int temporaryLockSeconds;
   private Password password;
   
   @Getter
