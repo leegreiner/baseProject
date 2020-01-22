@@ -13,10 +13,15 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginController extends BaseWebController {
 	public static final String LOGIN_VIEW = "login";
 	public static final String LOGIN_MAPPING = "/loginPage";
+	private transient final SecurityUtils securityUtils;
+	
+	public LoginController(final SecurityUtils securityUtils) {
+	  this.securityUtils = securityUtils;
+	}
 	
 	@GetMapping(LOGIN_MAPPING)
 	public String loginPage() {
 		log.debug("In login()");
-		return SecurityUtils.userIsAuthenticated() ? this.createRedirectViewPath(HomeController.HOME_MAPPING) : LOGIN_VIEW;
+		return securityUtils.userIsAuthenticated() ? this.createRedirectViewPath(HomeController.HOME_MAPPING) : LOGIN_VIEW;
 	}
 }

@@ -1,11 +1,12 @@
 package edu.duke.rs.baseProject.security;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.reset;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -14,9 +15,8 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
-import static org.mockito.Mockito.reset;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -30,7 +30,7 @@ public class LoginAttemptServiceUnitTest {
   private UserRepository userRepository;
   private LoginAttemptServiceImpl loginAttemptService;
   
-  @Before
+  @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
     when(securityProperties.getNumberOfLoginAttemptFailuresBeforeTemporaryLock()).thenReturn(3);

@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import org.hibernate.envers.RevisionType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class EventHistoryUnitTest {
   @Test

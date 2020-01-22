@@ -3,6 +3,7 @@ package edu.duke.rs.baseProject.security.saml;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -11,8 +12,8 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.Optional;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -50,46 +51,46 @@ public class SamlUserDetailsServiceImplUnitTest {
   private SamlUserDetailsServiceImpl samlUserDetailsService;
   private static XMLObjectBuilderFactory builderFactory;
   
-  @Before
+  @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
   }
   
-  @Test(expected = UsernameNotFoundException.class)
+  @Test
   public void whenUserAttributeNotFound_thenUsernameNotFoundExceptionThrown() throws Exception {
     when(credential.getAttribute(SamlUserDetailsServiceImpl.UID_ATTRIBUTE)).thenReturn(null);
     when(uidAttribute.getAttributeValues()).thenReturn(Collections.singletonList(createXSStringAttributeValue()));
     when(userRepository.findByUsernameIgnoreCase(any(String.class))).thenReturn(Optional.empty());
     
-    samlUserDetailsService.loadUserBySAML(credential);
+    assertThrows(UsernameNotFoundException.class, () -> samlUserDetailsService.loadUserBySAML(credential));
   }
   
-  @Test(expected = UsernameNotFoundException.class)
+  @Test
   public void whenUserIdValueNotFound_thenUsernameNotFoundExceptionThrown() throws Exception {
     when(credential.getAttribute(SamlUserDetailsServiceImpl.UID_ATTRIBUTE)).thenReturn(uidAttribute);
     when(uidAttribute.getAttributeValues()).thenReturn(Collections.singletonList(createXSBooleanAttributeValue()));
     when(userRepository.findByUsernameIgnoreCase(any(String.class))).thenReturn(Optional.empty());
     
-    samlUserDetailsService.loadUserBySAML(credential);
+    assertThrows(UsernameNotFoundException.class, () -> samlUserDetailsService.loadUserBySAML(credential));
   }
   
-  @Test(expected = UsernameNotFoundException.class)
+  @Test
   public void whenUserNotFound_thenUsernameNotFoundExceptionThrown() throws Exception {
     when(credential.getAttribute(SamlUserDetailsServiceImpl.UID_ATTRIBUTE)).thenReturn(uidAttribute);
     when(uidAttribute.getAttributeValues()).thenReturn(Collections.singletonList(createXSStringAttributeValue()));
     when(userRepository.findByUsernameIgnoreCase(any(String.class))).thenReturn(Optional.empty());
     
-    samlUserDetailsService.loadUserBySAML(credential);
+    assertThrows(UsernameNotFoundException.class, () -> samlUserDetailsService.loadUserBySAML(credential));
   }
   
-  @Test(expected = LockedException.class)
+  @Test
   public void whenUserFoundButInactive_thenLockedExceptionThrown() throws Exception {
     when(credential.getAttribute(SamlUserDetailsServiceImpl.UID_ATTRIBUTE)).thenReturn(uidAttribute);
     when(uidAttribute.getAttributeValues()).thenReturn(Collections.singletonList(createXSStringAttributeValue()));
     when(user.isAccountEnabled()).thenReturn(false);
     when(userRepository.findByUsernameIgnoreCase(any(String.class))).thenReturn(Optional.of(user));
     
-    samlUserDetailsService.loadUserBySAML(credential);
+    assertThrows(LockedException.class, () -> samlUserDetailsService.loadUserBySAML(credential));
   }
   
   @Test

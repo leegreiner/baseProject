@@ -11,14 +11,26 @@ import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.util.DateUtils;
 
 public class SystemLocalDateTimeToUserLocalDateTimeConverter extends StdConverter<LocalDateTime, LocalDateTime> {
+  private final SecurityUtils securityUtils;
+  private final DateUtils dateUtils;
+  
+  public SystemLocalDateTimeToUserLocalDateTimeConverter(final SecurityUtils securityUtils) {
+    this.securityUtils = securityUtils;
+    this.dateUtils = new DateUtils(securityUtils);
+  }
+  
+  public SystemLocalDateTimeToUserLocalDateTimeConverter() {
+    this(new SecurityUtils());
+  }
+  
   @Override
   public LocalDateTime convert(final LocalDateTime value) {
-    final Optional<AppPrincipal> currentUser = SecurityUtils.getPrincipal();
+    final Optional<AppPrincipal> currentUser = securityUtils.getPrincipal();
     
     if (currentUser.isEmpty()) {
       return value;
     }
     
-    return DateUtils.convertToZone(value, ZoneId.systemDefault(), currentUser.get().getTimeZone().toZoneId());
+    return dateUtils.convertToZone(value, ZoneId.systemDefault(), currentUser.get().getTimeZone().toZoneId());
   }
 }

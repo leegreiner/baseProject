@@ -3,8 +3,8 @@ package edu.duke.rs.baseProject.formatters;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
@@ -15,33 +15,28 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.TimeZone;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.util.DateUtils;
 
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*"})
-@PrepareForTest(SecurityUtils.class)
 public class LocalDateTimeFormatterUnitTest {
   private static final ZoneId ZONE_ID = ZoneId.of("Africa/Accra");
 
   @Mock
   private AppPrincipal appPrincipal;
-  final LocalDateTimeFormatter formatter = new LocalDateTimeFormatter();
+  @Mock
+  private SecurityUtils securityUtils;
+  LocalDateTimeFormatter formatter;
   
-  @Before
+  @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
-    mockStatic(SecurityUtils.class);
+    formatter = new LocalDateTimeFormatter(securityUtils);
   }
   
   @Test
@@ -51,7 +46,7 @@ public class LocalDateTimeFormatterUnitTest {
   
   @Test
   public void whenAppUserNotFound_thenSystemTimezoneUsed() {
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
+    when(securityUtils.getPrincipal()).thenReturn(Optional.empty());
     
     final LocalDateTime now = LocalDateTime.now();
     final String actual = formatter.print(now, Locale.getDefault());
@@ -67,7 +62,7 @@ public class LocalDateTimeFormatterUnitTest {
   public void whenAppUserFound_thenAppUserTimezoneUsed() {
     final TimeZone timeZone = TimeZone.getTimeZone(ZONE_ID);
     when(appPrincipal.getTimeZone()).thenReturn(timeZone);
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     
     final LocalDateTime now = LocalDateTime.now();
     final String actual = formatter.print(now, Locale.getDefault());
@@ -88,13 +83,13 @@ public class LocalDateTimeFormatterUnitTest {
   public void whenCurrentUserPresent_thenDateConvertedFromUsersTimezone() throws ParseException {
     final TimeZone timeZone = TimeZone.getTimeZone(ZONE_ID);
     final LocalDateTime date = LocalDateTime.of(2019, 1, 1, 12, 30);
-    final LocalDateTime currentUserTime = DateUtils.convertToZone(date, ZoneId.systemDefault(), ZONE_ID);
+    final LocalDateTime currentUserTime = new DateUtils().convertToZone(date, ZoneId.systemDefault(), ZONE_ID);
     final String currentUserTimeString = String.format("%d-%02d-%02d %02d:%02d", currentUserTime.getYear(),
         currentUserTime.getMonth().getValue(), currentUserTime.getDayOfMonth(),currentUserTime.getHour(),
         currentUserTime.getMinute());
     
     when(appPrincipal.getTimeZone()).thenReturn(timeZone);
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     
     final LocalDateTime actual = this.formatter.parse(currentUserTimeString, Locale.getDefault());
     
@@ -108,15 +103,15 @@ public class LocalDateTimeFormatterUnitTest {
         date.getMonth().getValue(), date.getDayOfMonth(),date.getHour(),
         date.getMinute());
     
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
+    when(securityUtils.getPrincipal()).thenReturn(Optional.empty());
     
     final LocalDateTime actual = this.formatter.parse(dateString, Locale.getDefault());
     
     assertThat(actual, equalTo(date));
   }
   
-  @Test(expected = DateTimeParseException.class)
+  @Test
   public void whenParseCalled_thenNotImplementedExceptionThrown() throws ParseException {
-    formatter.parse("abc", Locale.getDefault());
+    assertThrows(DateTimeParseException.class, () -> formatter.parse("abc", Locale.getDefault()));
   }
 }

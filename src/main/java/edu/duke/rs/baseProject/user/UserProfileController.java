@@ -25,9 +25,11 @@ public class UserProfileController extends BaseWebController {
   public static final String USER_PROFILE_MAPPING = "/userProfile";
   public static final String USER_PROFILE_ATTRIBUTE = "userProfile";
   private transient final UserService userService;
+  private transient final SecurityUtils securityUtils;
   
-  public UserProfileController(final UserService userService) {
+  public UserProfileController(final UserService userService, final SecurityUtils securityUtils) {
     this.userService = userService;
+    this.securityUtils = securityUtils;
   }
   
   @GetMapping(USER_PROFILE_MAPPING)
@@ -50,7 +52,7 @@ public class UserProfileController extends BaseWebController {
       return USER_PROFILE_VIEW;
     }
     
-    final AppPrincipal principal = SecurityUtils.getPrincipal().orElseThrow(() ->  new IllegalArgumentException("error.principalNotFound"));
+    final AppPrincipal principal = securityUtils.getPrincipal().orElseThrow(() -> new IllegalArgumentException("error.principalNotFound"));
     
     try {
       userService.updateUserProfile(userProfile);

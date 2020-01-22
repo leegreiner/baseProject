@@ -2,7 +2,7 @@ package edu.duke.rs.baseProject;
 
 import javax.mail.internet.MimeMessage;
 
-import org.junit.Before;
+import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -26,8 +26,7 @@ public abstract class AbstractWebIntegrationTest extends AbstractWebTest {
   @Value("${app.defaultEmailFrom}")
   protected String defaultMailFrom;
   
-  
-  @Before
+  @BeforeEach
   public void resetState() throws Exception {
     TestUtils.resetState(jdbcTemplate, cacheManager);
   }

@@ -3,7 +3,7 @@ package edu.duke.rs.baseProject.index;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import edu.duke.rs.baseProject.AbstractWebIntegrationTest;
 

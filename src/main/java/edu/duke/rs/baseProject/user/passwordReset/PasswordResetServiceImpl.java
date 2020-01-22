@@ -28,16 +28,19 @@ public class PasswordResetServiceImpl implements PasswordResetService {
   private transient final UserRepository userRepository;
   private transient final PasswordEncoder passwordEncoder;
   private transient final ApplicationEventPublisher eventPublisher;
+  private transient final SecurityUtils securityUtils;
   @Setter
   @Value("${app.resetPasswordExpirationDays:2}")
   private Long resetPasswordExpirationDays;
 
   public PasswordResetServiceImpl(final UserRepository userRepository,
       final PasswordEncoder passwordEncoder,
-      final ApplicationEventPublisher eventPublisher) {
+      final ApplicationEventPublisher eventPublisher,
+      final SecurityUtils securityUtils) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.eventPublisher = eventPublisher;
+    this.securityUtils = securityUtils;
   }
 
   @Override
@@ -46,7 +49,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     final User user = this.userRepository.findByEmailIgnoreCase(passwordResetDto.getEmail())
         .orElseThrow(() -> new NotFoundException("error.userNotFound", new Object[] {passwordResetDto.getEmail()}));
    
-    final Optional<AppPrincipal> currentUserOptional = SecurityUtils.getPrincipal();
+    final Optional<AppPrincipal> currentUserOptional = securityUtils.getPrincipal();
    
     if (currentUserOptional.isPresent() && 
         ! StringUtils.equalsIgnoreCase(currentUserOptional.get().getEmail(), user.getEmail())) {
@@ -75,7 +78,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     }
     
     final User user = userOptional.get();
-    final Optional<AppPrincipal> currentUserOptional = SecurityUtils.getPrincipal();
+    final Optional<AppPrincipal> currentUserOptional = securityUtils.getPrincipal();
     
     if (currentUserOptional.isPresent() && ! currentUserOptional.get().getUserId().equals(user.getId())) {
       throw new ConstraintViolationException("error.passwordReset.currentlyLoggedInAsDifferentUser", (Object[])null);

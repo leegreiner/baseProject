@@ -11,8 +11,8 @@ import static org.mockito.Mockito.when;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.context.SecurityContext;
@@ -24,7 +24,7 @@ public class HttpUtilsUnitTest {
   @Mock
   private HttpSession httpSession;
   
-  @Before
+  @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
   }

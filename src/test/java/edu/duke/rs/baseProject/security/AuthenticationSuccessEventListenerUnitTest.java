@@ -5,8 +5,8 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -21,7 +21,7 @@ public class AuthenticationSuccessEventListenerUnitTest {
   private Authentication authentication;
   private AuthenticationSuccessEventListener listener;
   
-  @Before
+  @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
     listener = new AuthenticationSuccessEventListener(loginAttemptService);

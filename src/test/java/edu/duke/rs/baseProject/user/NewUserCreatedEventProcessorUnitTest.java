@@ -10,8 +10,8 @@ import static org.mockito.Mockito.when;
 import java.util.Locale;
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -33,7 +33,7 @@ public class NewUserCreatedEventProcessorUnitTest {
   private MessageSource messageSource;
   private NewUserCreatedEventProcessor processor;
   
-  @Before
+  @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
     processor = new NewUserCreatedEventProcessor(emailService, messageSource);

@@ -5,8 +5,8 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.ArrayMatching.hasItemInArray;
-import static org.junit.Assert.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -20,9 +20,9 @@ import java.util.UUID;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MvcResult;
@@ -52,14 +52,14 @@ public class PasswordResetControllerIntegrationTest extends AbstractWebIntegrati
 
   private Role role;
   
-  @Before
+  @BeforeEach
   public void init() {
     role = roleRepository.save(new Role(RoleName.USER));
     smtpServer = new GreenMail(new ServerSetup(25, null, "smtp"));
     smtpServer.start();
   }
   
-  @After
+  @AfterEach
   public void tearDown() throws Exception {
     smtpServer.stop();
   }

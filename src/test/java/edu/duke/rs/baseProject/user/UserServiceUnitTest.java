@@ -3,13 +3,13 @@ package edu.duke.rs.baseProject.user;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import java.time.ZoneId;
 import java.util.HashSet;
@@ -18,16 +18,12 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TimeZone;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Sort;
 
@@ -42,9 +38,6 @@ import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.security.password.PasswordGenerator;
 import edu.duke.rs.baseProject.user.passwordReset.PasswordResetService;
 
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*"})
-@PrepareForTest(SecurityUtils.class)
 public class UserServiceUnitTest {
   @Mock
   private AppPrincipal appPrincipal;
@@ -58,27 +51,28 @@ public class UserServiceUnitTest {
   private PasswordResetService passwordResetService;
   @Mock
   private ApplicationEventPublisher eventPublisher;
+  @Mock
+  private SecurityUtils securityUtils;
   
   private UserServiceImpl service;
   
-  @Before
+  @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
-    mockStatic(SecurityUtils.class);
-    service = new UserServiceImpl(userRepository, roleRepository, passwordGenerator, passwordResetService, eventPublisher);
+    service = new UserServiceImpl(userRepository, roleRepository, passwordGenerator, passwordResetService, eventPublisher, securityUtils);
   }
   
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void whenNoCurrentUser_thenGetUserProfileThrowsIllegalArgumentExceptionThrown() {
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
+    when(securityUtils.getPrincipal()).thenReturn(Optional.empty());
     
-    service.getUserProfile();
+    assertThrows(IllegalArgumentException.class, () -> service.getUserProfile());
   }
   
   @Test
   public void whenUserNotFound_thenGetUserProfileThrowsNotFoundException() {
     when(appPrincipal.getUserId()).thenReturn(1L);
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findById(appPrincipal.getUserId())).thenReturn(Optional.empty());
     
     try {
@@ -97,7 +91,7 @@ public class UserServiceUnitTest {
     final User user = new User();
     user.setTimeZone(TimeZone.getTimeZone("GMT"));
     when(appPrincipal.getUserId()).thenReturn(1L);
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findById(appPrincipal.getUserId())).thenReturn(Optional.of(user));
     
     final UserProfile userProfile = service.getUserProfile();
@@ -108,18 +102,18 @@ public class UserServiceUnitTest {
     
   }
   
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void whenNoCurrentUser_thenUpdateUserProfileThrowsIllegalArgumentExceptionThrown() {
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
+    when(securityUtils.getPrincipal()).thenReturn(Optional.empty());
     final UserProfile userProfile = new UserProfile(TimeZone.getTimeZone("GMT"));
     
-    service.updateUserProfile(userProfile);
+    assertThrows(IllegalArgumentException.class, () -> service.updateUserProfile(userProfile));
   }
   
   @Test
   public void whenUserNotFound_thenUpdateUserProfileThrowsNotFoundException() {
     when(appPrincipal.getUserId()).thenReturn(1L);
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findById(appPrincipal.getUserId())).thenReturn(Optional.empty());
     
     final UserProfile userProfile = new UserProfile(TimeZone.getTimeZone("GMT"));
@@ -139,7 +133,7 @@ public class UserServiceUnitTest {
   public void whenUserFound_thenUserTimeZoneEqualsUserProfileTimeZone() {
     final User user = new User();
     when(appPrincipal.getUserId()).thenReturn(1L);
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findById(appPrincipal.getUserId())).thenReturn(Optional.of(user));
     
     final UserProfile userProfile = new UserProfile(TimeZone.getTimeZone("GMT"));
@@ -151,14 +145,14 @@ public class UserServiceUnitTest {
     verifyNoMoreInteractions(userRepository);
   }
   
-  @Test(expected = NotFoundException.class)
+  @Test
   public void whenUserNotFound_thenGetUserThrowsNotFoundException() {
     final User user = new User();
     user.setId(Long.valueOf(1));
     user.setUsername("abc");
     when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
     
-    service.getUser(user.getId());
+    assertThrows(NotFoundException.class, () -> service.getUser(user.getId()));
   }
   
   @Test
@@ -187,7 +181,7 @@ public class UserServiceUnitTest {
     verifyNoMoreInteractions(roleRepository);
   }
   
-  @Test(expected = ConstraintViolationException.class)
+  @Test
   public void whenCreatingNewUserWithDuplicateUsername_thenConstraintViolationExceptionThrown() {
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
@@ -202,10 +196,10 @@ public class UserServiceUnitTest {
 
     when(userRepository.findByUsernameIgnoreCase(userDto.getUsername())).thenReturn(Optional.of(new User()));
     
-    service.save(userDto);
+    assertThrows(ConstraintViolationException.class, () -> service.save(userDto));
   }
   
-  @Test(expected = ConstraintViolationException.class)
+  @Test
   public void whenCreatingNewUserWithDuplicateEmail_thenConstraintViolationExceptionThrown() {
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
@@ -221,10 +215,10 @@ public class UserServiceUnitTest {
     when(userRepository.findByUsernameIgnoreCase(userDto.getUsername())).thenReturn(Optional.empty());
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.of(new User()));
     
-    service.save(userDto);
+    assertThrows(ConstraintViolationException.class, () -> service.save(userDto));
   }
   
-  @Test(expected = NotFoundException.class)
+  @Test
   public void whenCreatingUserWithInvaidRole_thenNotFoundExcetpionThrown() {
     final Role role = new Role(RoleName.USER);
     final String password = "thepassword";
@@ -244,7 +238,7 @@ public class UserServiceUnitTest {
     when(passwordGenerator.generate()).thenReturn(password);
     when(roleRepository.findByName(role.getName())).thenReturn(Optional.empty());
 
-    service.save(userDto);
+    assertThrows(NotFoundException.class, () -> service.save(userDto));
   }
   
   @Test
@@ -304,7 +298,7 @@ public class UserServiceUnitTest {
     verifyNoMoreInteractions(eventPublisher);
   }
   
-  @Test(expected = ConstraintViolationException.class)
+  @Test
   public void whenUpdatingOwnAccount_thenConstraintViolationExceptionThrown() {
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
@@ -320,12 +314,12 @@ public class UserServiceUnitTest {
     userDto.setId(Long.valueOf(1));
 
     when(appPrincipal.getUserId()).thenReturn(userDto.getId());
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     
-    service.save(userDto);
+    assertThrows(ConstraintViolationException.class, () -> service.save(userDto));
   }
   
-  @Test(expected = ConstraintViolationException.class)
+  @Test
   public void whenUpdatingUserWithDuplicateEmail_thenConstraintViolationExceptionThrown() {
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
@@ -342,13 +336,13 @@ public class UserServiceUnitTest {
     foundUser.setId(userDto.getId() + 1);
 
     when(appPrincipal.getUserId()).thenReturn(userDto.getId() + 1);
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.of(foundUser));
     
-    service.save(userDto);
+    assertThrows(ConstraintViolationException.class, () -> service.save(userDto));
   }
   
-  @Test(expected = NotFoundException.class)
+  @Test
   public void whenUpdatingUserAndUserNotFound_thenNotFoundExceptionThrown() {
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
@@ -365,11 +359,11 @@ public class UserServiceUnitTest {
     foundUser.setId(userDto.getId() + 1);
 
     when(appPrincipal.getUserId()).thenReturn(userDto.getId() + 1);
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.empty());
     when(userRepository.findById(userDto.getId())).thenReturn(Optional.empty());
     
-    service.save(userDto);
+    assertThrows(NotFoundException.class, () -> service.save(userDto));
   }
   
   @Test
@@ -404,7 +398,7 @@ public class UserServiceUnitTest {
     foundUser.setUsername(username);
 
     when(appPrincipal.getUserId()).thenReturn(userDto.getId() + 1);
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.empty());
     when(userRepository.findById(userDto.getId())).thenReturn(Optional.of(foundUser));
     when(roleRepository.findByName(role.getName())).thenReturn(Optional.of(role));

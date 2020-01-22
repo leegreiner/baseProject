@@ -1,9 +1,8 @@
 package edu.duke.rs.baseProject.util;
 
-import static org.mockito.Mockito.when;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
+import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -11,14 +10,10 @@ import java.time.ZonedDateTime;
 import java.util.Optional;
 import java.util.TimeZone;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
@@ -28,18 +23,18 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*"})
-@PrepareForTest(SecurityUtils.class)
 public class DateUtilsUnitTest {
   private static final ZoneId ZONE_ID = ZoneId.of("Africa/Accra");
   @Mock
   private AppPrincipal appPrincipal;
+  @Mock
+  private SecurityUtils securityUtils;
+  private DateUtils dateUtils;
 
-  @Before
+  @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
-    mockStatic(SecurityUtils.class);
+    dateUtils = new DateUtils(securityUtils);
   }
   
   @Test
@@ -47,7 +42,7 @@ public class DateUtilsUnitTest {
     final TimeZone timeZone = TimeZone.getTimeZone(ZONE_ID);
     final LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
     when(appPrincipal.getTimeZone()).thenReturn(timeZone);
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     
     final LocalDateTimes ldt = new LocalDateTimes(now, now.plusDays(1L));
     
@@ -58,7 +53,7 @@ public class DateUtilsUnitTest {
     to = from.withZoneSameInstant(ZONE_ID);
     final LocalDateTime expectedEnd = to.toLocalDateTime();
     
-    DateUtils.convertLocalDateTimeToCurrentUserTime(ldt);
+    dateUtils.convertLocalDateTimeToCurrentUserTime(ldt);
     
     assertThat(ldt.getStart(), equalTo(expectedStart));
     assertThat(ldt.getEnd(), equalTo(expectedEnd));
@@ -68,9 +63,9 @@ public class DateUtilsUnitTest {
   public void whenCurrentUserDoesntExists_thenConvertLocalDateTimeToCurrentUserTimeDoesntConvert() {
     final LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
     final LocalDateTimes ldt = new LocalDateTimes(now, now.plusDays(1L));
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
+    when(securityUtils.getPrincipal()).thenReturn(Optional.empty());
     
-    DateUtils.convertLocalDateTimeToCurrentUserTime(ldt);
+    dateUtils.convertLocalDateTimeToCurrentUserTime(ldt);
     
     assertThat(ldt.getStart(), equalTo(ldt.getStart()));
     assertThat(ldt.getEnd(), equalTo(ldt.getEnd()));
@@ -81,7 +76,7 @@ public class DateUtilsUnitTest {
     final TimeZone timeZone = TimeZone.getTimeZone(ZONE_ID);
     final LocalDateTime now = LocalDateTime.now(ZONE_ID);
     when(appPrincipal.getTimeZone()).thenReturn(timeZone);
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     
     final LocalDateTimes ldt = new LocalDateTimes(now, now.plusDays(1L));
     
@@ -92,7 +87,7 @@ public class DateUtilsUnitTest {
     to = from.withZoneSameInstant(ZoneId.systemDefault());
     final LocalDateTime expectedEnd = to.toLocalDateTime();
     
-    DateUtils.convertCurrentUserTimeToLocalDateTime(ldt);
+    dateUtils.convertCurrentUserTimeToLocalDateTime(ldt);
     
     assertThat(ldt.getStart(), equalTo(expectedStart));
     assertThat(ldt.getEnd(), equalTo(expectedEnd));
@@ -102,9 +97,9 @@ public class DateUtilsUnitTest {
   public void whenCurrentUserDoesntExists_thenConvertCurrentUserTimeToLocalDateTimeDoesntConvert() {
     final LocalDateTime now = LocalDateTime.now(ZONE_ID);
     final LocalDateTimes ldt = new LocalDateTimes(now, now.plusDays(1L));
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
+    when(securityUtils.getPrincipal()).thenReturn(Optional.empty());
     
-    DateUtils.convertCurrentUserTimeToLocalDateTime(ldt);
+    dateUtils.convertCurrentUserTimeToLocalDateTime(ldt);
     
     assertThat(ldt.getStart(), equalTo(ldt.getStart()));
     assertThat(ldt.getEnd(), equalTo(ldt.getEnd()));
@@ -120,7 +115,7 @@ public class DateUtilsUnitTest {
     final ZonedDateTime to = from.withZoneSameInstant(toZoneId);
     final LocalDateTime expectedLocalDateTime = to.toLocalDateTime();
     
-    final LocalDateTime result = DateUtils.convertToZone(now, fromZoneId, toZoneId);
+    final LocalDateTime result = dateUtils.convertToZone(now, fromZoneId, toZoneId);
     
     assertThat(result, equalTo(expectedLocalDateTime));
   }
@@ -135,7 +130,7 @@ public class DateUtilsUnitTest {
     final ZonedDateTime to = from.withZoneSameInstant(toZoneId);
     final LocalDateTime expectedLocalDateTime = to.toLocalDateTime();
     
-    final LocalDateTime result = DateUtils.convertToZone(now, fromZoneId, toZoneId);
+    final LocalDateTime result = dateUtils.convertToZone(now, fromZoneId, toZoneId);
     
     assertThat(result, equalTo(expectedLocalDateTime));
   }

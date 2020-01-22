@@ -20,10 +20,17 @@ import edu.duke.rs.baseProject.security.SecurityUtils;
 public class DateUtils {
   public static final String DEFAULT_DATE_TIME_FORMAT = "yyyy-MM-dd HH:mm";
   public static final DateTimeFormatter DEFAULT_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(DEFAULT_DATE_TIME_FORMAT);
+  private final SecurityUtils securityUtils;
+      
+  public DateUtils(final SecurityUtils securityUtils) {
+    this.securityUtils = securityUtils;
+  }
   
-  private DateUtils() {}
+  public DateUtils() {
+    this(new SecurityUtils());
+  }
   
-  public static void convertLocalDateTimeToCurrentUserTime(final Object object) {
+  public void convertLocalDateTimeToCurrentUserTime(final Object object) {
     final ZoneId currentUserZoneId = getCurrentUserZoneId();
     
     if (currentUserZoneId == null) {
@@ -50,7 +57,7 @@ public class DateUtils {
       });
   }
   
-  public static void convertCurrentUserTimeToLocalDateTime(final Object object) {
+  public void convertCurrentUserTimeToLocalDateTime(final Object object) {
     final ZoneId currentUserZoneId = getCurrentUserZoneId();
     
     if (currentUserZoneId == null) {
@@ -77,7 +84,7 @@ public class DateUtils {
       });
   }
   
-  public static LocalDateTime convertToZone(final LocalDateTime dateTime, final ZoneId fromZoneId,
+  public LocalDateTime convertToZone(final LocalDateTime dateTime, final ZoneId fromZoneId,
       final ZoneId toZoneId) {
     final ZonedDateTime fromZonedDateTime = ZonedDateTime.of(dateTime, fromZoneId);
     final ZonedDateTime toZonedDateTime = fromZonedDateTime.withZoneSameInstant(toZoneId);
@@ -91,8 +98,8 @@ public class DateUtils {
         .collect(Collectors.toList());
   }
   
-  private static ZoneId getCurrentUserZoneId() {
-    final Optional<AppPrincipal> currentUser = SecurityUtils.getPrincipal();
+  private ZoneId getCurrentUserZoneId() {
+    final Optional<AppPrincipal> currentUser = securityUtils.getPrincipal();
     
     return currentUser.isPresent() ? currentUser.get().getTimeZone().toZoneId() : null;
   }

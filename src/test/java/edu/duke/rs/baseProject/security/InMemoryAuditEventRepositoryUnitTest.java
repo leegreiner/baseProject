@@ -8,7 +8,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.List;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.boot.actuate.audit.AuditEvent;
 
 public class InMemoryAuditEventRepositoryUnitTest {

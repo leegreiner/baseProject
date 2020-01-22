@@ -7,8 +7,8 @@ import java.util.List;
 
 import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditQuery;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -16,7 +16,7 @@ public class AuditQueryUtilsUnitTest {
   @Mock
   private AuditQuery auditQuery;
   
-  @Before
+  @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
   }

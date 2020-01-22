@@ -35,9 +35,11 @@ public class PasswordResetController extends BaseWebController {
   public static final String PASSWORD_RESET_MODEL_ATTRIBUTE = "pwdreset";
   public static final String PASSWORD_RESET_ID_REQUEST_PARAM = "id";
   private transient final PasswordResetService passwordResetService;
+  private transient final SecurityUtils securityUtils;
   
-  public PasswordResetController(final PasswordResetService passwordResetService) {
+  public PasswordResetController(final PasswordResetService passwordResetService, final SecurityUtils securityUtils) {
     this.passwordResetService = passwordResetService;
+    this.securityUtils = securityUtils;
   }
   
   @GetMapping(PASSWORD_RESET_INITIATE_MAPPING)
@@ -80,7 +82,7 @@ public class PasswordResetController extends BaseWebController {
     
     this.addFeedbackMessage(attributes, "message.passwordResetInitiated", (Object[])null);
 
-    return SecurityUtils.userIsAuthenticated() ? 
+    return securityUtils.userIsAuthenticated() ? 
         UriComponentsBuilder.fromPath(REDIRECT_PREFIX + HomeController.HOME_MAPPING).toUriString() :
           UriComponentsBuilder.fromPath(REDIRECT_PREFIX + IndexController.INDEX_MAPPING).toUriString();
   }
@@ -104,7 +106,7 @@ public class PasswordResetController extends BaseWebController {
     
     this.addFeedbackMessage(attributes, "message.passwordResetCompleted", (Object[])null);
     
-    return SecurityUtils.userIsAuthenticated() ? 
+    return securityUtils.userIsAuthenticated() ? 
         UriComponentsBuilder.fromPath(REDIRECT_PREFIX + HomeController.HOME_MAPPING).toUriString() :
           UriComponentsBuilder.fromPath(REDIRECT_PREFIX + IndexController.INDEX_MAPPING).toUriString();
   }

@@ -15,13 +15,25 @@ import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.util.DateUtils;
 
 public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
+  private final SecurityUtils securityUtils;
+  private final DateUtils dateUtils;
+  
+  public LocalDateTimeFormatter(final SecurityUtils securityUtils) {
+    this.securityUtils = securityUtils;
+    this.dateUtils = new DateUtils(securityUtils);
+  }
+  
+  public LocalDateTimeFormatter() {
+    this(new SecurityUtils());
+  }
+  
   @Override
   public String print(LocalDateTime dateTime, Locale locale) {
     if (dateTime == null) {
       return "";
     }
     
-    final Optional<AppPrincipal> currentUser = SecurityUtils.getPrincipal();
+    final Optional<AppPrincipal> currentUser = securityUtils.getPrincipal();
     ZoneId zoneId;
     
     if (currentUser.isPresent()) {
@@ -41,7 +53,7 @@ public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
       return null;
     }
     
-    final Optional<AppPrincipal> currentUser = SecurityUtils.getPrincipal();
+    final Optional<AppPrincipal> currentUser = securityUtils.getPrincipal();
     ZoneId zoneId;
     
     if (currentUser.isPresent()) {
@@ -50,6 +62,6 @@ public class LocalDateTimeFormatter implements Formatter<LocalDateTime> {
       zoneId = ZoneId.systemDefault();
     }
     
-    return DateUtils.convertToZone(LocalDateTime.parse(text, DateUtils.DEFAULT_DATE_TIME_FORMATTER), zoneId, ZoneId.systemDefault());
+    return dateUtils.convertToZone(LocalDateTime.parse(text, DateUtils.DEFAULT_DATE_TIME_FORMATTER), zoneId, ZoneId.systemDefault());
   }
 }

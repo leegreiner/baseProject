@@ -10,8 +10,8 @@ import static org.mockito.Mockito.when;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.access.AccessDeniedException;
@@ -34,7 +34,7 @@ public class AjaxAwareAccessDeniedHandlerUnitTest {
   private static final CsrfToken EXPECTED_CSRF_TOKEN = new DefaultCsrfToken("header", "parameter", "token"); 
   private static final String ACTUAL_TOKEN = "token3"; 
   
-  @Before
+  @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
   }

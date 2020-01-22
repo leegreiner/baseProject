@@ -3,13 +3,14 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasProperty;
-import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import java.util.Locale;
 import java.util.UUID;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -39,11 +40,14 @@ import edu.duke.rs.baseProject.exception.NotFoundException;
 import edu.duke.rs.baseProject.home.HomeController;
 import edu.duke.rs.baseProject.index.IndexController;
 import edu.duke.rs.baseProject.role.RoleName;
+import edu.duke.rs.baseProject.security.SecurityUtils;
 
 @WebMvcTest(PasswordResetController.class)
 public class PasswordResetControllerUnitTest extends AbstractWebUnitTest {
   @MockBean
   private PasswordResetService passwordResetService;
+  @MockBean
+  private SecurityUtils securityUtils;
   @Autowired
   private MessageSource messageSource;
   
@@ -147,6 +151,8 @@ public class PasswordResetControllerUnitTest extends AbstractWebUnitTest {
     throws Exception {
     final InitiatePasswordResetDto dto = new InitiatePasswordResetDto();
     dto.setEmail("abc@123.com");
+    
+    when(securityUtils.userIsAuthenticated()).thenReturn(true);
     
     final MvcResult result = this.mockMvc.perform(post(PasswordResetController.PASSWORD_RESET_INITIATE_MAPPING)
         .with(csrf())
@@ -265,6 +271,8 @@ public class PasswordResetControllerUnitTest extends AbstractWebUnitTest {
     dto.setPassword(dto.getConfirmPassword());
     dto.setPasswordChangeId(UUID.randomUUID());
     dto.setUsername("johnSmith");
+    
+    when(securityUtils.userIsAuthenticated()).thenReturn(true);
     
     final MvcResult result = this.mockMvc.perform(put(PasswordResetController.PASSWORD_RESET_INITIATE_MAPPING)
         .with(csrf())

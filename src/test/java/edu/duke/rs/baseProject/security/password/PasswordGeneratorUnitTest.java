@@ -2,7 +2,7 @@ package edu.duke.rs.baseProject.security.password;
 
 import static com.jcabi.matchers.RegexMatchers.matchesPattern;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -10,8 +10,8 @@ import static org.mockito.Mockito.when;
 
 import java.util.regex.Pattern;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
@@ -24,7 +24,7 @@ public class PasswordGeneratorUnitTest {
   @Mock
   private PasswordEncoder passwordEncoder;
   
-  @Before
+  @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
     when(passwordEncoder.encode(org.mockito.ArgumentMatchers.any(CharSequence.class))).thenAnswer(new Answer<String>() {

@@ -3,28 +3,22 @@ package edu.duke.rs.baseProject.user.passwordReset;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.verification.VerificationModeFactory;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -35,9 +29,6 @@ import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
 
-@RunWith(PowerMockRunner.class)
-@PowerMockIgnore({"com.sun.org.apache.xerces.*", "javax.xml.*", "org.xml.*"})
-@PrepareForTest(SecurityUtils.class)
 public class PasswordResetServiceUnitTest {
   private static final Long EXPIRATION_DAYS = Long.valueOf(2);
   @Mock
@@ -48,36 +39,37 @@ public class PasswordResetServiceUnitTest {
   private PasswordEncoder passwordEncoder;
   @Mock
   private ApplicationEventPublisher eventPublisher;
+  @Mock
+  private SecurityUtils securityUtils;
   private PasswordResetServiceImpl service;
   
-  @Before
+  @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
-    mockStatic(SecurityUtils.class);
-    service = new PasswordResetServiceImpl(userRepository, passwordEncoder, eventPublisher);
+    service = new PasswordResetServiceImpl(userRepository, passwordEncoder, eventPublisher, securityUtils);
     service.setResetPasswordExpirationDays(EXPIRATION_DAYS);
   }
   
-  @Test(expected = NotFoundException.class)
+  @Test
   public void whenEmailNotFound_thenInitiatePasswordResetThrowsNotFoundException() {
     final InitiatePasswordResetDto dto = createInitiatePasswordResetDto();
 
     when(this.userRepository.findByEmailIgnoreCase(dto.getEmail())).thenReturn(Optional.empty());
     
-    this.service.initiatePasswordReset(dto);
+    assertThrows(NotFoundException.class, () -> this.service.initiatePasswordReset(dto));
   }
   
-  @Test(expected = ConstraintViolationException.class)
+  @Test
   public void whenEmailEnteredDoesntMatchLoggedInUser_thenInitiatePasswordResetThrowsConstraintViolationException() {
     final InitiatePasswordResetDto dto = createInitiatePasswordResetDto();
     final User user = new User();
     user.setEmail(dto.getEmail());
 
     when(this.userRepository.findByEmailIgnoreCase(dto.getEmail())).thenReturn(Optional.of(user));
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(appPrincipal.getEmail()).thenReturn("m" + dto.getEmail() + "");
     
-    this.service.initiatePasswordReset(dto);
+    assertThrows(ConstraintViolationException.class, () -> this.service.initiatePasswordReset(dto));
   }
   
   @Test
@@ -87,7 +79,7 @@ public class PasswordResetServiceUnitTest {
     user.setEmail(dto.getEmail());
 
     when(this.userRepository.findByEmailIgnoreCase(dto.getEmail())).thenReturn(Optional.of(user));
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(appPrincipal.getEmail()).thenReturn(dto.getEmail());
     
     this.service.initiatePasswordReset(dto);
@@ -97,11 +89,10 @@ public class PasswordResetServiceUnitTest {
     
     verify(userRepository, times(1)).findByEmailIgnoreCase(dto.getEmail());
     verify(eventPublisher, times(1)).publishEvent(any(PasswordResetInitiatedEvent.class));
-    PowerMockito.verifyStatic(SecurityUtils.class, VerificationModeFactory.times(1));
-    SecurityUtils.getPrincipal();
+    verify(securityUtils, times(1)).getPrincipal();
     verifyNoMoreInteractions(userRepository);
     verifyNoMoreInteractions(eventPublisher);
-    PowerMockito.verifyNoMoreInteractions(SecurityUtils.class);
+    verifyNoMoreInteractions(securityUtils);
   }
   
   @Test
@@ -111,7 +102,7 @@ public class PasswordResetServiceUnitTest {
     user.setEmail(dto.getEmail());
 
     when(this.userRepository.findByEmailIgnoreCase(dto.getEmail())).thenReturn(Optional.of(user));
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
+    when(securityUtils.getPrincipal()).thenReturn(Optional.empty());
     
     this.service.initiatePasswordReset(dto);
     
@@ -120,23 +111,22 @@ public class PasswordResetServiceUnitTest {
     
     verify(userRepository, times(1)).findByEmailIgnoreCase(dto.getEmail());
     verify(eventPublisher, times(1)).publishEvent(any(PasswordResetInitiatedEvent.class));
-    PowerMockito.verifyStatic(SecurityUtils.class, VerificationModeFactory.times(1));
-    SecurityUtils.getPrincipal();
+    verify(securityUtils, times(1)).getPrincipal();
     verifyNoMoreInteractions(userRepository);
     verifyNoMoreInteractions(eventPublisher);
-    PowerMockito.verifyNoMoreInteractions(SecurityUtils.class);
+    verifyNoMoreInteractions(securityUtils);
   }
   
-  @Test(expected = NotFoundException.class)
+  @Test
   public void whenUserNotFoundUsingResetId_thenProcessPasswordResetThrowsNotFoundException() {
     final PasswordResetDto dto = createPasswordResetDto();
     
     when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.empty());
     
-    this.service.processPasswordReset(dto);
+    assertThrows(NotFoundException.class, () -> this.service.processPasswordReset(dto));
   }
   
-  @Test(expected = NotFoundException.class)
+  @Test
   public void whenResetIdExpired_thenProcessPasswordResetThrowsNotFoundException() {
     final PasswordResetDto dto = createPasswordResetDto();
     final User user = new User();
@@ -144,10 +134,10 @@ public class PasswordResetServiceUnitTest {
     
     when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.of(user));
     
-    this.service.processPasswordReset(dto);
+    assertThrows(NotFoundException.class, () -> this.service.processPasswordReset(dto));
   }
   
-  @Test(expected = ConstraintViolationException.class)
+  @Test
   public void whenUsernameEnteredDoesntMatchUser_thenProcessPasswordResetThrowsConstraintViolationException() {
     final PasswordResetDto dto = createPasswordResetDto();
     final User user = new User();
@@ -156,10 +146,10 @@ public class PasswordResetServiceUnitTest {
     
     when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.of(user));
     
-    this.service.processPasswordReset(dto);
+    assertThrows(ConstraintViolationException.class, () -> this.service.processPasswordReset(dto));
   }
   
-  @Test(expected = ConstraintViolationException.class)
+  @Test
   public void whenNewPasswordMatchesOldPassword_thenProcessPasswordResetThrowsConstraintViolationException() {
     final PasswordResetDto dto = createPasswordResetDto();
     final User user = new User();
@@ -169,11 +159,11 @@ public class PasswordResetServiceUnitTest {
     
     when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.of(user));
     when(this.passwordEncoder.matches(dto.getPassword(), user.getPassword())).thenReturn(true);
-    
-    this.service.processPasswordReset(dto);
+
+    assertThrows(ConstraintViolationException.class, () -> this.service.processPasswordReset(dto));
   }
   
-  @Test(expected = ConstraintViolationException.class)
+  @Test
   public void whenCurrentUserLoggedInAndChangingDifferntAccount_thenProcessPasswordResetThrowsConstraintViolationException() {
     final PasswordResetDto dto = createPasswordResetDto();
     final User user = new User();
@@ -183,10 +173,10 @@ public class PasswordResetServiceUnitTest {
     user.setId(Long.valueOf(1));
     
     when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.of(user));
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(appPrincipal.getUserId()).thenReturn(user.getId() + 1);
     
-    this.service.processPasswordReset(dto);
+    assertThrows(ConstraintViolationException.class, () -> this.service.processPasswordReset(dto));
   }
   
   @Test
@@ -199,7 +189,7 @@ public class PasswordResetServiceUnitTest {
     user.setId(Long.valueOf(1));
     
     when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.of(user));
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(appPrincipal.getUserId()).thenReturn(user.getId());
     when(this.passwordEncoder.matches(dto.getPassword(), user.getPassword())).thenReturn(false);
     when(this.passwordEncoder.encode(dto.getPassword())).thenReturn(dto.getPassword() + "m");

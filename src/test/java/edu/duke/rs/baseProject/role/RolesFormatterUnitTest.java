@@ -2,13 +2,14 @@ package edu.duke.rs.baseProject.role;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.text.ParseException;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class RolesFormatterUnitTest {
   private static final RolesFormatter formatter = new RolesFormatter();
@@ -36,8 +37,8 @@ public class RolesFormatterUnitTest {
     assertThat(actual, equalTo(RoleName.ADMINISTRATOR.getValue() + ", " + RoleName.USER.getValue()));
   }
   
-  @Test(expected = ParseException.class)
+  @Test
   public void whenParseCalled_thenNotImplementedExceptionThrown() throws ParseException {
-    formatter.parse("abc", Locale.getDefault());
+    assertThrows(ParseException.class, () -> formatter.parse("abc", Locale.getDefault()));
   }
 }

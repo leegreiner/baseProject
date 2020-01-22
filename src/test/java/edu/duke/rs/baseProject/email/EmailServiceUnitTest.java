@@ -1,5 +1,6 @@
 package edu.duke.rs.baseProject.email;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
@@ -10,8 +11,8 @@ import static org.mockito.Mockito.when;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -24,20 +25,20 @@ public class EmailServiceUnitTest {
   private MessageContentBuilder contentBuilder;
   private EmailService emailService;
   
-  @Before
+  @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
     emailService = new EmailServiceImpl(mailSender, contentBuilder);
   }
   
-  @Test(expected = EmailException.class)
+  @Test
   public void whenEmailIsNotAbleToBeSent_thenEmailExceptionThrown() {
    final Map<String, Object> content = new HashMap<String, Object>();
    content.put("message", "This is a test");
    when(contentBuilder.build(MessageType.TEST, content)).thenReturn("This is a test");
    doThrow(EmailException.class).when(mailSender).send(any(MimeMessagePreparator.class));
    
-   emailService.send(MessageType.TEST, "abc@123.com", "Test subject", content);
+   assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, "abc@123.com", "Test subject", content));
   }
   
   @Test

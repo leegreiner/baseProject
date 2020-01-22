@@ -7,11 +7,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 
 import org.hibernate.envers.RevisionType;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import edu.duke.rs.baseProject.audit.AuditRevisionEntity;
 import edu.duke.rs.baseProject.user.User;
-import edu.duke.rs.baseProject.user.history.UserHistory;
 
 public class UserHistoryUnitTest {
   @Test

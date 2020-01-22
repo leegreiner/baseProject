@@ -5,9 +5,11 @@ import java.util.Optional;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 
+@Component
 public class SecurityUtils {
-	public static boolean userIsAuthenticated() {
+	public boolean userIsAuthenticated() {
 		final Authentication auth = SecurityContextHolder.getContext()
 				.getAuthentication();
 		
@@ -16,7 +18,7 @@ public class SecurityUtils {
 				          instanceof AnonymousAuthenticationToken);
 	}
 	
-	public static Optional<AppPrincipal> getPrincipal() {
+	public Optional<AppPrincipal> getPrincipal() {
     AppPrincipal appPrincipal = null;
     final Authentication auth = SecurityContextHolder.getContext()
         .getAuthentication();

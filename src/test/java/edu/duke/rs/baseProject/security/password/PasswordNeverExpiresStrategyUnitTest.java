@@ -1,11 +1,10 @@
 package edu.duke.rs.baseProject.security.password;
 
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import edu.duke.rs.baseProject.security.password.PasswordNeverExpiresStrategy;
 import edu.duke.rs.baseProject.user.User;
 
 public class PasswordNeverExpiresStrategyUnitTest {

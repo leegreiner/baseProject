@@ -34,16 +34,19 @@ public class UserServiceImpl implements UserService {
 	private transient final PasswordGenerator passwordGenerator;
 	private transient final PasswordResetService passwordResetService;
 	private transient final ApplicationEventPublisher eventPublisher;
+  private transient final SecurityUtils securityUtils;
 	
 	public UserServiceImpl(final UserRepository userRepository,
 	    final RoleRepository roleRepository, final PasswordGenerator passwordGenerator,
 	    final PasswordResetService passwordResetService,
-	    final ApplicationEventPublisher eventPublisher) {
+	    final ApplicationEventPublisher eventPublisher,
+	    final SecurityUtils securityUtils) {
 		this.userRepository = userRepository;
 		this.roleRepository = roleRepository;
 		this.passwordGenerator = passwordGenerator;
 		this.passwordResetService = passwordResetService;
 		this.eventPublisher = eventPublisher;
+		this.securityUtils = securityUtils;
 	}
 	
 	@Override
@@ -71,7 +74,7 @@ public class UserServiceImpl implements UserService {
   }
   
   private AppPrincipal getCurrentUser() {
-    return SecurityUtils.getPrincipal().orElseThrow(() ->  new IllegalArgumentException("error.principalNotFound"));
+    return securityUtils.getPrincipal().orElseThrow(() ->  new IllegalArgumentException("error.principalNotFound"));
   }
 
   @Override

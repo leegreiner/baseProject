@@ -2,9 +2,10 @@ package edu.duke.rs.baseProject.role;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 public class RoleNameConverterUnitTest {
   @Test
@@ -22,9 +23,9 @@ public class RoleNameConverterUnitTest {
     assertThat(new RoleNameConverter().convertToEntityAttribute(null), nullValue());
   }
   
-  @Test(expected = IllegalArgumentException.class)
+  @Test
   public void whenInvalidStringPassedToConvertToEntityAttribute_thenIllegalArgumentExceptionThrown() {
-    new RoleNameConverter().convertToEntityAttribute("somecrazystring");
+    assertThrows(IllegalArgumentException.class, () -> new RoleNameConverter().convertToEntityAttribute("somecrazystring"));
   }
   
   @Test

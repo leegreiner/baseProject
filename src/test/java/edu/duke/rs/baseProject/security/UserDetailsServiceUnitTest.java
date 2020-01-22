@@ -3,6 +3,7 @@ package edu.duke.rs.baseProject.security;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.equalToIgnoringCase;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -13,8 +14,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -38,18 +39,18 @@ public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 	@InjectMocks
 	private UserDetailsServiceImpl userDetailsService;
 	
-	@Before
+	@BeforeEach 
 	public void inint() {
 		MockitoAnnotations.initMocks(this);
 		when(passwordExpirationStrategy.isPasswordExpired(any(User.class))).thenReturn(false);
 	}
 	
-	@Test(expected = UsernameNotFoundException.class)
+	@Test
 	public void whenUserNotFound_thenUsernameNotFoundExceptionThrown() {
 		when(userRepository.findByUsernameIgnoreCase(any(String.class)))
 			.thenReturn(Optional.empty());
 		
-		userDetailsService.loadUserByUsername("abc");
+		assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername("abc"));
 	}
 	
 	@Test

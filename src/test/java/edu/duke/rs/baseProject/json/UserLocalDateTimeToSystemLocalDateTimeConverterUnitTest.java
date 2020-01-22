@@ -3,35 +3,30 @@ package edu.duke.rs.baseProject.json;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.when;
-import static org.powermock.api.mockito.PowerMockito.mockStatic;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Optional;
 import java.util.TimeZone;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.util.DateUtils;
 
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(SecurityUtils.class)
 public class UserLocalDateTimeToSystemLocalDateTimeConverterUnitTest {
   @Mock
   private AppPrincipal appPrincipal;
+  @Mock
+  private SecurityUtils securityUtils;
   
-  @Before
+  @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
-    mockStatic(SecurityUtils.class);
   }
   
   @Test
@@ -39,22 +34,22 @@ public class UserLocalDateTimeToSystemLocalDateTimeConverterUnitTest {
     final ZoneId zoneId = ZoneId.of("America/Los_Angeles");
     final TimeZone timeZone = TimeZone.getTimeZone(zoneId);
     when(appPrincipal.getTimeZone()).thenReturn(timeZone);
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     
-    final UserLocalDateTimeToSystemLocalDateTimeConverter converter = new UserLocalDateTimeToSystemLocalDateTimeConverter();
+    final UserLocalDateTimeToSystemLocalDateTimeConverter converter = new UserLocalDateTimeToSystemLocalDateTimeConverter(securityUtils);
     final LocalDateTime now = LocalDateTime.now();
     
     final LocalDateTime actual = converter.convert(now);
-    final LocalDateTime expected = DateUtils.convertToZone(now, zoneId, ZoneId.systemDefault());
+    final LocalDateTime expected = new DateUtils().convertToZone(now, zoneId, ZoneId.systemDefault());
     
     assertThat(actual, equalTo(expected));
   }
   
   @Test
   public void whenCurrentUserNotPresent_thenDateConvertedFromSystemTimezone() throws Exception {
-    when(SecurityUtils.getPrincipal()).thenReturn(Optional.empty());
+    when(securityUtils.getPrincipal()).thenReturn(Optional.empty());
     
-    final UserLocalDateTimeToSystemLocalDateTimeConverter converter = new UserLocalDateTimeToSystemLocalDateTimeConverter();
+    final UserLocalDateTimeToSystemLocalDateTimeConverter converter = new UserLocalDateTimeToSystemLocalDateTimeConverter(securityUtils);
     final LocalDateTime now = LocalDateTime.now();
     
     final LocalDateTime actual = converter.convert(now);
