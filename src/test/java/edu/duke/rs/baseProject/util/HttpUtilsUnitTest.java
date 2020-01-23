@@ -8,6 +8,8 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.util.Locale;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -33,6 +35,7 @@ public class HttpUtilsUnitTest {
   public void whenAjaxHeaderNotPresent_thenIsAjaxRequestIsFalse() {
     when(request.getHeader(HttpUtils.AJAX_REQUEST_HEADER)).thenReturn(null);
     when(request.getHeader(HttpUtils.ACCEPT_HEADER)).thenReturn(null);
+    when(request.getLocale()).thenReturn(Locale.US);
     
     assertThat(HttpUtils.isAjaxRequest(request), equalTo(false));
   }
@@ -41,6 +44,7 @@ public class HttpUtilsUnitTest {
   public void whenAjaxHeaderPresentAndNotAjaxValue_thenIsAjaxRequestIsFalse() {
     when(request.getHeader(HttpUtils.AJAX_REQUEST_HEADER)).thenReturn("oops");
     when(request.getHeader(HttpUtils.ACCEPT_HEADER)).thenReturn(null);
+    when(request.getLocale()).thenReturn(Locale.US);
     
     assertThat(HttpUtils.isAjaxRequest(request), equalTo(false));
     
@@ -54,16 +58,19 @@ public class HttpUtilsUnitTest {
   public void whenAjaxHeaderPresentAndNotAjax_thenIsAjaxRequestIsFalse() {
     when(request.getHeader(HttpUtils.AJAX_REQUEST_HEADER)).thenReturn(HttpUtils.AJAX_REQUEST_HEADER_VALUE);
     when(request.getHeader(HttpUtils.ACCEPT_HEADER)).thenReturn(null);
+    when(request.getLocale()).thenReturn(Locale.US);
     
     assertThat(HttpUtils.isAjaxRequest(request), equalTo(true));
     
     when(request.getHeader(HttpUtils.AJAX_REQUEST_HEADER)).thenReturn(null);
     when(request.getHeader(HttpUtils.ACCEPT_HEADER)).thenReturn("application/json");
+    when(request.getLocale()).thenReturn(Locale.US);
     
     assertThat(HttpUtils.isAjaxRequest(request), equalTo(true));
     
     when(request.getHeader(HttpUtils.AJAX_REQUEST_HEADER)).thenReturn(HttpUtils.AJAX_REQUEST_HEADER_VALUE);
     when(request.getHeader(HttpUtils.ACCEPT_HEADER)).thenReturn("application/json");
+    when(request.getLocale()).thenReturn(Locale.US);
     
     assertThat(HttpUtils.isAjaxRequest(request), equalTo(true));
   }

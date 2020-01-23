@@ -17,7 +17,7 @@ public class HttpUtils {
     final String  acceptHeader = request.getHeader(ACCEPT_HEADER); 
     final String ajaxHeader = request.getHeader(AJAX_REQUEST_HEADER);
     return (ajaxHeader != null && ajaxHeader.equals(AJAX_REQUEST_HEADER_VALUE)) ||
-        (acceptHeader != null && acceptHeader.toLowerCase().contains("json"));
+        (acceptHeader != null && acceptHeader.toLowerCase(request.getLocale()).contains("json"));
   }
   
   /**
