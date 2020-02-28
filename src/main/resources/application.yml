@@ -104,6 +104,7 @@ server:  compression:    enabled: true
   tomcat:
     basedir: /opt/apps/baseProject    accesslog:
       directory: logs      enabled: true
+      pattern: '%h %l %u %t "%r" %s %b %{X-Forwarded-For}i "%{Referer}i" "%{User-Agent}i"'
       request-attributes-enabled: true
       rotate: true
       suffix: .log
