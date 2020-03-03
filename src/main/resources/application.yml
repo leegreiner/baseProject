@@ -190,6 +190,7 @@ saml:
     
 logging:
   level:
+    org.hibernate.type.descriptor.sql.BasicBinder: trace
     edu.duke.rs: debug
 #    org.springframework.security: debug
 #    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: trace
