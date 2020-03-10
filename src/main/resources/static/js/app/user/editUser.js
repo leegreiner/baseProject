@@ -25,9 +25,12 @@ var targetPageSetUp = function() {
           event.preventDefault();
           event.stopPropagation();
       } else {
+        buttonUtils.disableButton('submitButton');
+        buttonUtils.disableLink('cancelLink');
+        
         ga('send', 'event', 'User', 'edit');
       }
-      
+
       form.classList.add('was-validated');
     }, false);
   });

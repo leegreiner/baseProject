@@ -19,7 +19,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>11</java.version>
-    <spring-cloud.version>2.2.1.RELEASE</spring-cloud.version>
+    <spring-cloud.version>2.2.2.RELEASE</spring-cloud.version>
     <spring.boot.saml.version>1.17</spring.boot.saml.version>
     <passay.version>1.5.0</passay.version>
     <jacoco.version>0.8.5</jacoco.version>

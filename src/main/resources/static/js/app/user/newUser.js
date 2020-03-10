@@ -11,6 +11,9 @@ var targetPageSetUp = function() {
           event.preventDefault();
           event.stopPropagation();
       } else {
+        buttonUtils.disableButton('submitButton');
+        buttonUtils.disableLink('cancelLink');
+        
         ga('send', 'event', 'User', 'new');
       }
       

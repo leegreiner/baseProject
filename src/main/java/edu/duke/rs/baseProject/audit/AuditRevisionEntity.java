@@ -22,9 +22,8 @@ import lombok.Setter;
 public class AuditRevisionEntity extends DefaultTrackingModifiedEntitiesRevisionEntity {
   private static final long serialVersionUID = 1L;
   
-  @Column(name = "user_id")
   private Long userId;
   
-  @Column(name = "initiator", length = 100, nullable = false)
+  @Column(length = 100, nullable = false)
   private String initiator;
 }

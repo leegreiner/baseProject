@@ -71,62 +71,58 @@ public class User extends BaseEntity implements Serializable {
   @SequenceGenerator(name = "user_seq", sequenceName = "USER_SEQ", allocationSize = 1)
 	private Long id;
 	
-	@Column(name = "user_name", length = 30, nullable = false)
+	@Column(length = 30, nullable = false)
 	@NonNull
 	@NotBlank
 	@Size(min = 4, max = 30)
 	@Include
 	private String username;
 	
-	@Column(name = "password", length = 200, nullable = false)
+	@Column(length = 200, nullable = false)
 	@NonNull
 	@NotBlank
 	@Size(min = 8, max = 200)
 	private String password;
 	
-	@Column(name = "first_name", length = 30, nullable = false)
+	@Column(length = 30, nullable = false)
 	@NonNull
 	@NotBlank
 	@Size(max = 30)
 	private String firstName;
 	
-	@Column(name = "middle_initial", length = 1)
+	@Column(length = 1)
   @Size(max = 1)
 	private String middleInitial;
 	
-	@Column(name = "last_name", length = 30, nullable = false)
+	@Column(length = 30, nullable = false)
   @NonNull
   @NotBlank
   @Size(max = 30)
 	private String lastName;
 	
-	@Column(name = "email", length = 320, nullable = false)
+	@Column(length = 320, nullable = false)
   @NonNull
   @NotBlank
   @Size(max = 320)
   private String email;
 	
-	@Column(name = "account_enabled", nullable = false)
+	@Column(nullable = false)
 	@Type(type = "yes_no")
 	private boolean accountEnabled = true;
 	
-	@Column(name = "time_zone", length = 100, nullable = false)
+	@Column(length = 100, nullable = false)
 	@NotNull
 	private TimeZone timeZone = TimeZone.getTimeZone("UTC");
 	
-	@Column(name = "last_logged_in")
 	private LocalDateTime lastLoggedIn;
 	
-	@Column(name = "last_invalid_login_attempt")
 	private LocalDateTime lastInvalidLoginAttempt;
 	
-	@Column(name = "invalid_login_attempts")
 	private Integer invalidLoginAttempts;
 	
-	@Column(name = "last_password_change")
   private LocalDateTime lastPasswordChange;
 	
-	@Column(name = "password_change_id", length = 36, nullable = true)
+	@Column(length = 36, nullable = true)
 	@Type(type = "uuid-char")
 	private UUID passwordChangeId;
 	

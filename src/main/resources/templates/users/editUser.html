@@ -127,10 +127,10 @@
                   </div>
 	   
 	                <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row">
-	                  <button type="submit" class="btn btn-primary ml-auto">
+	                  <button id="submitButton" type="submit" class="btn btn-primary ml-auto">
                      <i class="fa fa-check"></i> <span th:text="#{submit}">submit</span>
                     </button>
-                    <a th:href="@{'/users/' + ${user.id}}" class="btn btn-default ml-3">
+                    <a id="cancelLink" th:href="@{'/users/' + ${user.id}}" class="btn btn-default ml-3">
                      <i class="fa fa-times"></i> <span th:text="#{cancel}">cancel</span>
                     </a>
 	                </div>
@@ -145,6 +145,7 @@
     <customJs th:remove="tag">
       <script th:src="@{/js/formplugins/select2/select2.bundle.js}"></script>
       <script th:src="@{/js/addon/hotkeys.min.js}"></script>
+      <script th:src="@{/js/app/buttonUtils.js}"></script>
       <script th:src="@{/js/app/user/editUser.js}"></script>
       <script th:inline="javascript">
       /*<![CDATA[*/
