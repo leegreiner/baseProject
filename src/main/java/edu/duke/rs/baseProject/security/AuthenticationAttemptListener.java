@@ -34,10 +34,11 @@ public class AuthenticationAttemptListener {
     final StringBuffer message = new StringBuffer("Authentication event" + DELIMITER + event.getType()
       + DELIMITER + event.getPrincipal());
     
-    final WebAuthenticationDetails details = (WebAuthenticationDetails) event.getData().get("details");
+    final Object details = event.getData().get("details");
     
-    if (details != null) {
-      message.append(DELIMITER + details.getRemoteAddress() + DELIMITER + details.getSessionId());
+    if (details != null && details instanceof WebAuthenticationDetails) {
+      message.append(DELIMITER + ((WebAuthenticationDetails) details).getRemoteAddress() + 
+          DELIMITER + ((WebAuthenticationDetails) details).getSessionId());
     }
     
     log.info(message.toString());
