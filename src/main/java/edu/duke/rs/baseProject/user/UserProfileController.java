@@ -16,6 +16,7 @@ import edu.duke.rs.baseProject.home.HomeController;
 import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.util.HttpUtils;
+import io.micrometer.core.annotation.Timed;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -33,6 +34,7 @@ public class UserProfileController extends BaseWebController {
   }
   
   @GetMapping(USER_PROFILE_MAPPING)
+  @Timed(description = "User profile")
   public String userProfile(Model model) {
     log.debug("In userProfile()");
     final UserProfile userProfile = userService.getUserProfile();

@@ -15,6 +15,7 @@ import edu.duke.rs.baseProject.BaseRestController;
 import edu.duke.rs.baseProject.datatables.DataTablesInput;
 import edu.duke.rs.baseProject.datatables.DataTablesOutput;
 import edu.duke.rs.baseProject.datatables.DataTablesUtils;
+import io.micrometer.core.annotation.Timed;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -27,6 +28,7 @@ public class UserRestController extends BaseRestController {
   }
   
   @GetMapping(API_MAPPING + UserController.USERS_MAPPING)
+  @Timed(description = "Search users")
   public DataTablesOutput<UserListItem> searchUsers(@Valid DataTablesInput input) {
     log.debug("In searchUsers(): " + input.toString());
     final List<String> additionalOrders = new ArrayList<String>();
