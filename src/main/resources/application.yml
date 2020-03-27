@@ -98,6 +98,8 @@ server:  compression:    enabled: true
       request-attributes-enabled: true
       rotate: true
       suffix: .log
+    mbeanregistry:
+      enabled : true
     
 management:
   endpoints:    web:      exposure:        include: '*'
