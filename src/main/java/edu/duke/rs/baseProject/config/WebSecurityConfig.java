@@ -31,12 +31,16 @@ import org.springframework.security.saml.userdetails.SAMLUserDetailsService;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
+import org.springframework.security.web.authentication.logout.HeaderWriterLogoutHandler;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
+import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.github.ulisesbocchio.spring.boot.security.saml.bean.SAMLConfigurerBean;
 
 import edu.duke.rs.baseProject.error.ApplicationErrorController;
 import edu.duke.rs.baseProject.home.HomeController;
+import edu.duke.rs.baseProject.index.IndexController;
 import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.security.AjaxAwareAccessDeniedHandler;
 import edu.duke.rs.baseProject.security.AjaxAwareExceptionMappingAuthenticationHandler;
@@ -125,8 +129,10 @@ public class WebSecurityConfig {
             .failureHandler(authenticationFailureHandler())
         .and()
           .logout()
+            .clearAuthentication(true)
             .logoutRequestMatcher(new AntPathRequestMatcher("/saml/logout"))
-            .logoutSuccessUrl("/")
+            .logoutSuccessUrl(IndexController.INDEX_MAPPING)
+            .addLogoutHandler(new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(Directive.CACHE, Directive.COOKIES, Directive.STORAGE)))
             .permitAll()
             .deleteCookies("SESSION")
               .invalidateHttpSession(true);
@@ -200,7 +206,8 @@ public class WebSecurityConfig {
           .authorizeRequests()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
             .antMatchers("/", "/error/**", "/webfonts/**", "/img/**").permitAll()
-            .anyRequest().hasRole(RoleName.ADMINISTRATOR.name());
+            .antMatchers("/users/**").hasRole(RoleName.ADMINISTRATOR.name())
+            .anyRequest().authenticated();
     }
     
     @Bean
