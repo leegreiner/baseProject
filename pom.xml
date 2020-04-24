@@ -21,7 +21,7 @@
     <java.version>11</java.version>
     <spring-cloud.version>2.2.2.RELEASE</spring-cloud.version>
     <spring.boot.saml.version>1.17</spring.boot.saml.version>
-    <passay.version>1.5.0</passay.version>
+    <passay.version>1.6.0</passay.version>
     <jacoco.version>0.8.5</jacoco.version>
   </properties>
 
@@ -155,12 +155,16 @@
     <dependency>
         <groupId>com.icegreen</groupId>
         <artifactId>greenmail</artifactId>
-        <version>1.5.11</version>
+        <version>1.5.13</version>
         <scope>test</scope>
         <exclusions>
           <exclusion>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.junit.vintage</groupId>
+            <artifactId>junit-vintage-engine</artifactId>
           </exclusion>
       </exclusions>
     </dependency>
@@ -306,7 +310,7 @@
           <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs</artifactId>
-            <version>4.0.0-beta4</version>
+            <version>4.0.2</version>
           </dependency>
         </dependencies>
         <configuration>
