@@ -56,6 +56,8 @@ public class WebSecurityConfig {
 		private String managementUserName;
 		@Value("${app.management.password}")
 		private String managementPassword;
+		@Value("${server.ssl.enabled:false}")
+    private boolean sslEnabled;
 		
 		@Override
 		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -72,11 +74,14 @@ public class WebSecurityConfig {
 		
 		@Override
     protected void configure(final HttpSecurity http) throws Exception {
+		  if (sslEnabled) {
+        http.requiresChannel()
+          .anyRequest().requiresSecure();
+      }
+      
 			http
-        .requiresChannel()
-        .and()
-  				.requestMatcher(EndpointRequest.toAnyEndpoint())
-  				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
+  			.requestMatcher(EndpointRequest.toAnyEndpoint())
+  			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
 				.and()
   				.exceptionHandling()
             .accessDeniedHandler(accessDeniedHandler())
@@ -96,6 +101,8 @@ public class WebSecurityConfig {
   @Order(2)
   public static class ApplicationConfigurationAdapter extends WebSecurityConfigurerAdapter {
     private static final String LOGIN_PAGE = "/loginPage";
+    @Value("${server.ssl.enabled:false}")
+    private boolean sslEnabled;
     @Autowired
     private UserDetailsService userDetailsService;
     
@@ -108,10 +115,13 @@ public class WebSecurityConfig {
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+      if (sslEnabled) {
+        http.requiresChannel()
+          .anyRequest().requiresSecure();
+      }
+      
       http
-        .requiresChannel()
-        .and()
-          .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
         .and()
           .exceptionHandling()
             .accessDeniedHandler(accessDeniedHandler())

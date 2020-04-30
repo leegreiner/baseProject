@@ -9,6 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import edu.duke.rs.baseProject.role.Role;
+import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.user.User;
 
 public class AppPrincipal implements UserDetails {
@@ -29,6 +30,19 @@ public class AppPrincipal implements UserDetails {
 			authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + role.getName().name()));
 		}
 	}
+	
+	public boolean hasRole(final RoleName roleName) {
+    boolean result = false;
+    
+    for (final GrantedAuthority authority : this.getAuthorities()) {
+      if ((ROLE_PREFIX + roleName.toString()).equals(authority.getAuthority())) {
+        result = true;
+        break;
+      }
+    }
+    
+    return result;
+  }
 	
 	@Override
 	public String getPassword() {

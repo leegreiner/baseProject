@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
+import edu.duke.rs.baseProject.role.RoleName;
+
 @Component
 public class SecurityUtils {
 	public boolean userIsAuthenticated() {
@@ -17,6 +19,17 @@ public class SecurityUtils {
 				!(SecurityContextHolder.getContext().getAuthentication() 
 				          instanceof AnonymousAuthenticationToken);
 	}
+	
+	public boolean hasRole(final RoleName roleName) {
+    boolean result = false;
+    final Optional<AppPrincipal> principal = getPrincipal();
+
+    if (principal.isPresent()) {
+      result = principal.get().hasRole(roleName);
+    }
+
+    return result;
+  }
 	
 	public Optional<AppPrincipal> getPrincipal() {
     AppPrincipal appPrincipal = null;
