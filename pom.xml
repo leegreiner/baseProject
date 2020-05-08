@@ -337,6 +337,32 @@
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>versions-maven-plugin</artifactId>
       </plugin>
+      
+       <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce</id>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
+            <configuration>
+              <rules>
+                <banDuplicatePomDependencyVersions/>
+                <requireMavenVersion>
+                  <version>3.0</version>
+                  <message>Invalid Maven version. It should, at least, be 3.0</message>
+                </requireMavenVersion>
+                <requireJavaVersion>
+                  <version>11</version>
+                  <message>Invalid Java version. It should, at least, be 11</message>
+                </requireJavaVersion>
+              </rules>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
       <!--
       <plugin>
         <groupId>org.owasp</groupId>
