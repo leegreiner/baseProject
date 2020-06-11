@@ -106,6 +106,9 @@ management:
   endpoint:
     health:
       show-details: always
+  health:
+    probes:
+      enabled: true
     
 info:
   app:
