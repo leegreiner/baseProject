@@ -1,5 +1,5 @@
 /*!
- * SmartWizard v4.3.x
+ * SmartWizard v4.4.x
  * jQuery Wizard Plugin
  * http://www.techlaboratory.net/smartwizard
  *
@@ -34,7 +34,7 @@
 /* SmartWizard Theme: White */
 .sw-theme-default {
   -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3);
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3); }
+          box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.3); }
 
 .sw-theme-default .sw-container {
   min-height: 250px; }
@@ -88,7 +88,7 @@
   -webkit-transition: all 250ms ease 0s;
   transition: all 250ms ease 0s;
   -webkit-transform: scale(0);
-  transform: scale(0); }
+          transform: scale(0); }
 
 .sw-theme-default > ul.step-anchor > li.active > a {
   border: none !important;
@@ -98,7 +98,7 @@
 
 .sw-theme-default > ul.step-anchor > li.active > a::after {
   -webkit-transform: scale(1);
-  transform: scale(1); }
+          transform: scale(1); }
 
 .sw-theme-default > ul.step-anchor > li.done > a {
   border: none !important;
@@ -109,7 +109,7 @@
 .sw-theme-default > ul.step-anchor > li.done > a::after {
   background: #5cb85c;
   -webkit-transform: scale(1);
-  transform: scale(1); }
+          transform: scale(1); }
 
 .sw-theme-default > ul.step-anchor > li.danger > a {
   border: none !important;
@@ -121,7 +121,7 @@
   background: #d9534f;
   border-left-color: #f8d7da;
   -webkit-transform: scale(1);
-  transform: scale(1); }
+          transform: scale(1); }
 
 .sw-theme-default > ul.step-anchor > li.disabled > a, .sw-theme-default > ul.step-anchor > li.disabled > a:hover {
   color: #eee !important;
@@ -175,13 +175,13 @@
 @keyframes spin {
   0% {
     -webkit-transform: rotate(0deg);
-    transform: rotate(0deg); }
+            transform: rotate(0deg); }
   100% {
     -webkit-transform: rotate(360deg);
-    transform: rotate(360deg); } }
+            transform: rotate(360deg); } }
 
 /*!
- * SmartWizard v4.3.x
+ * SmartWizard v4.4.x
  * jQuery Wizard Plugin
  * http://www.techlaboratory.net/smartwizard
  *
@@ -330,7 +330,7 @@
   border-top: 10px solid #5cb85c; }
 
 /*!
- * SmartWizard v4.3.x
+ * SmartWizard v4.4.x
  * jQuery Wizard Plugin
  * http://www.techlaboratory.net/smartwizard
  *
@@ -391,7 +391,7 @@
   padding: 25px 0;
   border-radius: 50%;
   -webkit-box-shadow: inset 0px 0px 0px 3px #fff !important;
-  box-shadow: inset 0px 0px 0px 3px #fff !important;
+          box-shadow: inset 0px 0px 0px 3px #fff !important;
   text-decoration: none;
   outline-style: none;
   z-index: 99;
@@ -440,7 +440,7 @@
   color: #eee !important; }
 
 /*!
- * SmartWizard v4.3.x
+ * SmartWizard v4.4.x
  * jQuery Wizard Plugin
  * http://www.techlaboratory.net/smartwizard
  *

@@ -1,11 +1,11 @@
 /*!
- * Cropper.js v1.5.4
+ * Cropper.js v1.5.6
  * https://fengyuanchen.github.io/cropperjs
  *
  * Copyright 2015-present Chen Fengyuan
  * Released under the MIT license
  *
- * Date: 2019-08-03T08:38:42.128Z
+ * Date: 2019-10-04T04:33:48.372Z
  */
 
 (function (global, factory) {
@@ -48,6 +48,55 @@
     if (protoProps) _defineProperties(Constructor.prototype, protoProps);
     if (staticProps) _defineProperties(Constructor, staticProps);
     return Constructor;
+  }
+
+  function _defineProperty(obj, key, value) {
+    if (key in obj) {
+      Object.defineProperty(obj, key, {
+        value: value,
+        enumerable: true,
+        configurable: true,
+        writable: true
+      });
+    } else {
+      obj[key] = value;
+    }
+
+    return obj;
+  }
+
+  function ownKeys(object, enumerableOnly) {
+    var keys = Object.keys(object);
+
+    if (Object.getOwnPropertySymbols) {
+      var symbols = Object.getOwnPropertySymbols(object);
+      if (enumerableOnly) symbols = symbols.filter(function (sym) {
+        return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+      });
+      keys.push.apply(keys, symbols);
+    }
+
+    return keys;
+  }
+
+  function _objectSpread2(target) {
+    for (var i = 1; i < arguments.length; i++) {
+      var source = arguments[i] != null ? arguments[i] : {};
+
+      if (i % 2) {
+        ownKeys(source, true).forEach(function (key) {
+          _defineProperty(target, key, source[key]);
+        });
+      } else if (Object.getOwnPropertyDescriptors) {
+        Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+      } else {
+        ownKeys(source).forEach(function (key) {
+          Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+        });
+      }
+    }
+
+    return target;
   }
 
   function _toConsumableArray(arr) {
@@ -740,7 +789,8 @@
    */
 
   function getMaxZoomRatio(pointers) {
-    var pointers2 = assign({}, pointers);
+    var pointers2 = _objectSpread2({}, pointers);
+
     var ratios = [];
     forEach(pointers, function (pointer, pointerId) {
       delete pointers2[pointerId];
@@ -774,7 +824,7 @@
       endX: pageX,
       endY: pageY
     };
-    return endOnly ? end : assign({
+    return endOnly ? end : _objectSpread2({
       startX: pageX,
       startY: pageY
     }, end);
@@ -1818,10 +1868,10 @@
       var buttons = event.buttons,
           button = event.button;
 
-      if (this.disabled // No primary button (Usually the left button)
-      // Note that touch events have no `buttons` or `button` property
-      || isNumber(buttons) && buttons !== 1 || isNumber(button) && button !== 0 // Open context menu
-      || event.ctrlKey) {
+      if (this.disabled // Handle mouse event and pointer event and ignore touch event
+      || (event.type === 'mousedown' || event.type === 'pointerdown' && event.pointerType === 'mouse') && ( // No primary button (Usually the left button)
+      isNumber(buttons) && buttons !== 1 || isNumber(button) && button !== 0 // Open context menu
+      || event.ctrlKey)) {
         return;
       }
 
@@ -3566,35 +3616,34 @@
 }));
 
 /*!
- * jQuery Cropper v1.0.0
- * https://github.com/fengyuanchen/jquery-cropper
+ * jQuery Cropper v1.0.1
+ * https://fengyuanchen.github.io/jquery-cropper
  *
- * Copyright (c) 2018 Chen Fengyuan
+ * Copyright 2018-present Chen Fengyuan
  * Released under the MIT license
  *
- * Date: 2018-04-01T06:20:13.168Z
+ * Date: 2019-10-19T08:48:33.062Z
  */
 
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(require('jquery'), require('cropperjs')) :
   typeof define === 'function' && define.amd ? define(['jquery', 'cropperjs'], factory) :
-  (factory(global.jQuery,global.Cropper));
-}(this, (function ($,Cropper) { 'use strict';
+  (global = global || self, factory(global.jQuery, global.Cropper));
+}(this, function ($, Cropper) { 'use strict';
 
   $ = $ && $.hasOwnProperty('default') ? $['default'] : $;
   Cropper = Cropper && Cropper.hasOwnProperty('default') ? Cropper['default'] : Cropper;
 
-  if ($.fn) {
+  if ($ && $.fn && Cropper) {
     var AnotherCropper = $.fn.cropper;
     var NAMESPACE = 'cropper';
 
     $.fn.cropper = function jQueryCropper(option) {
-      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+      for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
         args[_key - 1] = arguments[_key];
       }
 
-      var result = void 0;
-
+      var result;
       this.each(function (i, element) {
         var $element = $(element);
         var isDestroy = option === 'destroy';
@@ -3606,7 +3655,6 @@
           }
 
           var options = $.extend({}, $element.data(), $.isPlainObject(option) && option);
-
           cropper = new Cropper(element, options);
           $element.data(NAMESPACE, cropper);
         }
@@ -3627,16 +3675,16 @@
           }
         }
       });
-
       return result !== undefined ? result : this;
     };
 
     $.fn.cropper.Constructor = Cropper;
     $.fn.cropper.setDefaults = Cropper.setDefaults;
+
     $.fn.cropper.noConflict = function noConflict() {
       $.fn.cropper = AnotherCropper;
       return this;
     };
   }
 
-})));
+}));

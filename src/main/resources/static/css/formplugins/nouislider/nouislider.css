@@ -1,4 +1,4 @@
-/*! nouislider - 14.0.2 - 6/28/2019 */
+/*! nouislider - 14.5.0 - 5/11/2020 */
 /* Functional styling;
  * These styles are required for noUiSlider to function.
  * You don't need to change these rules to apply your design.
@@ -17,8 +17,7 @@
           box-sizing: border-box; }
 
 .noUi-target {
-  position: relative;
-  direction: ltr; }
+  position: relative; }
 
 .noUi-base,
 .noUi-connects {
@@ -39,7 +38,7 @@
   position: absolute;
   z-index: 1;
   top: 0;
-  left: 0;
+  right: 0;
   -ms-transform-origin: 0 0;
   -webkit-transform-origin: 0 0;
   -webkit-transform-style: preserve-3d;
@@ -57,9 +56,9 @@
 
 /* Offset direction
  */
-html:not([dir="rtl"]) .noUi-horizontal .noUi-origin {
-  left: auto;
-  right: 0; }
+.noUi-txt-dir-rtl.noUi-horizontal .noUi-origin {
+  left: 0;
+  right: auto; }
 
 /* Give origins 0 height/width so they don't interfere with clicking the
  * connect elements.
@@ -98,7 +97,7 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-origin {
 .noUi-horizontal .noUi-handle {
   width: 34px;
   height: 28px;
-  left: -17px;
+  right: -17px;
   top: -6px; }
 
 .noUi-vertical {
@@ -107,12 +106,12 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-origin {
 .noUi-vertical .noUi-handle {
   width: 28px;
   height: 34px;
-  left: -6px;
+  right: -6px;
   top: -17px; }
 
-html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
-  right: -17px;
-  left: auto; }
+.noUi-txt-dir-rtl.noUi-horizontal .noUi-handle {
+  left: -17px;
+  right: auto; }
 
 /* Styling;
  * Giving the connect element a border radius causes issues with using transform: scale
@@ -303,5 +302,17 @@ html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
   transform: translate(0, -50%);
   top: 50%;
   right: 120%; }
+
+.noUi-horizontal .noUi-origin > .noUi-tooltip {
+  -webkit-transform: translate(50%, 0);
+  transform: translate(50%, 0);
+  left: auto;
+  bottom: 10px; }
+
+.noUi-vertical .noUi-origin > .noUi-tooltip {
+  -webkit-transform: translate(0, -18px);
+  transform: translate(0, -18px);
+  top: auto;
+  right: 28px; }
 
 /*# sourceMappingURL=nouislider.css.map */
