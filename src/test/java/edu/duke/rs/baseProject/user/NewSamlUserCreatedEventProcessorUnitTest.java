@@ -50,7 +50,7 @@ public class NewSamlUserCreatedEventProcessorUnitTest {
     
     verify(messageSource, times(1)).getMessage(eq(NewSamlUserCreatedEventProcessor.NEW_USER_SUBJECT_CODE), eq(null), any(Locale.class));
     verify(emailService, times(1)).send(eq(MessageType.NEW_SAML_USER), eq(user.getEmail()),
-        eq(subject), ArgumentMatchers.<String, Object>anyMap());
+        eq(subject), ArgumentMatchers.<String, Object>anyMap(), eq(null));
     verifyNoMoreInteractions(messageSource);
     verifyNoMoreInteractions(emailService);
   }

@@ -231,6 +231,12 @@
       <artifactId>jackson-module-mrbean</artifactId>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-email</artifactId>
+      <version>1.5</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>

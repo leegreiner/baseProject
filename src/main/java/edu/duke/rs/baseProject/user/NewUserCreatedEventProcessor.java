@@ -56,6 +56,7 @@ public class NewUserCreatedEventProcessor {
         .queryParam(PasswordResetController.PASSWORD_RESET_ID_REQUEST_PARAM, user.getPasswordChangeId().toString()).build());
     
     this.emailService.send(MessageType.NEW_USER, user.getEmail(),
-        messageSource.getMessage(NEW_USER_SUBJECT_CODE, (Object[]) null, LocaleContextHolder.getLocale()), content);
+        messageSource.getMessage(NEW_USER_SUBJECT_CODE, (Object[]) null, LocaleContextHolder.getLocale()), content,
+        null);
   }
 }

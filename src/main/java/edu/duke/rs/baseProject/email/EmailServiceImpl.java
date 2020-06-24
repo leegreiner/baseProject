@@ -1,9 +1,12 @@
 package edu.duke.rs.baseProject.email;
 
+import java.io.File;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+
+import javax.mail.MessagingException;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -28,15 +31,18 @@ public class EmailServiceImpl implements EmailService {
   
   @Override
   public void send(final MessageType messageType, final String to, final String subject,
-      final Map<String, Object> content) {
-    this.send(messageType, List.of(to), Collections.emptyList(), Collections.emptyList(), null, subject, content);  
+      final Map<String, Object> content, final Collection<File> attachments) {
+    this.send(messageType, List.of(to), Collections.emptyList(), Collections.emptyList(), null, subject, content,
+        attachments);  
   }
   
   @Override
   public void send(final MessageType messageType, final Collection<String> to, final Collection<String> cc,
-      final Collection<String> bcc, final String from, final String subject, final Map<String, Object> content) {
+      final Collection<String> bcc, final String from, final String subject, final Map<String, Object> content,
+      final Collection<File> attachments) {
     final MimeMessagePreparator messagePreparator = mimeMessage -> {
-      MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage);
+      MimeMessageHelper messageHelper = new MimeMessageHelper(mimeMessage,
+          attachments == null || attachments.size() == 0 ? false : true);
       messageHelper.setFrom(StringUtils.isBlank(from) ? defaultEmailFrom : from);
       messageHelper.setTo(to.stream().toArray(String[]::new));
       
@@ -48,6 +54,16 @@ public class EmailServiceImpl implements EmailService {
       }
       messageHelper.setSubject(subject);
       messageHelper.setText(contentBuilder.build(messageType, content == null ? Collections.emptyMap() : content), true);
+      
+      if (attachments != null) {
+        attachments.forEach(attachment -> {
+          try {
+            messageHelper.addAttachment(attachment.getName(), attachment);
+          } catch (final MessagingException messagingException) {
+            throw new EmailException("Unable to add attachment " + attachment.getAbsolutePath(), messagingException, (Object[]) null);
+          }
+        });
+      }
     };
     
     try {

@@ -38,16 +38,29 @@ public class EmailServiceUnitTest {
    when(contentBuilder.build(MessageType.TEST, content)).thenReturn("This is a test");
    doThrow(EmailException.class).when(mailSender).send(any(MimeMessagePreparator.class));
    
-   assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, "abc@123.com", "Test subject", content));
+   assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, "abc@123.com", "Test subject", content, null));
   }
   
   @Test
-  public void whenValidEmailRequest_thenEmailSent() {
+  public void whenValidEmailRequestWithContent_thenEmailSent() {
    final Map<String, Object> content = new HashMap<String, Object>();
    content.put("message", "This is a test");
    when(contentBuilder.build(MessageType.TEST, content)).thenReturn("This is a test");
    
-   emailService.send(MessageType.TEST, "abc@123.com", "Test subject", content);
+   emailService.send(MessageType.TEST, "abc@123.com", "Test subject", content, null);
+   
+   verifyNoMoreInteractions(contentBuilder);
+   verify(mailSender, times(1)).send(any(MimeMessagePreparator.class));
+   verifyNoMoreInteractions(mailSender);
+  }
+  
+  @Test
+  public void whenValidEmailRequestWithoutContent_thenEmailSent() {
+   final Map<String, Object> content = new HashMap<String, Object>();
+   content.put("message", "This is a test");
+   when(contentBuilder.build(MessageType.TEST, content)).thenReturn("This is a test");
+   
+   emailService.send(MessageType.TEST, "abc@123.com", "Test subject", null, null);
    
    verifyNoMoreInteractions(contentBuilder);
    verify(mailSender, times(1)).send(any(MimeMessagePreparator.class));

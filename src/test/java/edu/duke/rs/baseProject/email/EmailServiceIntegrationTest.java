@@ -2,11 +2,14 @@ package edu.duke.rs.baseProject.email;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.collection.ArrayMatching.hasItemInArray;
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
 import static org.hamcrest.collection.IsIn.in;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -18,12 +21,15 @@ import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.mail.util.MimeMessageParser;
 import org.assertj.core.util.Arrays;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.MediaType;
+import org.springframework.util.ResourceUtils;
 
 import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetup;
@@ -56,7 +62,7 @@ public class EmailServiceIntegrationTest extends AbstractWebIntegrationTest {
     final Map<String, Object> content = new HashMap<String, Object>();
     content.put("message", expectedContent);
     
-    emailService.send(MessageType.TEST, expectedTo, expectedSubject, content);
+    emailService.send(MessageType.TEST, expectedTo, expectedSubject, content, null);
     
     final MimeMessage[] receivedMessages = smtpServer.getReceivedMessages();
     assertThat(1, equalTo(receivedMessages.length));
@@ -69,10 +75,39 @@ public class EmailServiceIntegrationTest extends AbstractWebIntegrationTest {
   }
   
   @Test
+  public void whenValidEmailAndAttachmentPassed_thenEmailAndAttachmentSent() throws Exception {
+    final String expectedContent = "This is a test";
+    final String expectedTo = "abc@123.com";
+    final String expectedSubject = "Test subject";
+    final List<File> attachments = List.of(ResourceUtils.getFile("classpath:files/twoXmlFiles.zip"));
+    final Map<String, Object> content = new HashMap<String, Object>();
+    content.put("message", expectedContent);
+    
+    emailService.send(MessageType.TEST, expectedTo, expectedSubject, content, attachments);
+    
+    final MimeMessage[] receivedMessages = smtpServer.getReceivedMessages();
+    assertThat(1, equalTo(receivedMessages.length));
+    final MimeMessage receivedMessage = receivedMessages[0];
+    
+    assertThat(receivedMessage.getAllRecipients(), hasItemInArray(new InternetAddress(expectedTo)));
+    assertThat(receivedMessage.getSubject(),equalTo(expectedSubject));
+    assertThat(receivedMessage.getFrom(), hasItemInArray(new InternetAddress(defaultMailFrom)));
+    assertThat(receivedMessage.getContentType(), startsWith(MediaType.MULTIPART_MIXED_VALUE));
+    
+    final MimeMessageParser mimeMessage = new MimeMessageParser(receivedMessage);
+    
+    mimeMessage.parse();
+    
+    assertThat(mimeMessage.getHtmlContent(), containsString(expectedContent));
+    assertThat(mimeMessage.getAttachmentList(),  hasSize(attachments.size()));
+    assertThat(mimeMessage.getAttachmentList().get(0).getName(), equalTo(attachments.get(0).getName()));
+  }
+  
+  @Test
   public void whenUnableToSendEmail_thenEmailExceptionThrown() {
     smtpServer.stop();
     
-    assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, "abc@123", "Test subject", Collections.emptyMap()));
+    assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, "abc@123", "Test subject", Collections.emptyMap(), null));
   }
   
   @Test
@@ -86,7 +121,7 @@ public class EmailServiceIntegrationTest extends AbstractWebIntegrationTest {
     final Map<String, Object> content = new HashMap<String, Object>();
     content.put("message", expectedContent);
     
-    emailService.send(MessageType.TEST, expectedTo, expectedCc, expectedBcc, expectedFrom, expectedSubject, content);
+    emailService.send(MessageType.TEST, expectedTo, expectedCc, expectedBcc, expectedFrom, expectedSubject, content, null);
     
     final MimeMessage[] receivedMessages = smtpServer.getReceivedMessages();
     assertThat(receivedMessages.length, equalTo(expectedTo.size() + expectedCc.size() + expectedBcc.size()));
@@ -115,6 +150,6 @@ public class EmailServiceIntegrationTest extends AbstractWebIntegrationTest {
     smtpServer.stop();
     
     assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, List.of("abc@123"), List.of("def@123.com"),
-        List.of("ghi@123.com"), "jkl@123.com", "Test subject", Collections.emptyMap()));
+        List.of("ghi@123.com"), "jkl@123.com", "Test subject", Collections.emptyMap(), null));
   }
 }

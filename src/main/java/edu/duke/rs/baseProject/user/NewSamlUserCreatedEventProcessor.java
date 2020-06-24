@@ -50,7 +50,8 @@ public class NewSamlUserCreatedEventProcessor {
     content.put(URL_KEY,  UriComponentsBuilder.fromHttpUrl(applicationUrl).build());
     
     this.emailService.send(MessageType.NEW_SAML_USER, user.getEmail(),
-        messageSource.getMessage(NEW_USER_SUBJECT_CODE, (Object[]) null, LocaleContextHolder.getLocale()), content);
+        messageSource.getMessage(NEW_USER_SUBJECT_CODE, (Object[]) null, LocaleContextHolder.getLocale()), content,
+        null);
   }
 
 }

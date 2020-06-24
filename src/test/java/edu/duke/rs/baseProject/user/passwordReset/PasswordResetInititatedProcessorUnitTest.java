@@ -45,7 +45,7 @@ public class PasswordResetInititatedProcessorUnitTest {
     processor.onPasswordResetInitiated(new PasswordResetInitiatedEvent(this, user));
     
     verify(emailService, times(1)).send(eq(MessageType.PASSWORD_RESET_INITIATED), eq(user.getEmail()),
-        any(String.class), ArgumentMatchers.<String, Object>anyMap());
+        any(String.class), ArgumentMatchers.<String, Object>anyMap(), eq(null));
     verifyNoMoreInteractions(emailService);
   }
 }

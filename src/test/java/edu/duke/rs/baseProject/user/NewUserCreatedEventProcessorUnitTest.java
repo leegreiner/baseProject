@@ -55,7 +55,7 @@ public class NewUserCreatedEventProcessorUnitTest {
     
     verify(messageSource, times(1)).getMessage(eq(NewUserCreatedEventProcessor.NEW_USER_SUBJECT_CODE), eq(null), any(Locale.class));
     verify(emailService, times(1)).send(eq(MessageType.NEW_USER), eq(user.getEmail()),
-        eq(subject), ArgumentMatchers.<String, Object>anyMap());
+        eq(subject), ArgumentMatchers.<String, Object>anyMap(), eq(null));
     verifyNoMoreInteractions(messageSource);
     verifyNoMoreInteractions(emailService);
   }

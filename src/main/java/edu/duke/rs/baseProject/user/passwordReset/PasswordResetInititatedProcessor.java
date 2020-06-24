@@ -44,7 +44,7 @@ public class PasswordResetInititatedProcessor {
         .queryParam(PasswordResetController.PASSWORD_RESET_ID_REQUEST_PARAM, event.getUser().getPasswordChangeId().toString()).build());
     
     this.emailService.send(MessageType.PASSWORD_RESET_INITIATED, event.getUser().getEmail(),
-        "Your DTS password reset/change request", content);
+        "Your DTS password reset/change request", content, null);
   }
 
 }
