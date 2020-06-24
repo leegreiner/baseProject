@@ -1,6 +1,7 @@
 package edu.duke.rs.baseProject.security;
 
 import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.HashSet;
@@ -44,12 +45,25 @@ public class AppPrinicipalUnitTest {
   
   @Test
   public void verifyAllOtherFields() {
+    final Role role = new Role(RoleName.USER);
     final User user = new User();
     user.setRoles(new HashSet<Role>());
-    user.getRoles().add(new Role(RoleName.USER));
+    user.getRoles().add(role);
     user.setAccountEnabled(true);
+    user.setFirstName("joe");
+    user.setId(Long.valueOf(1));
+    user.setPassword("a password");
+    user.setUsername("ausername");;
     
     AppPrincipal appPrincipal = new AppPrincipal(user, false, false);
+    
+    assertThat(appPrincipal.getUserId(), equalTo(user.getId()));
+    assertThat(appPrincipal.getAlternateUserId(), equalTo(user.getAlternateId()));
+    assertThat(appPrincipal.hasRole(role.getName()), is(true));
+    assertThat(appPrincipal.getDisplayName(), equalTo(user.getDisplayName()));
+    assertThat(appPrincipal.getEmail(), equalTo(user.getEmail()));
+    assertThat(appPrincipal.getPassword(), equalTo(user.getPassword()));
+    assertThat(appPrincipal.getUsername(), equalTo(user.getUsername()));
     
     assertThat(appPrincipal.isEnabled(), equalTo(true));
     assertThat(appPrincipal.isAccountNonLocked(), equalTo(true));

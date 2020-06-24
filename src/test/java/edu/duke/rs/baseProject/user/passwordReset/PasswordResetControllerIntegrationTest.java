@@ -55,7 +55,7 @@ public class PasswordResetControllerIntegrationTest extends AbstractWebIntegrati
   @BeforeEach
   public void init() {
     role = roleRepository.save(new Role(RoleName.USER));
-    smtpServer = new GreenMail(new ServerSetup(25, null, "smtp"));
+    smtpServer = new GreenMail(new ServerSetup(mailPort, null, "smtp"));
     smtpServer.start();
   }
   

@@ -1,7 +1,12 @@
 package edu.duke.rs.baseProject.user;
 
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Value;
+
 public interface UserListItem {
-	Long getId();
+  @Value("#{target.alternateId}")
+	UUID getId();
 	String getFirstName();
 	String getLastName();
 	String getUsername();

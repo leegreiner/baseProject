@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
@@ -60,7 +61,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   @BeforeEach
   public void init() {
     role = roleRepository.save(new Role(RoleName.USER));
-    smtpServer = new GreenMail(new ServerSetup(25, null, "smtp"));
+    smtpServer = new GreenMail(new ServerSetup(mailPort, null, "smtp"));
     smtpServer.start();
   }
   
@@ -85,7 +86,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   
   @Test
   public void whenNotAuthenticated_thenUserDetailsRedirectsToLogin() throws Exception {
-    this.mockMvc.perform(get(UserController.USER_MAPPING, 1L))
+    this.mockMvc.perform(get(UserController.USER_MAPPING, UUID.randomUUID()))
       .andExpect(status().isFound())
       .andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));
   }
@@ -98,7 +99,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     User user = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
     user = userRepository.save(user);
     
-    this.mockMvc.perform(get(UserController.USER_MAPPING, user.getId())
+    this.mockMvc.perform(get(UserController.USER_MAPPING, user.getAlternateId())
       .with(user(UserDetailsBuilder.build(user.getId(), RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USER_DETAILS_VIEW))
@@ -154,7 +155,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
 
     assertThat(result.getResponse().getRedirectedUrl(),
         equalTo(UriComponentsBuilder.fromPath(UserController.USER_MAPPING)
-            .buildAndExpand(actual.getId()).encode().toUriString()));
+            .buildAndExpand(actual.getAlternateId()).encode().toUriString()));
 
     assertThat(actual.getCreatedDate(), notNullValue());
     assertThat(actual.getDisplayName(),
@@ -180,13 +181,13 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     assertThat(1, equalTo(receivedMessages.length));
     assertThat((String) receivedMessage.getContent(), containsString(actual.getPasswordChangeId().toString()));
     assertThat(receivedMessage.getAllRecipients(), hasItemInArray(new InternetAddress(actual.getEmail())));
-    assertThat(receivedMessage.getSubject(),containsString("DTS"));
+    assertThat(receivedMessage.getSubject(), containsString("DTS"));
     assertThat(receivedMessage.getFrom(), hasItemInArray(new InternetAddress(defaultMailFrom)));
   }
   
   @Test
   public void whenNotAuthenticated_thenUpdateUserRedirectsToLogin() throws Exception {
-    this.mockMvc.perform(put(UserController.USER_MAPPING, Long.valueOf(1))
+    this.mockMvc.perform(put(UserController.USER_MAPPING, UUID.randomUUID())
         .with(csrf()))
         .andExpect(status().isFound())
         .andExpect(redirectedUrl(LOCAL_HOST + LoginController.LOGIN_MAPPING));
@@ -202,9 +203,9 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     user.setAccountEnabled(false);
     user = userRepository.save(user);
     
-    expected.setId(user.getId());
+    expected.setId(user.getAlternateId());
     
-    final MvcResult result = this.mockMvc.perform(put(UserController.USER_MAPPING, user.getId())
+    final MvcResult result = this.mockMvc.perform(put(UserController.USER_MAPPING, user.getAlternateId())
         .with(csrf())
         .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR)))
         .param("email", expected.getEmail())
@@ -218,12 +219,12 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
         .andExpect(status().isFound())
         .andReturn();
     
-    final User actual = userRepository.findById(user.getId())
+    final User actual = userRepository.findByAlternateId(user.getAlternateId())
         .orElseThrow(() -> new NotFoundException());
 
     assertThat(result.getResponse().getRedirectedUrl(),
         equalTo(UriComponentsBuilder.fromPath(UserController.USER_MAPPING)
-            .buildAndExpand(actual.getId()).encode().toUriString()));
+            .buildAndExpand(actual.getAlternateId()).encode().toUriString()));
 
     assertThat(actual.getCreatedDate().atZone(ZoneId.systemDefault()).toEpochSecond(),
         equalTo(user.getCreatedDate().atZone(ZoneId.systemDefault()).toEpochSecond()));
@@ -262,7 +263,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     final User actual = userRepository.findByUsernameIgnoreCase(expected.getUsername())
         .orElseThrow(() -> new NotFoundException());
     
-    final MvcResult result = this.mockMvc.perform(get(UserController.USER_HISTORY_MAPPING, actual.getId())
+    final MvcResult result = this.mockMvc.perform(get(UserController.USER_HISTORY_MAPPING, actual.getAlternateId())
         .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USER_HISTORY_VIEW))
@@ -306,6 +307,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
         .roles(List.of(RoleName.USER.name()))
         .timeZone(TimeZone.getTimeZone("Brazil/East"))
         .username("johnsmith")
+        .id(UUID.randomUUID())
         .build();
 
     return user;

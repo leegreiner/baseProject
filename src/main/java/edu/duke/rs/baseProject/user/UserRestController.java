@@ -21,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RestController
 public class UserRestController extends BaseRestController {
+  public static final String USERS_MAPPING = API_MAPPING + UserController.USERS_MAPPING;
   private transient final UserRepository userRepository;
   
   public UserRestController(final UserRepository userRepository) {

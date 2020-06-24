@@ -52,7 +52,7 @@ public class UserRestControllerUnitTest extends AbstractWebUnitTest {
     final String params = DataTablesTestUtils.toRequestParameters(input);
 
     final RequestBuilder requestBuilder =
-        MockMvcRequestBuilders.get(API + UserController.USERS_MAPPING + "?" + params);
+        MockMvcRequestBuilders.get(UserRestController.USERS_MAPPING + "?" + params);
     
     when(userRepositoryMock.findAllBy(any(Pageable.class))).thenReturn(new PageImpl<UserListItem>(new ArrayList<UserListItem>()));
     
@@ -73,7 +73,7 @@ public class UserRestControllerUnitTest extends AbstractWebUnitTest {
     final String params = DataTablesTestUtils.toRequestParameters(input);
     
     final RequestBuilder requestBuilder =
-        MockMvcRequestBuilders.get(API + UserController.USERS_MAPPING + "?" + params);
+        MockMvcRequestBuilders.get(UserRestController.USERS_MAPPING + "?" + params);
     
     when(userRepositoryMock.findByLastNameStartingWithIgnoreCase(eq(input.getSearch().getValue()), any(Pageable.class)))
       .thenReturn(new PageImpl<UserListItem>(new ArrayList<UserListItem>()));
@@ -96,7 +96,7 @@ public class UserRestControllerUnitTest extends AbstractWebUnitTest {
     final String errorMessage = "error.principalNotFound";
     
     final RequestBuilder requestBuilder =
-        MockMvcRequestBuilders.get(AbstractWebTest.API + UserController.USERS_MAPPING + "?" + params)
+        MockMvcRequestBuilders.get(UserRestController.USERS_MAPPING + "?" + params)
         .header(HttpUtils.AJAX_REQUEST_HEADER, HttpUtils.AJAX_REQUEST_HEADER_VALUE);
     
     when(userRepositoryMock.findByLastNameStartingWithIgnoreCase(eq(input.getSearch().getValue()), any(Pageable.class)))
@@ -124,7 +124,7 @@ public class UserRestControllerUnitTest extends AbstractWebUnitTest {
     final String errorMessage = "Oops";
     
     final RequestBuilder requestBuilder =
-        MockMvcRequestBuilders.get(AbstractWebTest.API + UserController.USERS_MAPPING + "?" + params)
+        MockMvcRequestBuilders.get(UserRestController.USERS_MAPPING + "?" + params)
         .header(HttpUtils.AJAX_REQUEST_HEADER, HttpUtils.AJAX_REQUEST_HEADER_VALUE);
     
     when(userRepositoryMock.findByLastNameStartingWithIgnoreCase(eq(input.getSearch().getValue()), any(Pageable.class)))

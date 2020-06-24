@@ -11,15 +11,18 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.invocation.InvocationOnMock;
@@ -28,6 +31,7 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Sort;
 
 import edu.duke.rs.baseProject.event.CreatedEvent;
+import edu.duke.rs.baseProject.event.UpdatedEvent;
 import edu.duke.rs.baseProject.exception.ConstraintViolationException;
 import edu.duke.rs.baseProject.exception.NotFoundException;
 import edu.duke.rs.baseProject.role.Role;
@@ -37,6 +41,8 @@ import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.security.password.PasswordGenerator;
 import edu.duke.rs.baseProject.user.passwordReset.PasswordResetService;
+
+
 
 public class UserServiceUnitTest {
   @Mock
@@ -152,7 +158,7 @@ public class UserServiceUnitTest {
     user.setUsername("abc");
     when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
     
-    assertThrows(NotFoundException.class, () -> service.getUser(user.getId()));
+    assertThrows(NotFoundException.class, () -> service.getUser(user.getAlternateId()));
   }
   
   @Test
@@ -160,12 +166,12 @@ public class UserServiceUnitTest {
     final User user = new User();
     user.setId(Long.valueOf(1));
     user.setUsername("abc");
-    when(userRepository.findById(user.getId())).thenReturn(Optional.of(user));
+    when(userRepository.findByAlternateId(user.getAlternateId())).thenReturn(Optional.of(user));
     
-    final User retrievedUser = service.getUser(user.getId());
+    final User retrievedUser = service.getUser(user.getAlternateId());
     
     assertThat(retrievedUser, equalTo(user));
-    verify(userRepository, times(1)).findById(user.getId());
+    verify(userRepository, times(1)).findByAlternateId(user.getAlternateId());
     verifyNoMoreInteractions(userRepository);
   }
   
@@ -290,7 +296,7 @@ public class UserServiceUnitTest {
     verify(userRepository, times(1)).save(any(User.class));
     verify(passwordGenerator, times(1)).generate();
     verify(passwordResetService, times(1)).initiatePasswordReset(any(User.class));
-    verify(eventPublisher, times(1)).publishEvent(any(CreatedEvent.class));
+    verify(eventPublisher, times(1)).publishEvent(ArgumentMatchers.<CreatedEvent<User>>any());
     verifyNoMoreInteractions(userRepository);
     verifyNoMoreInteractions(roleRepository);
     verifyNoMoreInteractions(passwordGenerator);
@@ -309,11 +315,10 @@ public class UserServiceUnitTest {
         .roles(List.of(RoleName.USER.name()))
         .timeZone(TimeZone.getDefault())
         .username("jsmith")
-        .id(Long.valueOf(1))
+        .id(UUID.randomUUID())
         .build();
-    userDto.setId(Long.valueOf(1));
 
-    when(appPrincipal.getUserId()).thenReturn(userDto.getId());
+    when(appPrincipal.getAlternateUserId()).thenReturn(userDto.getId());
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     
     assertThrows(ConstraintViolationException.class, () -> service.save(userDto));
@@ -330,14 +335,12 @@ public class UserServiceUnitTest {
         .roles(List.of(RoleName.USER.name()))
         .timeZone(TimeZone.getDefault())
         .username("jsmith")
-        .id(Long.valueOf(1))
+        .id(UUID.randomUUID())
         .build();
-    final User foundUser = new User();
-    foundUser.setId(userDto.getId() + 1);
 
-    when(appPrincipal.getUserId()).thenReturn(userDto.getId() + 1);
+    when(appPrincipal.getAlternateUserId()).thenReturn(UUID.randomUUID());
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
-    when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.of(foundUser));
+    when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.of(new User()));
     
     assertThrows(ConstraintViolationException.class, () -> service.save(userDto));
   }
@@ -353,15 +356,13 @@ public class UserServiceUnitTest {
         .roles(List.of(RoleName.USER.name()))
         .timeZone(TimeZone.getDefault())
         .username("jsmith")
-        .id(Long.valueOf(1))
+        .id(UUID.randomUUID())
         .build();
-    final User foundUser = new User();
-    foundUser.setId(userDto.getId() + 1);
 
-    when(appPrincipal.getUserId()).thenReturn(userDto.getId() + 1);
+    when(appPrincipal.getAlternateUserId()).thenReturn(UUID.randomUUID());
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.empty());
-    when(userRepository.findById(userDto.getId())).thenReturn(Optional.empty());
+    when(userRepository.findByAlternateId(userDto.getId())).thenReturn(Optional.empty());
     
     assertThrows(NotFoundException.class, () -> service.save(userDto));
   }
@@ -371,36 +372,36 @@ public class UserServiceUnitTest {
     final String password = "abcdef";
     final String username = "jsmeith";
     final Role role = new Role(RoleName.USER);
-    final UserDto userDto = UserDto.builder()
-        .accountEnabled(true)
-        .email("abc@123.com")
-        .firstName("Joe")
-        .lastName("Smith")
-        .middleInitial("M")
-        .roles(List.of(role.getName().name()))
-        .timeZone(TimeZone.getDefault())
-        .username("jsmith")
-        .id(Long.valueOf(1))
-        .build();
     final Set<Role> roles = new HashSet<Role>();
     final Role currentRole = new Role(RoleName.ADMINISTRATOR);
     roles.add(currentRole);         //TODO need to update when > 1 role
     final User foundUser = new User();
-    foundUser.setId(userDto.getId());
-    foundUser.setAccountEnabled(! userDto.isAccountEnabled());
-    foundUser.setEmail("a" + userDto.getEmail());
-    foundUser.setFirstName("a" + userDto.getFirstName());
-    foundUser.setLastName("a" + userDto.getLastName());
-    foundUser.setMiddleInitial(userDto.getMiddleInitial() != null ? null : "M");
+    foundUser.setId(Long.valueOf(1));
+    foundUser.setAccountEnabled(true);
+    foundUser.setEmail("abc@123.com");
+    foundUser.setFirstName("Joe");
+    foundUser.setLastName("Smith");
+    foundUser.setMiddleInitial("M");
     foundUser.setPassword(password);
     foundUser.setRoles(roles);
     foundUser.setTimeZone(TimeZone.getDefault());
     foundUser.setUsername(username);
+    final UserDto userDto = UserDto.builder()
+        .accountEnabled(true)
+        .email("a" + foundUser.getEmail())
+        .firstName("a" + foundUser.getFirstName())
+        .lastName("a" + foundUser.getLastName())
+        .middleInitial(foundUser.getMiddleInitial() != null ? null : "M")
+        .roles(List.of(role.getName().name()))
+        .timeZone(TimeZone.getDefault())
+        .username(username)
+        .id(UUID.randomUUID())
+        .build();
 
-    when(appPrincipal.getUserId()).thenReturn(userDto.getId() + 1);
+    when(appPrincipal.getAlternateUserId()).thenReturn(UUID.randomUUID());
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.empty());
-    when(userRepository.findById(userDto.getId())).thenReturn(Optional.of(foundUser));
+    when(userRepository.findByAlternateId(userDto.getId())).thenReturn(Optional.of(foundUser));
     when(roleRepository.findByName(role.getName())).thenReturn(Optional.of(role));
     when(userRepository.save(any(User.class))).thenAnswer(new Answer<User>() {
       @Override
@@ -414,7 +415,7 @@ public class UserServiceUnitTest {
     
     assertThat(actual.getEmail(), equalTo(userDto.getEmail()));
     assertThat(actual.getDisplayName(),
-        equalTo(userDto.getFirstName() + " " + userDto.getMiddleInitial() + " " + userDto.getLastName()));
+        equalTo(userDto.getFirstName() + " " + userDto.getLastName()));
     assertThat(actual.getFirstName(), equalTo(userDto.getFirstName()));
     assertThat(actual.getId(), equalTo(foundUser.getId()));
     assertThat(actual.getLastName(), equalTo(userDto.getLastName()));
@@ -426,12 +427,21 @@ public class UserServiceUnitTest {
     assertThat(actual.getUsername(), equalTo(username));
     
     verify(userRepository, times(1)).findByEmailIgnoreCase(userDto.getEmail());
-    verify(userRepository, times(1)).findById(userDto.getId());
+    verify(userRepository, times(1)).findByAlternateId(userDto.getId());
     verify(roleRepository, times(1)).findByName(role.getName());
     verify(userRepository, times(1)).save(any(User.class));
+    verify(eventPublisher, times(1)).publishEvent(ArgumentMatchers.<UpdatedEvent<User>>any());
     verifyNoMoreInteractions(userRepository);
     verifyNoMoreInteractions(roleRepository);
     verifyNoMoreInteractions(passwordGenerator);
     verifyNoMoreInteractions(eventPublisher);
+  }
+  
+  @Test
+  public void whenDisableUnusedAccountsCalled_thenDisableUnusedAccountOnRepositoryCalled() {
+    this.service.disableUnusedAccounts();
+    
+    verify(userRepository, times(1)).disableUnusedAccounts(any(LocalDateTime.class));
+    verifyNoMoreInteractions(userRepository);
   }
 }

@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +125,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   
   @Test
   public void whenAuthenticatedButRequestingNonexistantUser_thenExceptionErrorPageReturned() throws Exception {
-    final Long userId = Long.valueOf(1);
+    final UUID userId = UUID.randomUUID();
     when(userService.getUser(userId)).thenThrow(new NotFoundException("error.principalNotFound", (Object[])null));
     
     this.mockMvc.perform(get(UserController.USER_MAPPING, userId)
@@ -142,15 +143,15 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     final User user = new User();
     user.setId(Long.valueOf(1));
     user.setUsername("abc");
-    when(userService.getUser(user.getId())).thenReturn(user);
+    when(userService.getUser(user.getAlternateId())).thenReturn(user);
     
-    this.mockMvc.perform(get(UserController.USER_MAPPING, user.getId())
+    this.mockMvc.perform(get(UserController.USER_MAPPING, user.getAlternateId())
         .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USER_DETAILS_VIEW))
       .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, equalTo(user)));
     
-    verify(userService, times(1)).getUser(user.getId());
+    verify(userService, times(1)).getUser(user.getAlternateId());
     verifyNoMoreInteractions(userService);
   }
   
@@ -160,9 +161,9 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     user.setId(Long.valueOf(1));
     user.setUsername("abc");
     final String errorMessage = "error.principalNotFound";
-    when(userService.getUser(user.getId())).thenThrow(new NotFoundException(errorMessage, (Object[])null));
+    when(userService.getUser(user.getAlternateId())).thenThrow(new NotFoundException(errorMessage, (Object[])null));
     
-    final MvcResult result = this.mockMvc.perform(get(UserController.USER_MAPPING, user.getId())
+    final MvcResult result = this.mockMvc.perform(get(UserController.USER_MAPPING, user.getAlternateId())
         .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(ExceptionController.EXCEPTION_ERROR_VIEW))
@@ -177,7 +178,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     final User user = new User();
     user.setId(Long.valueOf(1));
     user.setUsername("abc");
-    when(userService.getUser(user.getId())).thenThrow(new NullPointerException());
+    when(userService.getUser(user.getAlternateId())).thenThrow(new NullPointerException());
     
     final MvcResult result = this.mockMvc.perform(get(UserController.USER_MAPPING, user.getId())
         .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
@@ -205,9 +206,9 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     user.setTimeZone(TimeZone.getDefault());
     user.setUsername("johnsmith");
     
-    when(userService.getUser(user.getId())).thenReturn(user);
+    when(userService.getUser(user.getAlternateId())).thenReturn(user);
     
-    this.mockMvc.perform(get(UserController.USER_MAPPING, user.getId())
+    this.mockMvc.perform(get(UserController.USER_MAPPING, user.getAlternateId())
         .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR)))
         .param(UserController.ACTION_REQUEST_PARAM, "new"))
       .andExpect(status().isOk())
@@ -215,7 +216,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
       .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
       .andExpect(model().attribute(UserController.ROLES_MODEL_ATTRIBUTE, not(nullValue())));
     
-    verify(userService, times(1)).getUser(user.getId());
+    verify(userService, times(1)).getUser(user.getAlternateId());
   }
   
   @Test
@@ -287,7 +288,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     
     assertThat(result.getResponse().getRedirectedUrl(),
         equalTo(UriComponentsBuilder.fromPath(UserController.USER_MAPPING)
-            .buildAndExpand(user.getId()).encode().toUriString()));
+            .buildAndExpand(user.getAlternateId()).encode().toUriString()));
     
     verify(userService, times(1)).save(any(UserDto.class));
   }
@@ -296,7 +297,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   public void whenBindingResultHasErrors_thenEditUserReturnsNewUserViewViewAndErrorMessagePresent() throws Exception{
     final UserDto userDto = buildUserDto();
     userDto.setEmail(null);
-    userDto.setId(Long.valueOf(1));
+    userDto.setId(UUID.randomUUID());
     
     this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
         .with(csrf())
@@ -318,7 +319,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   @Test
   public void whenEditUserThrowsApplicationException_thenNewUserReturnsNewUserViewViewAndErrorMessagePresent() throws Exception{
     final UserDto userDto = buildUserDto();
-    userDto.setId(Long.valueOf(1));
+    userDto.setId(UUID.randomUUID());
     final String errorMessage = "not found";
     
     when(userService.save(any(UserDto.class))).thenThrow(new NotFoundException(errorMessage, (Object[])null));
@@ -344,10 +345,9 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   
   @Test
   public void whenEditUserUpdated_thenUserDetailsPagePresented() throws Exception{
-    final UserDto userDto = buildUserDto();
-    userDto.setId(Long.valueOf(1));
     final User user = new User();
-    user.setId(userDto.getId());
+    final UserDto userDto = buildUserDto();
+    userDto.setId(user.getAlternateId());
     
     when(userService.save(any(UserDto.class))).thenReturn(user);
     
@@ -366,7 +366,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     
     assertThat(result.getResponse().getRedirectedUrl(),
         equalTo(UriComponentsBuilder.fromPath(UserController.USER_MAPPING)
-            .buildAndExpand(user.getId()).encode().toUriString()));
+            .buildAndExpand(user.getAlternateId()).encode().toUriString()));
     
     verify(userService, times(1)).save(any(UserDto.class));
   }
@@ -401,17 +401,17 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     user.setUsername("abc");
     final List<UserHistory> history = new ArrayList<UserHistory>();
     
-    when(userService.getUser(user.getId())).thenReturn(user);
+    when(userService.getUser(user.getAlternateId())).thenReturn(user);
     when(userHistoryRepository.listUserRevisions(user.getId())).thenReturn(history);
     
-    this.mockMvc.perform(get(UserController.USER_HISTORY_MAPPING, user.getId())
+    this.mockMvc.perform(get(UserController.USER_HISTORY_MAPPING, user.getAlternateId())
         .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USER_HISTORY_VIEW))
       .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, equalTo(user)))
       .andExpect(model().attribute(UserController.USER_HISTORY_MODEL_ATTRIBUTE, equalTo(history)));
     
-    verify(userService, times(1)).getUser(user.getId());
+    verify(userService, times(1)).getUser(user.getAlternateId());
     verify(userHistoryRepository, times(1)).listUserRevisions(user.getId());
     verifyNoMoreInteractions(userService);
     verifyNoMoreInteractions(userHistoryRepository);

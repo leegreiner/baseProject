@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
+import java.util.UUID;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -24,7 +25,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class UserDto {
-  private Long id;
+  private UUID id;
   
   @NotBlank
   @Size(min = 4, max = 30)

@@ -4,11 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
@@ -62,22 +59,7 @@ public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTes
     final DataTablesOutput<UserListItem> output =
         mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<DataTablesOutput<UserListItem>>() {});
     
-    final List<UserListItem> expectedResult = new ArrayList<UserListItem>();
-    Map<String, Object> backingMap = new HashMap<>();
-    backingMap.put("id", user2.getId());
-    backingMap.put("firstName", user2.getFirstName());
-    backingMap.put("lastName", user2.getLastName());
-    expectedResult.add(PROJECTION_FACTORY.createProjection(UserListItem.class, backingMap));
-    backingMap = new HashMap<String, Object>();
-    backingMap.put("id", user3.getId());
-    backingMap.put("firstName", user3.getFirstName());
-    backingMap.put("lastName", user3.getLastName());
-    expectedResult.add(PROJECTION_FACTORY.createProjection(UserListItem.class, backingMap));
-    backingMap = new HashMap<String, Object>();
-    backingMap.put("id", user1.getId());
-    backingMap.put("firstName", user1.getFirstName());
-    backingMap.put("lastName", user1.getLastName());
-    expectedResult.add(PROJECTION_FACTORY.createProjection(UserListItem.class, backingMap));
+    final List<User> expectedResult = List.of(user2, user3, user1);
     
     assertThat(output.getDraw(), equalTo(input.getDraw()));
     assertThat(output.getRecordsFiltered(), equalTo(Long.valueOf(expectedResult.size())));
@@ -85,7 +67,7 @@ public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTes
     assertThat(output.getData().size(), equalTo(expectedResult.size()));
     
     for (int i = 0; i < output.getData().size(); i++) {
-      assertThat(output.getData().get(i).getId(), equalTo(expectedResult.get(i).getId()));
+      assertThat(output.getData().get(i).getId(), equalTo(expectedResult.get(i).getAlternateId()));
       assertThat(output.getData().get(i).getFirstName(), equalTo(expectedResult.get(i).getFirstName()));
       assertThat(output.getData().get(i).getLastName(), equalTo(expectedResult.get(i).getLastName()));
     }
@@ -119,17 +101,7 @@ public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTes
     final DataTablesOutput<UserListItem> output =
         mapper.readValue(result.getResponse().getContentAsString(), new TypeReference<DataTablesOutput<UserListItem>>() {});
     
-    final List<UserListItem> expectedResult = new ArrayList<UserListItem>();
-    Map<String, Object> backingMap = new HashMap<>();
-    backingMap.put("id", user2.getId());
-    backingMap.put("firstName", user2.getFirstName());
-    backingMap.put("lastName", user2.getLastName());
-    expectedResult.add(PROJECTION_FACTORY.createProjection(UserListItem.class, backingMap));
-    backingMap = new HashMap<String, Object>();
-    backingMap.put("id", user3.getId());
-    backingMap.put("firstName", user3.getFirstName());
-    backingMap.put("lastName", user3.getLastName());
-    expectedResult.add(PROJECTION_FACTORY.createProjection(UserListItem.class, backingMap));
+    final List<User> expectedResult = List.of(user2, user3);
     
     assertThat(output.getDraw(), equalTo(input.getDraw()));
     assertThat(output.getRecordsFiltered(), equalTo(Long.valueOf(expectedResult.size())));
@@ -137,9 +109,10 @@ public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTes
     assertThat(output.getData().size(), equalTo(expectedResult.size()));
     
     for (int i = 0; i < output.getData().size(); i++) {
-      assertThat(output.getData().get(i).getId(), equalTo(expectedResult.get(i).getId()));
+      assertThat(output.getData().get(i).getId(), equalTo(expectedResult.get(i).getAlternateId()));
       assertThat(output.getData().get(i).getFirstName(), equalTo(expectedResult.get(i).getFirstName()));
       assertThat(output.getData().get(i).getLastName(), equalTo(expectedResult.get(i).getLastName()));
     }
   }
 }
+

@@ -25,6 +25,8 @@ public abstract class AbstractWebIntegrationTest extends AbstractWebTest {
   private CacheManager cacheManager;
   @Value("${app.defaultEmailFrom}")
   protected String defaultMailFrom;
+  @Value("${spring.mail.port}")
+  protected Integer mailPort;
   
   @BeforeEach
   public void resetState() throws Exception {

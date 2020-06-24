@@ -11,6 +11,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -34,7 +35,6 @@ import edu.duke.rs.baseProject.role.Role;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.EqualsAndHashCode.Include;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -43,15 +43,19 @@ import lombok.ToString;
 @Data
 @NoArgsConstructor
 @RequiredArgsConstructor
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 @ToString(callSuper = true)
 @Entity
 @Audited
-@Table(name = "users")
+@Table(name = "users",
+  indexes = {
+    @Index(name = "IX_USER_ALT_ID", unique = true, columnList="alternate_id")
+  }
+)
 @NamedEntityGraphs({
-	@NamedEntityGraph(name = "user.userAndRoles", attributeNodes = {
-			@NamedAttributeNode("roles")
-	})
+  @NamedEntityGraph(name = "user.userAndRoles", attributeNodes = {
+      @NamedAttributeNode("roles")
+  })
 })
 @NamedQueries({
   @NamedQuery(
@@ -75,7 +79,6 @@ public class User extends BaseEntity implements Serializable {
 	@NonNull
 	@NotBlank
 	@Size(min = 4, max = 30)
-	@Include
 	private String username;
 	
 	@Column(length = 200, nullable = false)

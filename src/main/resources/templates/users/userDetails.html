@@ -56,7 +56,7 @@
               </div>
 
               <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row">
-	              <a th:href="@{/users/{userId}(userId=${user.id}, action='edit')}" class="btn btn-primary ml-auto"
+	              <a th:href="@{/users/{userId}(userId=${user.alternateId}, action='edit')}" class="btn btn-primary ml-auto"
                  th:classappend="${user.id == #authentication.getPrincipal().getUserId() ? 'disabled' : ''}">
                  <i class="fa fa-pen"></i> <span th:text="#{edit}">edit</span>
                 </a>
@@ -72,7 +72,7 @@
 		  <script th:src="@{/js/app/user/userDetails.js}"></script>
 		  <script th:inline="javascript">
 		  /*<![CDATA[*/
-		    CONTEXT.setUserId(/*[[${user.id}]]*/ '1');
+		    CONTEXT.setUserId(/*[[${user.alternateId}]]*/ '1');
 		  /*]]>*/  
 		  </script>
 		</customJs>

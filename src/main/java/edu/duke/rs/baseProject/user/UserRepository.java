@@ -21,10 +21,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 	Optional<User> findByUsernameIgnoreCase(String username);
 	Optional<User> findByEmailIgnoreCase(String email);
 	Optional<User> findByPasswordChangeId(UUID passwordChangeId);
-	 
+	
 	@EntityGraph("user.userAndRoles")
-  @Override
-  Optional<User> findById(Long id);
+	Optional<User> findByAlternateId(UUID alternateId);
 	
 	@Modifying
 	void expirePasswordChangeIds(@Param("time") LocalDateTime time);

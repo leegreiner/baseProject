@@ -6,15 +6,16 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import edu.duke.rs.baseProject.event.CreatedEvent;
+import edu.duke.rs.baseProject.event.UpdatedEvent;
 import edu.duke.rs.baseProject.exception.ConstraintViolationException;
 import edu.duke.rs.baseProject.exception.NotFoundException;
 import edu.duke.rs.baseProject.role.Role;
@@ -29,27 +30,27 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
-	private transient final UserRepository userRepository;
-	private transient final RoleRepository roleRepository;
-	private transient final PasswordGenerator passwordGenerator;
-	private transient final PasswordResetService passwordResetService;
-	private transient final ApplicationEventPublisher eventPublisher;
+  private transient final UserRepository userRepository;
+  private transient final RoleRepository roleRepository;
+  private transient final PasswordGenerator passwordGenerator;
+  private transient final PasswordResetService passwordResetService;
+  private transient final ApplicationEventPublisher eventPublisher;
   private transient final SecurityUtils securityUtils;
-	
-	public UserServiceImpl(final UserRepository userRepository,
-	    final RoleRepository roleRepository, final PasswordGenerator passwordGenerator,
-	    final PasswordResetService passwordResetService,
-	    final ApplicationEventPublisher eventPublisher,
-	    final SecurityUtils securityUtils) {
-		this.userRepository = userRepository;
-		this.roleRepository = roleRepository;
-		this.passwordGenerator = passwordGenerator;
-		this.passwordResetService = passwordResetService;
-		this.eventPublisher = eventPublisher;
-		this.securityUtils = securityUtils;
-	}
-	
-	@Override
+  
+  public UserServiceImpl(final UserRepository userRepository,
+      final RoleRepository roleRepository, final PasswordGenerator passwordGenerator,
+      final PasswordResetService passwordResetService,
+      final ApplicationEventPublisher eventPublisher,
+      final SecurityUtils securityUtils) {
+    this.userRepository = userRepository;
+    this.roleRepository = roleRepository;
+    this.passwordGenerator = passwordGenerator;
+    this.passwordResetService = passwordResetService;
+    this.eventPublisher = eventPublisher;
+    this.securityUtils = securityUtils;
+  }
+  
+  @Override
   public UserProfile getUserProfile() {
     final User user = userRepository.findById(getCurrentUser().getUserId())
         .orElseThrow(() -> new NotFoundException("error.principalNotFound", (Object[])null));
@@ -66,10 +67,9 @@ public class UserServiceImpl implements UserService {
     user.setTimeZone(userProfile.getTimeZone());
   }
   
-
   @Override
-  public User getUser(final Long userId) {
-    return userRepository.findById(userId)
+  public User getUser(final UUID  userId) {
+    return userRepository.findByAlternateId(userId)
         .orElseThrow(() -> new NotFoundException("error.userNotFound", new Object[] {userId}));
   }
   
@@ -84,29 +84,29 @@ public class UserServiceImpl implements UserService {
 
   @Override
   @Transactional
-  public void disableUnusedAccounts() {
-    this.userRepository.disableUnusedAccounts(LocalDateTime.now().minusYears(1));
-  }
-  
-  @Override
-  @Transactional(propagation = Propagation.REQUIRED)
   public User save(final UserDto userDto) {
     log.debug("In save(): " + userDto.toString());
     return userDto.getId() == null ? createUser(userDto) : saveUser(userDto);
   }
   
+  @Override
+  @Transactional
+  public void disableUnusedAccounts() {
+    this.userRepository.disableUnusedAccounts(LocalDateTime.now().minusYears(1));
+  }
+  
   private User saveUser(final UserDto userDto) {
-    if (this.getCurrentUser().getUserId().equals(userDto.getId())) {
+    if (this.getCurrentUser().getAlternateUserId().equals(userDto.getId())) {
       throw new ConstraintViolationException("error.cantUpdateOwnAccount", (Object[]) null);
     }
     
     final Optional<User> userWithEmail = this.userRepository.findByEmailIgnoreCase(userDto.getEmail());
     
-    if (userWithEmail.isPresent() && ! userWithEmail.get().getId().equals(userDto.getId())) {
+    if (userWithEmail.isPresent() && ! userWithEmail.get().getAlternateId().equals(userDto.getId())) {
       throw new ConstraintViolationException("error.duplicateEmail", new Object[] {userDto.getEmail()});
     }
     
-    User user = this.getUser(userDto.getId());
+    User user = userWithEmail.isPresent() ? userWithEmail.get() : this.getUser(userDto.getId());
     
     user.setAccountEnabled(userDto.isAccountEnabled());
     user.setEmail(userDto.getEmail().trim());
@@ -117,7 +117,11 @@ public class UserServiceImpl implements UserService {
     
     populateRoles(userDto, user);
     
-    return userRepository.save(user);
+    user = userRepository.save(user);
+    
+    eventPublisher.publishEvent(new UpdatedEvent<User>(user));
+    
+    return user;
   }
   
   private User createUser(final UserDto userDto) {

@@ -37,10 +37,9 @@ public class EmailServiceIntegrationTest extends AbstractWebIntegrationTest {
   @Value("${app.defaultEmailFrom}")
   private String defaultMailFrom;
   
-  
   @BeforeEach
   public void setUp() throws Exception {
-    smtpServer = new GreenMail(new ServerSetup(25, null, "smtp"));
+    smtpServer = new GreenMail(new ServerSetup(mailPort, null, "smtp"));
     smtpServer.start();
   }
 
@@ -72,6 +71,7 @@ public class EmailServiceIntegrationTest extends AbstractWebIntegrationTest {
   @Test
   public void whenUnableToSendEmail_thenEmailExceptionThrown() {
     smtpServer.stop();
+    
     assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, "abc@123", "Test subject", Collections.emptyMap()));
   }
   
@@ -113,8 +113,8 @@ public class EmailServiceIntegrationTest extends AbstractWebIntegrationTest {
   @Test
   public void whenUnableToSendEmail_thenEmailExceptionThrownLong() {
     smtpServer.stop();
+    
     assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, List.of("abc@123"), List.of("def@123.com"),
         List.of("ghi@123.com"), "jkl@123.com", "Test subject", Collections.emptyMap()));
-    ;
   }
 }

@@ -29,63 +29,63 @@ import edu.duke.rs.baseProject.role.RoleName;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
-	@Autowired
-	private TestEntityManager entityManager;
-	@Autowired
-	private UserRepository userRepository;
-	
-	@Test
-	public void whenFindByUserNameStartingWithIgnoreCaseNoUsers_thenReturnNoUsers() {
-		final Page<UserListItem> page = userRepository.findByLastNameStartingWithIgnoreCase(
-				"j", PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "username")));
-		
-		final List<UserListItem> users = page.getContent();
-		
-		assertThat(users, notNullValue());
-		assertThat(users.size(), equalTo(0));
-	}
-	
-	@Test
-	public void whenFindByUserNameStartingWithIgnoreCaseUsers_thenReturnUsers() {
-		final Role role = entityManager.persist(new Role(RoleName.USER));
-		final Set<Role> roles = new HashSet<Role>();
-		roles.add(role);
-		
-		User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
-		user1 = entityManager.persist(user1);
-		User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
-		user2 = entityManager.persist(user2);
-		User user3 = new User("jimmyjohnson", "password", "Jimmy", "Johnson","jimmyJohnson@gmail.com", roles);
-		user3 = entityManager.persistAndFlush(user3);
-		entityManager.clear();
-		
-		final Page<UserListItem> page = userRepository.findByLastNameStartingWithIgnoreCase(
-				"j", PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "lastName")));
-		
-		final List<User> expectedResult = new ArrayList<>(List.of(user3, user2));
-		final List<UserListItem> users = page.getContent();
-		
-		assertThat(users, notNullValue());
-		assertThat(users.size(), equalTo(expectedResult.size()));
-		
-		for (int i = 0; i < users.size(); i++) {
-			assertThat(users.get(i).getId(), equalTo(expectedResult.get(i).getId()));
-			assertThat(users.get(i).getFirstName(), equalTo(expectedResult.get(i).getFirstName()));
-			assertThat(users.get(i).getLastName(), equalTo(expectedResult.get(i).getLastName()));
-		}
-	}
-	
-	@Test
-	public void whenExpirePasswordChangeIds_thenUserPasswordResetFieldsAreNulled() {
-	  final LocalDateTime now = LocalDateTime.now();
-	  final Role role = entityManager.persist(new Role(RoleName.USER));
+  @Autowired
+  private TestEntityManager entityManager;
+  @Autowired
+  private UserRepository userRepository;
+  
+  @Test
+  public void whenFindByUserNameStartingWithIgnoreCaseNoUsers_thenReturnNoUsers() {
+    final Page<UserListItem> page = userRepository.findByLastNameStartingWithIgnoreCase(
+        "j", PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "username")));
+    
+    final List<UserListItem> users = page.getContent();
+    
+    assertThat(users, notNullValue());
+    assertThat(users.size(), equalTo(0));
+  }
+  
+  @Test
+  public void whenFindByUserNameStartingWithIgnoreCaseUsers_thenReturnUsers() {
+    final Role role = entityManager.persist(new Role(RoleName.USER));
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
-	  User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
-	  user1.setPasswordChangeId(UUID.randomUUID());
-	  user1.setPasswordChangeIdCreationTime(now.minusDays(3));
-	  user1 = entityManager.persist(user1);
-	  User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
+    
+    User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
+    user1 = entityManager.persist(user1);
+    User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
+    user2 = entityManager.persist(user2);
+    User user3 = new User("jimmyjohnson", "password", "Jimmy", "Johnson","jimmyJohnson@gmail.com", roles);
+    user3 = entityManager.persistAndFlush(user3);
+    entityManager.clear();
+    
+    final Page<UserListItem> page = userRepository.findByLastNameStartingWithIgnoreCase(
+        "j", PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "lastName")));
+    
+    final List<User> expectedResult = new ArrayList<>(List.of(user3, user2));
+    final List<UserListItem> users = page.getContent();
+    
+    assertThat(users, notNullValue());
+    assertThat(users.size(), equalTo(expectedResult.size()));
+    
+    for (int i = 0; i < users.size(); i++) {
+      assertThat(users.get(i).getId(), equalTo(expectedResult.get(i).getAlternateId()));
+      assertThat(users.get(i).getFirstName(), equalTo(expectedResult.get(i).getFirstName()));
+      assertThat(users.get(i).getLastName(), equalTo(expectedResult.get(i).getLastName()));
+    }
+  }
+  
+  @Test
+  public void whenExpirePasswordChangeIds_thenUserPasswordResetFieldsAreNulled() {
+    final LocalDateTime now = LocalDateTime.now();
+    final Role role = entityManager.persist(new Role(RoleName.USER));
+    final Set<Role> roles = new HashSet<Role>();
+    roles.add(role);
+    User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
+    user1.setPasswordChangeId(UUID.randomUUID());
+    user1.setPasswordChangeIdCreationTime(now.minusDays(3));
+    user1 = entityManager.persist(user1);
+    User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
     user2.setPasswordChangeId(UUID.randomUUID());
     user2.setPasswordChangeIdCreationTime(now.minusDays(1));
     user2 = entityManager.persistAndFlush(user2);
@@ -99,5 +99,29 @@ public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
     user2 = this.userRepository.getOne(user2.getId());
     assertThat(user2.getPasswordChangeId(), notNullValue());
     assertThat(user2.getPasswordChangeIdCreationTime(), notNullValue());
-	}
+  }
+  
+  @Test
+  public void whenDisableUnusedAccounts_thenUnusedAccountsDisabled() {
+    final Role role = entityManager.persist(new Role(RoleName.USER));
+    final Set<Role> roles = new HashSet<Role>();
+    roles.add(role);
+    User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
+    user1.setLastLoggedIn(LocalDateTime.now().minusYears(1).minusMinutes(1));
+    user1.setAccountEnabled(true);
+    entityManager.persist(user1);
+    User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
+    user2.setLastLoggedIn(LocalDateTime.now().minusYears(1).plusMinutes(1));
+    user2.setAccountEnabled(true);
+    user2 = entityManager.persistAndFlush(user2);
+    
+    this.userRepository.disableUnusedAccounts(LocalDateTime.now().minusYears(1));
+    entityManager.clear();
+    
+    user1 = this.userRepository.findById(user1.getId()).get();
+    user2 = this.userRepository.findById(user2.getId()).get();
+    
+    assertThat(user1.isAccountEnabled(), equalTo(false));
+    assertThat(user2.isAccountEnabled(), equalTo(true));
+  }
 }
