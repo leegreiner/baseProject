@@ -10,8 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 import edu.duke.rs.baseProject.security.password.PasswordExpirationStrategy;
 import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@RequiredArgsConstructor
 @Slf4j
 @Profile("!samlSecurity")
 @Service("userDetailsService")
@@ -19,13 +21,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	private transient final UserRepository userRepository;
 	private transient final PasswordExpirationStrategy passwordExpirationStrategy;
 	private transient final LoginAttemptService loginAttemptService;
-	
-	public UserDetailsServiceImpl(final UserRepository userRepository,final PasswordExpirationStrategy passwordExpirationStrategy,
-	    final LoginAttemptService loginAttemptService) {
-		this.userRepository = userRepository;
-		this.passwordExpirationStrategy = passwordExpirationStrategy;
-		this.loginAttemptService = loginAttemptService;
-	}
 	
 	@Override
 	@Transactional

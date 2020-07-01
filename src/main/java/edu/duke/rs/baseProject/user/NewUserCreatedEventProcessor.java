@@ -26,10 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Profile("!samlSecurity")
 public class NewUserCreatedEventProcessor {
-  public static final String NEW_USER_SUBJECT_CODE = "email.newUser.subject";
-  public static final String USER_NAME_KEY = "username";
-  public static final String EXPIRE_DAYS_KEY = "expireDays";
-  public static final String URL_KEY = "url";
+  static final String NEW_USER_SUBJECT_CODE = "email.newUser.subject";
+  static final String USER_NAME_KEY = "username";
+  static final String EXPIRE_DAYS_KEY = "expireDays";
+  static final String URL_KEY = "url";
   private transient final EmailService emailService;
   @Value("${app.url}")
   private String applicationUrl;

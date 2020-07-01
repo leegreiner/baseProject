@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import edu.duke.rs.baseProject.BaseRestController;
 import edu.duke.rs.baseProject.exception.ApplicationException;
 import edu.duke.rs.baseProject.security.ErrorInfo;
+import lombok.RequiredArgsConstructor;
 
+@RequiredArgsConstructor
 @RestControllerAdvice(assignableTypes = {BaseRestController.class})
 public class RestExceptionController extends BaseRestController {
   private transient final MessageSource messageSource;
-  
-  public RestExceptionController(final MessageSource messageSource) {
-    this.messageSource = messageSource;
-  }
   
   @ResponseBody
   @ExceptionHandler(Exception.class)

@@ -25,30 +25,27 @@ import edu.duke.rs.baseProject.BaseWebController;
 import edu.duke.rs.baseProject.exception.ApplicationException;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.user.history.UserHistoryRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@RequiredArgsConstructor
 @Slf4j
 @Controller
 public class UserController extends BaseWebController {
-  public static final String USERS_VIEW =  "users/users";
-  public static final String USER_DETAILS_VIEW = "users/userDetails";
-  public static final String EDIT_USER_VIEW = "users/editUser";
-  public static final String NEW_USER_VIEW = "users/newUser";
   public static final String USERS_MAPPING = "/users";
   public static final String USER_MAPPING = USERS_MAPPING + "/{userId}";
   public static final String USER_HISTORY_MAPPING = USER_MAPPING + "/history";
-  public static final String USER_HISTORY_VIEW = "users/history/userHistory";
-  public static final String USER_MODEL_ATTRIBUTE = "user";
-  public static final String ROLES_MODEL_ATTRIBUTE = "roles";
-  public static final String USER_HISTORY_MODEL_ATTRIBUTE = "history";
-  public static final String ACTION_REQUEST_PARAM = "action";
+  static final String USERS_VIEW =  "users/users";
+  static final String USER_DETAILS_VIEW = "users/userDetails";
+  static final String EDIT_USER_VIEW = "users/editUser";
+  static final String NEW_USER_VIEW = "users/newUser";
+  static final String USER_HISTORY_VIEW = "users/history/userHistory";
+  static final String USER_MODEL_ATTRIBUTE = "user";
+  static final String ROLES_MODEL_ATTRIBUTE = "roles";
+  static final String USER_HISTORY_MODEL_ATTRIBUTE = "history";
+  static final String ACTION_REQUEST_PARAM = "action";
   private transient final UserService userService;
   private transient final UserHistoryRepository userHistoryRepository;
-  
-  public UserController(final UserService userService, final UserHistoryRepository userHistoryRepository) {
-    this.userService = userService;
-    this.userHistoryRepository = userHistoryRepository;
-  }
   
   @GetMapping(USERS_MAPPING)
   public String getUsers(@RequestParam(name = ACTION_REQUEST_PARAM, required=false) final String action,

@@ -25,8 +25,10 @@ import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.security.password.PasswordGenerator;
 import edu.duke.rs.baseProject.user.passwordReset.PasswordResetService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@RequiredArgsConstructor
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
@@ -36,19 +38,6 @@ public class UserServiceImpl implements UserService {
   private transient final PasswordResetService passwordResetService;
   private transient final ApplicationEventPublisher eventPublisher;
   private transient final SecurityUtils securityUtils;
-  
-  public UserServiceImpl(final UserRepository userRepository,
-      final RoleRepository roleRepository, final PasswordGenerator passwordGenerator,
-      final PasswordResetService passwordResetService,
-      final ApplicationEventPublisher eventPublisher,
-      final SecurityUtils securityUtils) {
-    this.userRepository = userRepository;
-    this.roleRepository = roleRepository;
-    this.passwordGenerator = passwordGenerator;
-    this.passwordResetService = passwordResetService;
-    this.eventPublisher = eventPublisher;
-    this.securityUtils = securityUtils;
-  }
   
   @Override
   public UserProfile getUserProfile() {

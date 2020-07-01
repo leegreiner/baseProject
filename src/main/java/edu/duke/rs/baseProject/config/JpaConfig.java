@@ -17,9 +17,9 @@ import org.springframework.jdbc.support.DatabaseStartupValidator;
 public class JpaConfig {
   @Value("${spring.datasource.hikari.connection-test-query:select 1 from dual}")
   private String validationQuery;
-  @Value("${app.datasource.startupValidationInterval}")
+  @Value("${app.datasource.startupValidationInterval:5}")
   private int startupValidationInterval;
-  @Value("${app.datasource.startupValidationTimeout}")
+  @Value("${app.datasource.startupValidationTimeout:60}")
   private int startupValidationTimeout;
   
   @Bean

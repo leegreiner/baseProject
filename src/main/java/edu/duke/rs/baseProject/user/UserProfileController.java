@@ -17,21 +17,18 @@ import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.util.HttpUtils;
 import io.micrometer.core.annotation.Timed;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@RequiredArgsConstructor
 @Slf4j
 @Controller
 public class UserProfileController extends BaseWebController {
-  public static final String USER_PROFILE_VIEW = "users/userProfile";
   public static final String USER_PROFILE_MAPPING = "/userProfile";
-  public static final String USER_PROFILE_ATTRIBUTE = "userProfile";
+  static final String USER_PROFILE_VIEW = "users/userProfile";
+  static final String USER_PROFILE_ATTRIBUTE = "userProfile";
   private transient final UserService userService;
   private transient final SecurityUtils securityUtils;
-  
-  public UserProfileController(final UserService userService, final SecurityUtils securityUtils) {
-    this.userService = userService;
-    this.securityUtils = securityUtils;
-  }
   
   @GetMapping(USER_PROFILE_MAPPING)
   @Timed(description = "User profile")

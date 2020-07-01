@@ -12,8 +12,8 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Controller
 public class IndexController extends BaseWebController {
-	public static final String INDEX_VIEW = "index";
-	public static final String INDEX_MAPPING = "/";
+  public static final String INDEX_MAPPING = "/";
+	static final String INDEX_VIEW = "index";
 	
 	@GetMapping(INDEX_MAPPING)
 	public String index(Principal principal) {

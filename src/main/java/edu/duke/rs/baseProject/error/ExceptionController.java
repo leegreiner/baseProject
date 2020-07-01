@@ -14,8 +14,10 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.duke.rs.baseProject.BaseWebController;
 import edu.duke.rs.baseProject.exception.ApplicationException;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+@RequiredArgsConstructor
 @Slf4j
 @ControllerAdvice(assignableTypes = {BaseWebController.class})
 public class ExceptionController extends BaseWebController {
@@ -23,11 +25,7 @@ public class ExceptionController extends BaseWebController {
   public static final String EXCEPTION_MESSAGE_ATTRIBUTE = "errorMessage";
   public static final String UNKNOWN_ERROR_PROPERTY = "unknownError";
   private transient final MessageSource messageSource;
-  
-  public ExceptionController(final MessageSource messageSource) {
-    this.messageSource = messageSource;
-  }
-  
+
   @InitBinder
   public void initBinder (WebDataBinder binder) {
     // trim all string in incoming model attributes
