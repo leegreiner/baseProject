@@ -6,6 +6,7 @@ spring:
       config: classpath:ehcache.xml
 
   datasource:
+    continue-on-error: true
     initialization-mode: never
     platform: postgresql
     url: jdbc:postgresql://localhost:5432/devdb?currentSchema=baseapp
@@ -18,7 +19,8 @@ spring:
       idle-timeout: 600000
       max-lifetime: 1800000
       maximum-pool-size: 8
-      minimum-idle: 2
+      minimum-idle: 0
+      initialization-fail-timeout: -1
       pool-name: baseapphikaripool
     
   jpa:
@@ -120,6 +122,9 @@ logging:  level:    edu.duke.rs: debug
 #    org.apache.http.wire: debug
     
 app:
+  datasource:
+    startupValidationInterval: 5
+    startupValidationTimeout: 60
   defaultEmailFrom: abc@123.com
   google:
     analysicsTrackingId: None
