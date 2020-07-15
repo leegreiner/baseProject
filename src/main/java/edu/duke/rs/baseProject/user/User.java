@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -137,7 +138,7 @@ public class User extends BaseEntity implements Serializable {
 	@Column(name = "password_chg_id_create_time", nullable = true)
 	private LocalDateTime passwordChangeIdCreationTime;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "users_to_roles",
 		joinColumns = @JoinColumn(name = "user_fk", referencedColumnName = "user_id"),
 		inverseJoinColumns = @JoinColumn(name = "role_fk", referencedColumnName = "role_id")

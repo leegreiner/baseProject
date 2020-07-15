@@ -140,6 +140,7 @@ app:
   passwordExpirationDays: 90
   resetPasswordExpirationDays: 2
   security:
+    disableUnusedAccountsGreaterThanMonths: 12
     numberOfLoginAttemptFailuresBeforeTemporaryLock: 3
     temporaryLockSeconds: 300
     password:

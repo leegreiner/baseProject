@@ -439,6 +439,7 @@ public class UserServiceUnitTest {
   
   @Test
   public void whenDisableUnusedAccountsCalled_thenDisableUnusedAccountOnRepositoryCalled() {
+    this.service.setDisableUnusedAccountsGreaterThanMonths(Long.valueOf(12));
     this.service.disableUnusedAccounts();
     
     verify(userRepository, times(1)).disableUnusedAccounts(any(LocalDateTime.class));

@@ -20,6 +20,7 @@ import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
+import lombok.AccessLevel;
 import lombok.Setter;
 
 @Service
@@ -29,7 +30,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
   private transient final PasswordEncoder passwordEncoder;
   private transient final ApplicationEventPublisher eventPublisher;
   private transient final SecurityUtils securityUtils;
-  @Setter
+  @Setter(AccessLevel.PACKAGE)
   @Value("${app.resetPasswordExpirationDays:2}")
   private Long resetPasswordExpirationDays;
 

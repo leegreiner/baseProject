@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -25,7 +26,9 @@ import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.security.password.PasswordGenerator;
 import edu.duke.rs.baseProject.user.passwordReset.PasswordResetService;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @RequiredArgsConstructor
@@ -38,6 +41,9 @@ public class UserServiceImpl implements UserService {
   private transient final PasswordResetService passwordResetService;
   private transient final ApplicationEventPublisher eventPublisher;
   private transient final SecurityUtils securityUtils;
+  @Setter(AccessLevel.PACKAGE) // for testing
+  @Value("${app.security.disableUnusedAccountsGreaterThanMonths:12}")
+  private Long disableUnusedAccountsGreaterThanMonths;
   
   @Override
   public UserProfile getUserProfile() {
@@ -81,7 +87,7 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public void disableUnusedAccounts() {
-    this.userRepository.disableUnusedAccounts(LocalDateTime.now().minusYears(1));
+    this.userRepository.disableUnusedAccounts(LocalDateTime.now().minusMonths(disableUnusedAccountsGreaterThanMonths));
   }
   
   private User saveUser(final UserDto userDto) {
