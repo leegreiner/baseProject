@@ -21,4 +21,4 @@ RUN addgroup -S appgroup && adduser -S appuser -G appgroup
 USER appuser
 
 # Run the jar file 
-ENTRYPOINT exec java $JAVA_OPTS -jar /app/baseProject.jar
+ENTRYPOINT ["java", "-jar", "/app/baseProject.jar"]
