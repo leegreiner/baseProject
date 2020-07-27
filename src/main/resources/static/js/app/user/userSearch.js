@@ -3,6 +3,10 @@ var targetPageSetUp = function() {
     responsive: true,
     fixedHeader: true,
     serverSide: true,
+    processing: true,
+    language: {
+      processing: '<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>'
+    },
     ajax: {
       'url': '/api/users',
       'data': DataTables.flatten,
