@@ -104,13 +104,16 @@ server:  compression:    enabled: true
       enabled : true
     
 management:
-  endpoints:    web:      exposure:        include: '*'
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
   endpoint:
     health:
       show-details: always
-  health:
-    probes:
-      enabled: true
+      probes:
+        enabled: true
     
 info:
   app:
@@ -192,7 +195,7 @@ saml:
     
 logging:
   level:
-    org.hibernate.type.descriptor.sql.BasicBinder: trace
+    org.hibernate.type.descriptor.sql: trace
     edu.duke.rs: debug
     org.springframework.security.saml: debug
 #    org.springframework: debug
