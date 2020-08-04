@@ -19,7 +19,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>11</java.version>
-    <spring-cloud.version>2.2.3.RELEASE</spring-cloud.version>
+    <spring-cloud.version>2.2.4.RELEASE</spring-cloud.version>
     <spring.boot.saml.version>1.17</spring.boot.saml.version>
     <passay.version>1.6.0</passay.version>
     <jacoco.version>0.8.5</jacoco.version>
@@ -159,7 +159,7 @@
     <dependency>
         <groupId>com.icegreen</groupId>
         <artifactId>greenmail</artifactId>
-        <version>1.5.13</version>
+        <version>1.5.14</version>
         <scope>test</scope>
         <exclusions>
           <exclusion>
@@ -325,7 +325,7 @@
           <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs</artifactId>
-            <version>4.0.3</version>
+            <version>4.1.1</version>
           </dependency>
         </dependencies>
         <configuration>
