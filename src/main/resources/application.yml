@@ -1,9 +1,5 @@
 spring:
   application:    name: "@project.name@"
-    
-  cache:
-    jcache:
-      config: classpath:ehcache.xml
 
   datasource:
     continue-on-error: true
@@ -86,7 +82,7 @@ server:  compression:    enabled: true
   ssl:
     ciphers: TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA256, TLS_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
     enabled-protocols: TLSv1.2,TLSv1.3
-    enabled: true
+    enabled: false
     key-store: classpath:keystore.p12
 #   encrypt_key abc123    
     key-store-password: '{cipher}f04a152e702ddaa5039a13cfa98fc11437803467e704a72d9edd7a7eb24b09f3'
@@ -136,6 +132,10 @@ app:
     disableUnusedAccountsCronSchedule: '0 0 3 ? * * *'
 #   hourly on the hour
     expirePasswordChangeIdsCronSchedule: '0 0 * ? * * *'
+  kubernetes:
+    hazelcastDiscoveryService: baseproject-hazelcast-service
+    instanceName: baseproject-hazelcast-instance
+    namespace: baseproject
   management:
     userName: mgmt_user
 # changeMe1
@@ -195,13 +195,12 @@ saml:
     
 logging:
   level:
-    org.hibernate.type.descriptor.sql: trace
-    edu.duke.rs: debug
-    org.springframework.security.saml: debug
-#    org.springframework: debug
-    org.opensaml: debug
+#    org.hibernate.type.descriptor.sql: trace
+#    com.hazelcast: debug
+    edu.duke.drc: debug
+#    org.springframework.cache: trace
 #    org.springframework.security: debug
-#    org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping: trace
+#    org.springframework.web.servlet.mvc.method.annotation: trace
     
 app:
   google:

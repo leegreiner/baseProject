@@ -10,9 +10,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-  @Cacheable(value = "roles")
+  @Cacheable(value = "role", keyGenerator = "methodNameAndParametersKeyGenerator")
   List<Role> findAll(Sort sort);
   
-  @Cacheable(value = "roles")
+  @Cacheable(value = "role", keyGenerator = "methodNameAndParametersKeyGenerator")
 	Optional<Role> findByName(RoleName name);
 }
