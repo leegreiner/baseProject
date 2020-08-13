@@ -64,6 +64,10 @@ public class TomcatConfig implements WebServerFactoryCustomizer<TomcatServletWeb
     
     @Override
     public void onApplicationEvent(final ContextClosedEvent event) {
+      if (connector == null) {
+        return;
+      }
+      
       this.connector.pause();
       
       final Executor executor = this.connector.getProtocolHandler().getExecutor();
