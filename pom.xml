@@ -165,7 +165,7 @@
     <dependency>
         <groupId>com.icegreen</groupId>
         <artifactId>greenmail</artifactId>
-        <version>1.5.14</version>
+        <version>1.6.0</version>
         <scope>test</scope>
         <exclusions>
           <exclusion>
@@ -331,7 +331,7 @@
           <dependency>
             <groupId>com.github.spotbugs</groupId>
             <artifactId>spotbugs</artifactId>
-            <version>4.1.1</version>
+            <version>4.1.2</version>
           </dependency>
         </dependencies>
         <configuration>
@@ -380,6 +380,30 @@
           </execution>
         </executions>
       </plugin>
+      
+      <plugin>
+        <groupId>pl.project13.maven</groupId>
+        <artifactId>git-commit-id-plugin</artifactId>
+        <executions>
+          <execution>
+              <id>get-the-git-infos</id>
+              <goals>
+                  <goal>revision</goal>
+              </goals>
+          </execution>
+          <execution>
+              <id>validate-the-git-infos</id>
+              <goals>
+                  <goal>validateRevision</goal>
+              </goals>
+          </execution>
+        </executions>
+        
+        <configuration>
+          <failOnNoGitDirectory>false</failOnNoGitDirectory>
+        </configuration>
+      </plugin>
+      
       <!--
       <plugin>
         <groupId>org.owasp</groupId>
