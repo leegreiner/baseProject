@@ -326,14 +326,7 @@
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>3.1.12.2</version>
-        <dependencies>
-          <dependency>
-            <groupId>com.github.spotbugs</groupId>
-            <artifactId>spotbugs</artifactId>
-            <version>4.1.3</version>
-          </dependency>
-        </dependencies>
+        <version>4.1.3</version>
         <configuration>
           <threshold>Low</threshold>
           <effort>Max</effort>
