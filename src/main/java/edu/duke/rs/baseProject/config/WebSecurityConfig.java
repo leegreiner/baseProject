@@ -77,7 +77,13 @@ public class WebSecurityConfig {
 		@Override
     protected void configure(final HttpSecurity http) throws Exception {
 		  if (sslEnabled) {
-        configureSsl(http);
+		    http.headers()
+          .httpStrictTransportSecurity()
+            .includeSubDomains(true)
+            .maxAgeInSeconds(HSTS_AGE_SECONDS);
+  
+        http.requiresChannel()
+          .anyRequest().requiresSecure();
       }
       
 			http
@@ -117,7 +123,13 @@ public class WebSecurityConfig {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
       if (sslEnabled) {
-        configureSsl(http);
+        http.headers()
+          .httpStrictTransportSecurity()
+            .includeSubDomains(true)
+            .maxAgeInSeconds(HSTS_AGE_SECONDS);
+    
+        http.requiresChannel()
+          .anyRequest().requiresSecure();
       }
       
       http
@@ -199,7 +211,13 @@ public class WebSecurityConfig {
     @Override
     public void configure(HttpSecurity http) throws Exception {
       if (sslEnabled) {
-        configureSsl(http);
+        http.headers()
+          .httpStrictTransportSecurity()
+            .includeSubDomains(true)
+            .maxAgeInSeconds(HSTS_AGE_SECONDS);
+      
+        http.requiresChannel()
+          .anyRequest().requiresSecure();
       }
       
       http.httpBasic()
@@ -243,16 +261,6 @@ public class WebSecurityConfig {
       
       return handler;
     }
-  }
-  
-  private static void configureSsl(final HttpSecurity http) throws Exception {
-    http.headers()
-      .httpStrictTransportSecurity()
-        .includeSubDomains(true)
-        .maxAgeInSeconds(HSTS_AGE_SECONDS);
-    
-    http.requiresChannel()
-      .anyRequest().requiresSecure();
   }
 	
 	@Bean
