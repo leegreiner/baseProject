@@ -49,6 +49,8 @@ import edu.duke.rs.baseProject.security.RestBasicAuthenticationEntryPoint;
 
 @Configuration
 public class WebSecurityConfig {
+  private static final long HSTS_AGE_SECONDS = 31536000;
+  
   @Configuration
 	@Order(1)
 	public static class ManagementConfigurationAdapter extends WebSecurityConfigurerAdapter {
@@ -75,8 +77,7 @@ public class WebSecurityConfig {
 		@Override
     protected void configure(final HttpSecurity http) throws Exception {
 		  if (sslEnabled) {
-        http.requiresChannel()
-          .anyRequest().requiresSecure();
+        configureSsl(http);
       }
       
 			http
@@ -116,8 +117,7 @@ public class WebSecurityConfig {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
       if (sslEnabled) {
-        http.requiresChannel()
-          .anyRequest().requiresSecure();
+        configureSsl(http);
       }
       
       http
@@ -174,6 +174,9 @@ public class WebSecurityConfig {
   @Order(2)
   @Configuration
   public static class SamlWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+    @Value("${server.ssl.enabled:false}")
+    private boolean sslEnabled;
+    
     @Autowired
     private SAMLUserDetailsService samlUserDetailsService;
     
@@ -195,6 +198,10 @@ public class WebSecurityConfig {
     
     @Override
     public void configure(HttpSecurity http) throws Exception {
+      if (sslEnabled) {
+        configureSsl(http);
+      }
+      
       http.httpBasic()
         .disable()
         .csrf()
@@ -236,6 +243,16 @@ public class WebSecurityConfig {
       
       return handler;
     }
+  }
+  
+  private static void configureSsl(final HttpSecurity http) throws Exception {
+    http.headers()
+      .httpStrictTransportSecurity()
+        .includeSubDomains(true)
+        .maxAgeInSeconds(HSTS_AGE_SECONDS);
+    
+    http.requiresChannel()
+      .anyRequest().requiresSecure();
   }
 	
 	@Bean
