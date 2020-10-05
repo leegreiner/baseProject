@@ -5,4 +5,12 @@
     <Method name="parse" />
     <Bug pattern="NP_NONNULL_RETURN_VIOLATION"/>
   </Match>
+  <!-- ignore all bugs in test classes, except for those bugs specifically relating to JUnit tests -->
+  <!-- i.e. filter bug if ( classIsJUnitTest && ! bugIsRelatedToJUnit ) -->
+  <Match>
+    <Class name="~.*\.*Test" />
+    <Not>
+      <Bug code="IJU" /> <!-- 'IJU' is the code for bugs related to JUnit test code -->
+    </Not>
+  </Match>
 </FindBugsFilter>
