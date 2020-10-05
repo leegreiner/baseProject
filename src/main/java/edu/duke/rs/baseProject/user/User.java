@@ -80,7 +80,7 @@ public class User extends BaseEntity implements Serializable {
   @SequenceGenerator(name = "user_seq", sequenceName = "USER_SEQ", allocationSize = 1)
 	private Long id;
 	
-	@Column(length = 30, nullable = false)
+	@Column(length = 30, unique = true, nullable = false)
 	@NonNull
 	@NotBlank
 	@Size(min = 4, max = 30)
@@ -108,7 +108,7 @@ public class User extends BaseEntity implements Serializable {
   @Size(max = 30)
 	private String lastName;
 	
-	@Column(length = 320, nullable = false)
+	@Column(length = 320, unique = true, nullable = false)
   @NonNull
   @NotBlank
   @Size(max = 320)

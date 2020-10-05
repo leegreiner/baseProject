@@ -52,7 +52,7 @@ public class HazelcastConfig {
     final Config config = new Config().setInstanceName(this.instanceName);
     
     config.getMapConfig(HazelcastIndexedSessionRepository.DEFAULT_SESSION_MAP_NAME)
-      .addMapAttributeConfig(attributeConfig()).addMapIndexConfig(
+      .addMapAttributeConfig(springSessionAttributeConfig()).addMapIndexConfig(
         new MapIndexConfig(HazelcastIndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE, false));
     
     config.addMapConfig(roleMapConfig());
@@ -60,7 +60,7 @@ public class HazelcastConfig {
     return config;
   }
   
-  private MapAttributeConfig attributeConfig() {
+  private MapAttributeConfig springSessionAttributeConfig() {
     return new MapAttributeConfig()
         .setName(HazelcastIndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE)
         .setExtractor(PrincipalNameExtractor.class.getName());
