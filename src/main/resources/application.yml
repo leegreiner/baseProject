@@ -129,10 +129,11 @@ app:
     disableUnusedAccountsCronSchedule: '0 0 3 ? * * *'
 #   hourly on the hour
     expirePasswordChangeIdsCronSchedule: '0 0 * ? * * *'
+  hazelcast:
+    instanceName: dts-hazelcast-instance
+    multicastPort: 5702
   kubernetes:
-    hazelcastDiscoveryService: baseproject-hazelcast-service
-    instanceName: baseproject-hazelcast-instance
-    namespace: baseproject
+    hazelcastDiscoveryService: dts-hazelcast-service
   management:
     userName: mgmt_user
 # changeMe1

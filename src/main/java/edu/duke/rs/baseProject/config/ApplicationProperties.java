@@ -81,5 +81,6 @@ public class ApplicationProperties {
   @Setter
   public static class Hazelcast {
     private String instanceName;
+    private int multicastPort;
   }
 }

@@ -17,21 +17,28 @@ import com.hazelcast.config.MaxSizeConfig;
 @Configuration
 @EnableHazelcastHttpSession(maxInactiveIntervalInSeconds = 3600)
 public class HazelcastConfig {
-  private static final Integer BASE_MAP_SIZE = 271;
+  private static final Integer PARTITION_COUNT = 271;
   private final String namespace;
   private final String hazelcastDiscoveryService;
   private final String instanceName;
+  private final int hazelcastMulticastPort;
   
   public HazelcastConfig(final ApplicationProperties applicationProperties) {
     this.namespace = applicationProperties.getKubernetes().getNamespace();
     this.hazelcastDiscoveryService = applicationProperties.getKubernetes().getHazelcastDiscoveryService();
     this.instanceName = applicationProperties.getHazelcast().getInstanceName();
+    this.hazelcastMulticastPort = applicationProperties.getHazelcast().getMulticastPort();
   }
   
   @Bean
   @Profile({"!val & !prod"})
   public Config hazelcastLocalConfig() {
-    return this.hazelcastBaseConfig();
+    final Config config = this.hazelcastBaseConfig();
+    
+    config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(true);
+    config.getNetworkConfig().getJoin().getMulticastConfig().setMulticastPort(this.hazelcastMulticastPort);
+    
+    return config;
   }
   
   @Bean
@@ -69,7 +76,7 @@ public class HazelcastConfig {
   private MapConfig roleMapConfig() {
     return new MapConfig().setName("role")
         .setTimeToLiveSeconds(0)
-        .setMaxSizeConfig(new MaxSizeConfig(BASE_MAP_SIZE + 500, MaxSizeConfig.MaxSizePolicy.PER_NODE))
+        .setMaxSizeConfig(new MaxSizeConfig(PARTITION_COUNT + 50, MaxSizeConfig.MaxSizePolicy.PER_NODE))
         .setEvictionPolicy(EvictionPolicy.LRU);
   }
 }

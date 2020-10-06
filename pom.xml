@@ -21,6 +21,7 @@
     <java.version>11</java.version>
     <spring-cloud.version>2.2.5.RELEASE</spring-cloud.version>
     <spring.boot.saml.version>1.17</spring.boot.saml.version>
+    <hazelcast.version>3.12.8</hazelcast.version>
     <hazelcast.kubernetes.version>1.5.4</hazelcast.kubernetes.version>
     <passay.version>1.6.0</passay.version>
     <jacoco.version>0.8.5</jacoco.version>
@@ -75,7 +76,8 @@
     </dependency>
     <dependency>
       <groupId>com.hazelcast</groupId>
-      <artifactId>hazelcast</artifactId>
+      <artifactId>hazelcast-all</artifactId>
+      <version>${hazelcast.version}</version>
     </dependency>
     <dependency>
       <groupId>com.hazelcast</groupId>
