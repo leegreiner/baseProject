@@ -61,11 +61,11 @@ public class HazelcastConfig {
     config.getMapConfig(HazelcastIndexedSessionRepository.DEFAULT_SESSION_MAP_NAME)
       .addMapAttributeConfig(springSessionAttributeConfig()).addMapIndexConfig(
         new MapIndexConfig(HazelcastIndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE, false));
-    
+
     config.addMapConfig(roleMapConfig());
     
     return config;
-  }
+  } 
   
   private MapAttributeConfig springSessionAttributeConfig() {
     return new MapAttributeConfig()
