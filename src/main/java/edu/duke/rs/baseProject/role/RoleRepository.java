@@ -3,14 +3,21 @@ package edu.duke.rs.baseProject.role;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.cache.annotation.Cacheable;
+import javax.persistence.QueryHint;
+
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
-  @Cacheable(value="role", keyGenerator="methodNameAndParametersKeyGenerator")
+  @QueryHints({@QueryHint(name = org.hibernate.annotations.QueryHints.CACHEABLE, value = "true"),
+    @QueryHint(name = org.hibernate.annotations.QueryHints.CACHE_REGION, value = "edu.duke.rs.baseProject.role.Role")
+  })
   List<Role> findAll(Sort sort);
+  @QueryHints({@QueryHint(name = org.hibernate.annotations.QueryHints.CACHEABLE, value = "true"),
+    @QueryHint(name = org.hibernate.annotations.QueryHints.CACHE_REGION, value = "edu.duke.rs.baseProject.role.Role")
+  })
 	Optional<Role> findByName(RoleName name);
 }
