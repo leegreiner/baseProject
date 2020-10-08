@@ -25,6 +25,17 @@ spring:
       ddl-auto: none
     open-in-view: true # needed for audit history
     properties:      hibernate:
+        generate_statistics: true
+        cache:
+          use_second_level_cache: true
+          use_query_cache: true
+          region:
+            factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+        javax:
+          cache:
+            missing_cache_strategy: create-warn
+            provider: org.ehcache.jsr107.EhcacheCachingProvider
+            uri: classpath:ehcache.xml
         connection:
           provider_disables_autocommit: true
         dialect: org.hibernate.dialect.PostgreSQL94Dialect
@@ -33,6 +44,10 @@ spring:
           lob:
             non_contextual_creation: true
         show_sql: false
+      javax:
+        persistence:
+          sharedCache:
+            mode: ENABLE_SELECTIVE
       org:
         hibernate:
           envers:
