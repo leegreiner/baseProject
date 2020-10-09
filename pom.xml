@@ -162,6 +162,10 @@
       <artifactId>micrometer-registry-prometheus</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.liquibase</groupId>
+      <artifactId>liquibase-core</artifactId>
+    </dependency> 
+    <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <scope>provided</scope>
@@ -285,9 +289,8 @@
         <groupId>org.liquibase</groupId>
         <artifactId>liquibase-maven-plugin</artifactId>
         <configuration>
-          <propertyFile>liquibase/local/liquibase.properties</propertyFile>
+          <propertyFile>src/main/resources/liquibase/local/liquibase.properties</propertyFile>
           <propertyFileWillOverride>true</propertyFileWillOverride>
-          <outputChangeLogFile>/tmp/changelog.xml</outputChangeLogFile>
         </configuration>
         <dependencies>
           <dependency>

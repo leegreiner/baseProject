@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+  xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-4.0.xsd http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">       
+  <changeSet author="Lee Greiner" id="1602262487014-5">
+    <createTable tableName="spring_session">
+      <column name="primary_id" type="CHAR(36)">
+        <constraints nullable="false" primaryKey="true"
+          primaryKeyName="spring_session_pk" />
+      </column>
+      <column name="session_id" type="CHAR(36)">
+        <constraints nullable="false" />
+      </column>
+      <column name="creation_time" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="last_access_time" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="max_inactive_interval" type="INTEGER">
+        <constraints nullable="false" />
+      </column>
+      <column name="expiry_time" type="BIGINT">
+        <constraints nullable="false" />
+      </column>
+      <column name="principal_name" type="VARCHAR(100)" />
+    </createTable>
+  </changeSet>
+  <changeSet author="Lee Greiner" id="1602262487014-12">
+    <createTable tableName="spring_session_attributes">
+      <column name="session_primary_id" type="CHAR(36)">
+        <constraints nullable="false" primaryKey="true"
+          primaryKeyName="spring_session_attributes_pk" />
+      </column>
+      <column name="attribute_name" type="VARCHAR(200)">
+        <constraints nullable="false" primaryKey="true"
+          primaryKeyName="spring_session_attributes_pk" />
+      </column>
+      <column name="attribute_bytes" type="BYTEA">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+  </changeSet>
+  <changeSet author="Lee Greiner" id="1602262487014-35">
+    <createIndex indexName="spring_session_ix1" tableName="spring_session" unique="true">
+      <column name="session_id" />
+    </createIndex>
+  </changeSet>
+  <changeSet author="Lee Greiner" id="1602262487014-36">
+    <createIndex indexName="spring_session_ix2" tableName="spring_session">
+      <column name="expiry_time" />
+    </createIndex>
+  </changeSet>
+  <changeSet author="Lee Greiner" id="1602262487014-37">
+    <createIndex indexName="spring_session_ix3" tableName="spring_session">
+      <column name="principal_name" />
+    </createIndex>
+  </changeSet>
+  <changeSet author="Lee Greiner" id="1602262487014-42">
+    <addForeignKeyConstraint baseColumnNames="session_primary_id"
+      baseTableName="spring_session_attributes" constraintName="spring_session_attributes_fk"
+      deferrable="false" initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
+      referencedColumnNames="primary_id" referencedTableName="spring_session" validate="true" />
+  </changeSet>
+</databaseChangeLog>

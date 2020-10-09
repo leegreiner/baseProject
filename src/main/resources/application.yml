@@ -52,7 +52,10 @@ spring:
         hibernate:
           envers:
             track_entities_changed_in_revision: true
-            
+  
+  liquibase:
+    change-log: classpath:/liquibase/changelog/changelog-master.xml
+              
   mail:
     default-encoding: UTF-8
     host: smtpgw.duhs.duke.edu
@@ -130,6 +133,7 @@ info:
     version: "@project.version@"
     
 logging:  level:    edu.duke.rs: debug
+    liquibse: info
 #    org.apache.http.wire: debug
     
 app:
