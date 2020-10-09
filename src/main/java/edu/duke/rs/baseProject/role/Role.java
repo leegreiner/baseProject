@@ -31,7 +31,7 @@ import lombok.RequiredArgsConstructor;
 @Entity
 @Table(name = "role",
   indexes = {
-      @Index(name = "IX_ROLE_ALT_ID", unique = true, columnList="alternate_id")
+      @Index(name = "UIX_ROLE_ALT_ID", unique = true, columnList="alternate_id")
   }
 )
 @Cacheable
