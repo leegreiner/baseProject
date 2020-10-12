@@ -27,7 +27,7 @@
       </listener>
     </listeners>
     <resources>
-      <heap>1000</heap>
+      <heap>5000</heap>
     </resources>
   </cache-template>
   
@@ -36,5 +36,18 @@
       <none/>
     </expiry>
     <heap>100</heap>
+  </cache>
+  
+  <!-- query cache expiry should be <= entity cache expiry to avoid single selects when entity cache entries expire -->
+  <cache alias="default-query-results-region" uses-template="defaultTemplate">
+    <expiry>
+      <ttl unit="seconds">5</ttl>
+    </expiry>
+  </cache>
+
+  <cache alias="default-update-timestamps-region" uses-template="defaultTemplate">
+    <expiry>
+      <none/>
+    </expiry>
   </cache>
 </config>
