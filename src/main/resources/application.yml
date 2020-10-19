@@ -25,7 +25,6 @@ spring:
       ddl-auto: none
     open-in-view: true # needed for audit history
     properties:      hibernate:
-        generate_statistics: true
         cache:
           use_second_level_cache: true
           use_query_cache: true
@@ -198,12 +197,13 @@ saml:
 ---
 spring:  profiles: local
   resources:    cache:      cachecontrol:        no-cache: true
-      
+     
   jpa:    show-sql: true
     hibernate:      ddl-auto: create-drop
     open-in-view: true # needed for audit history
     properties:      hibernate:
         format_sql: true
+        generate_statistics: true
         show_sql: true
         
   mail:
@@ -216,6 +216,8 @@ logging:
 #    org.hibernate.type.descriptor.sql: trace
 #    com.hazelcast: debug
     edu.duke.drc: debug
+    org.springframework.cache: trace
+    org.hibernate.stat: debug
 #    org.springframework.cache: trace
 #    org.springframework.security: debug
 #    org.springframework.web.servlet.mvc.method.annotation: trace

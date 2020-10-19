@@ -13,11 +13,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long> {
   @QueryHints({@QueryHint(name = org.hibernate.annotations.QueryHints.CACHEABLE, value = "true"),
-    @QueryHint(name = org.hibernate.annotations.QueryHints.CACHE_REGION, value = "edu.duke.rs.baseProject.role.Role")
+    @QueryHint(name = org.hibernate.annotations.QueryHints.CACHE_REGION, value = "noExpireQueryResultsRegion")
   })
   List<Role> findAll(Sort sort);
   @QueryHints({@QueryHint(name = org.hibernate.annotations.QueryHints.CACHEABLE, value = "true"),
-    @QueryHint(name = org.hibernate.annotations.QueryHints.CACHE_REGION, value = "edu.duke.rs.baseProject.role.Role")
+    @QueryHint(name = org.hibernate.annotations.QueryHints.CACHE_REGION, value = "noExpireQueryResultsRegion")
   })
 	Optional<Role> findByName(RoleName name);
 }

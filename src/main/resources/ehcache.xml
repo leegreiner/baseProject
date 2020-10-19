@@ -38,6 +38,12 @@
     <heap>100</heap>
   </cache>
   
+  <cache alias="noExpireQueryResultsRegion" uses-template="defaultTemplate">
+    <expiry>
+      <none/>
+    </expiry>
+  </cache>
+  
   <!-- query cache expiry should be <= entity cache expiry to avoid single selects when entity cache entries expire -->
   <cache alias="default-query-results-region" uses-template="defaultTemplate">
     <expiry>
