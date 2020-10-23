@@ -1,7 +1,6 @@
 package edu.duke.rs.baseProject.security;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 import javax.transaction.Transactional;
 import javax.validation.constraints.NotBlank;
@@ -31,32 +30,26 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
   public void loginFailed(@NotBlank String key) {
     log.debug("Login failed for " + key);
     
-    Optional<User> userOptional = this.userRepository.findByUsernameIgnoreCase(key);
-    
-    if (userOptional.isPresent()) {
-      final User user = userOptional.get();
-      
+    this.userRepository.findByUsernameIgnoreCase(key).ifPresent((user) -> {
       user.setLastInvalidLoginAttempt(LocalDateTime.now());
       
       if (! this.isBlocked(user)) {
         // brute force may exceed size of data structure. don't update after temp lock
         user.setInvalidLoginAttempts(user.getInvalidLoginAttempts() == null ? 1 : user.getInvalidLoginAttempts() + 1);
       }
-    }
+    });
   }
 
   @Override
   @Transactional
   public void loginSucceeded(@NotBlank final String key) {
     log.debug("Login succeeded for " + key);
-    Optional<User> userOptional = this.userRepository.findByUsernameIgnoreCase(key);
     
-    if (userOptional.isPresent()) {
-      final User user = userOptional.get();
+    this.userRepository.findByUsernameIgnoreCase(key).ifPresent((user) -> {
       user.setLastLoggedIn(LocalDateTime.now());
       user.setInvalidLoginAttempts(null);
       user.setLastInvalidLoginAttempt(null);
-    }
+    });
   }
 
   @Override

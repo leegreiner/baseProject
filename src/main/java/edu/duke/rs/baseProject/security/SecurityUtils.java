@@ -11,35 +11,23 @@ import edu.duke.rs.baseProject.role.RoleName;
 
 @Component
 public class SecurityUtils {
-	public boolean userIsAuthenticated() {
-		final Authentication auth = SecurityContextHolder.getContext()
-				.getAuthentication();
-		
-		return auth != null && auth.isAuthenticated() &&
-				!(SecurityContextHolder.getContext().getAuthentication() 
-				          instanceof AnonymousAuthenticationToken);
-	}
-	
-	public boolean hasRole(final RoleName roleName) {
-    boolean result = false;
-    final Optional<AppPrincipal> principal = getPrincipal();
+  public boolean userIsAuthenticated() {
+    final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-    if (principal.isPresent()) {
-      result = principal.get().hasRole(roleName);
-    }
-
-    return result;
+    return auth != null && auth.isAuthenticated()
+        && !(SecurityContextHolder.getContext().getAuthentication() instanceof AnonymousAuthenticationToken);
   }
-	
-	public Optional<AppPrincipal> getPrincipal() {
-    AppPrincipal appPrincipal = null;
-    final Authentication auth = SecurityContextHolder.getContext()
-        .getAuthentication();
 
-    if (auth != null
-        && auth.getPrincipal() != null
-        && AppPrincipal.class.isAssignableFrom(auth.getPrincipal()
-            .getClass())) {
+  public boolean hasRole(final RoleName roleName) {
+    return getPrincipal().map(appPrincipal -> appPrincipal.hasRole(roleName)).orElseGet(() -> false);
+  }
+
+  public Optional<AppPrincipal> getPrincipal() {
+    AppPrincipal appPrincipal = null;
+    final Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+    if (auth != null && auth.getPrincipal() != null
+        && AppPrincipal.class.isAssignableFrom(auth.getPrincipal().getClass())) {
       appPrincipal = (AppPrincipal) (auth.getPrincipal());
     }
 
