@@ -17,20 +17,24 @@ import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import edu.duke.rs.baseProject.config.ApplicationProperties;
 import edu.duke.rs.baseProject.exception.ConstraintViolationException;
 import edu.duke.rs.baseProject.exception.NotFoundException;
 import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
+import edu.duke.rs.baseProject.user.PasswordHistory;
 import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
 
 public class PasswordResetServiceUnitTest {
   private static final Long EXPIRATION_DAYS = Long.valueOf(2);
+  private static final Integer PASSWORD_HISTORY_SIZE = 2;
   @Mock
   private AppPrincipal appPrincipal;
   @Mock
@@ -41,13 +45,16 @@ public class PasswordResetServiceUnitTest {
   private ApplicationEventPublisher eventPublisher;
   @Mock
   private SecurityUtils securityUtils;
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private ApplicationProperties applicationProperties;
   private PasswordResetServiceImpl service;
   
   @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
-    service = new PasswordResetServiceImpl(userRepository, passwordEncoder, eventPublisher, securityUtils);
-    service.setResetPasswordExpirationDays(EXPIRATION_DAYS);
+    when(applicationProperties.getSecurity().getPassword().getResetPasswordExpirationDays()).thenReturn(EXPIRATION_DAYS);
+    when(applicationProperties.getSecurity().getPassword().getHistorySize()).thenReturn(PASSWORD_HISTORY_SIZE);
+    service = new PasswordResetServiceImpl(userRepository, passwordEncoder, eventPublisher, securityUtils, applicationProperties);
   }
   
   @Test
@@ -156,6 +163,7 @@ public class PasswordResetServiceUnitTest {
     user.setPasswordChangeIdCreationTime(LocalDateTime.now());
     user.setUsername(dto.getUsername());
     user.setPassword(dto.getPassword());
+    user.addPasswordHistory(new PasswordHistory(user.getPassword()));
     
     when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.of(user));
     when(this.passwordEncoder.matches(dto.getPassword(), user.getPassword())).thenReturn(true);
@@ -180,7 +188,41 @@ public class PasswordResetServiceUnitTest {
   }
   
   @Test
-  public void whenPasswordReset_thenNewPasswordCreatedAndResetFieldsCleared() {
+  public void whenPasswordResetWithHistory_thenNewPasswordCreatedAndResetFieldsCleared() {
+    final PasswordResetDto dto = createPasswordResetDto();
+    final User user = new User();
+    user.setPasswordChangeIdCreationTime(LocalDateTime.now());
+    user.setUsername(dto.getUsername());
+    user.setPassword(dto.getPassword() + "a");
+    user.setId(Long.valueOf(1));
+    user.addPasswordHistory(new PasswordHistory(user.getPassword()));
+    
+    when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.of(user));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(appPrincipal.getUserId()).thenReturn(user.getId());
+    when(this.passwordEncoder.matches(dto.getPassword(), user.getPassword())).thenReturn(false);
+    when(this.passwordEncoder.encode(dto.getPassword())).thenReturn(dto.getPassword() + "m");
+    
+    this.service.processPasswordReset(dto);
+    
+    assertThat(user.getLastPasswordChange(), notNullValue());
+    assertThat(user.getPassword(), equalTo(dto.getPassword() + "m"));
+    assertThat(user.getPasswordChangeId(), nullValue());
+    assertThat(user.getPasswordChangeIdCreationTime(), nullValue());
+    assertThat(user.getPasswordHistory().size(), equalTo(2));
+    assertThat(user.getPasswordHistory().stream()
+        .filter(passwordHistory -> passwordHistory.getPassword().equals(dto.getPassword() + "m")).count(), equalTo(1L));
+    
+    verify(this.userRepository, times(1)).findByPasswordChangeId(dto.getPasswordChangeId());
+    verify(this.passwordEncoder, times(1)).matches(dto.getPassword(), dto.getPassword() + "a");
+    verify(this.passwordEncoder, times(1)).encode(dto.getPassword());
+    verifyNoMoreInteractions(this.userRepository);
+    verifyNoMoreInteractions(this.passwordEncoder);
+    verifyNoMoreInteractions(eventPublisher);
+  }
+  
+  @Test
+  public void whenPasswordResetAndNoHistory_thenNewPasswordCreatedAndResetFieldsCleared() {
     final PasswordResetDto dto = createPasswordResetDto();
     final User user = new User();
     user.setPasswordChangeIdCreationTime(LocalDateTime.now());
@@ -200,9 +242,53 @@ public class PasswordResetServiceUnitTest {
     assertThat(user.getPassword(), equalTo(dto.getPassword() + "m"));
     assertThat(user.getPasswordChangeId(), nullValue());
     assertThat(user.getPasswordChangeIdCreationTime(), nullValue());
+    assertThat(user.getPasswordHistory().size(), equalTo(1));
+    assertThat(user.getPasswordHistory().stream()
+        .filter(passwordHistory -> passwordHistory.getPassword().equals(dto.getPassword() + "m")).count(), equalTo(1L));
     
     verify(this.userRepository, times(1)).findByPasswordChangeId(dto.getPasswordChangeId());
-    verify(this.passwordEncoder, times(1)).matches(dto.getPassword(), dto.getPassword() + "a");
+    verify(this.passwordEncoder, times(1)).encode(dto.getPassword());
+    verifyNoMoreInteractions(this.userRepository);
+    verifyNoMoreInteractions(this.passwordEncoder);
+    verifyNoMoreInteractions(eventPublisher);
+  }
+  
+  @Test
+  public void whenPasswordResetAndMaxHistory_thenNewPasswordCreatedResetFieldsClearedAndOldestHistoryEntryRemoved() {
+    final PasswordResetDto dto = createPasswordResetDto();
+    final User user = new User();
+    user.setPasswordChangeIdCreationTime(LocalDateTime.now());
+    user.setUsername(dto.getUsername());
+    user.setPassword(dto.getPassword() + "a");
+    user.setId(Long.valueOf(1));
+
+    for (int i = 0; i < PASSWORD_HISTORY_SIZE; i++) {
+      final PasswordHistory passwordHistory = new PasswordHistory(dto.getPassword() + i);
+      passwordHistory.setLastModifiedDate(LocalDateTime.now().plusMinutes(i));
+      user.addPasswordHistory(passwordHistory);
+    }
+    
+    when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.of(user));
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(appPrincipal.getUserId()).thenReturn(user.getId());
+    when(this.passwordEncoder.matches(dto.getPassword(), user.getPassword())).thenReturn(false);
+    when(this.passwordEncoder.encode(dto.getPassword())).thenReturn(dto.getPassword() + "m");
+    
+    this.service.processPasswordReset(dto);
+    
+    assertThat(user.getLastPasswordChange(), notNullValue());
+    assertThat(user.getPassword(), equalTo(dto.getPassword() + "m"));
+    assertThat(user.getPasswordChangeId(), nullValue());
+    assertThat(user.getPasswordChangeIdCreationTime(), nullValue());
+    assertThat(user.getPasswordHistory().size(), equalTo(PASSWORD_HISTORY_SIZE));
+    assertThat(user.getPasswordHistory().stream()
+        .filter(passwordHistory -> passwordHistory.getPassword().equals(dto.getPassword() + "m")).count(), equalTo(1L));
+    
+    verify(this.userRepository, times(1)).findByPasswordChangeId(dto.getPasswordChangeId());
+    
+    for (int i = 0; i < PASSWORD_HISTORY_SIZE; i++) {
+      verify(this.passwordEncoder, times(1)).matches(dto.getPassword(), dto.getPassword() + i);
+    }
     verify(this.passwordEncoder, times(1)).encode(dto.getPassword());
     verifyNoMoreInteractions(this.userRepository);
     verifyNoMoreInteractions(this.passwordEncoder);

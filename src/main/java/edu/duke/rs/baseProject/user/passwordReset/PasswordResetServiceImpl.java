@@ -8,20 +8,19 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import edu.duke.rs.baseProject.config.ApplicationProperties;
 import edu.duke.rs.baseProject.exception.ConstraintViolationException;
 import edu.duke.rs.baseProject.exception.NotFoundException;
 import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
+import edu.duke.rs.baseProject.user.PasswordHistory;
 import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
-import lombok.AccessLevel;
-import lombok.Setter;
 
 @Service
 @Profile("!samlSecurity")
@@ -30,18 +29,20 @@ public class PasswordResetServiceImpl implements PasswordResetService {
   private transient final PasswordEncoder passwordEncoder;
   private transient final ApplicationEventPublisher eventPublisher;
   private transient final SecurityUtils securityUtils;
-  @Setter(AccessLevel.PACKAGE)
-  @Value("${app.resetPasswordExpirationDays:2}")
   private Long resetPasswordExpirationDays;
+  private Integer passwordHistorySize;
 
   public PasswordResetServiceImpl(final UserRepository userRepository,
       final PasswordEncoder passwordEncoder,
       final ApplicationEventPublisher eventPublisher,
-      final SecurityUtils securityUtils) {
+      final SecurityUtils securityUtils,
+      final ApplicationProperties applicationProperties) {
     this.userRepository = userRepository;
     this.passwordEncoder = passwordEncoder;
     this.eventPublisher = eventPublisher;
     this.securityUtils = securityUtils;
+    this.resetPasswordExpirationDays = applicationProperties.getSecurity().getPassword().getResetPasswordExpirationDays();
+    this.passwordHistorySize = applicationProperties.getSecurity().getPassword().getHistorySize();
   }
 
   @Override
@@ -79,6 +80,7 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     }
     
     final User user = userOptional.get();
+    
     final Optional<AppPrincipal> currentUserOptional = securityUtils.getPrincipal();
     
     if (currentUserOptional.isPresent() && ! currentUserOptional.get().getUserId().equals(user.getId())) {
@@ -88,20 +90,38 @@ public class PasswordResetServiceImpl implements PasswordResetService {
     if (! StringUtils.equalsIgnoreCase(user.getUsername(), passwordResetDto.getUsername())) {
       throw new ConstraintViolationException("error.passwordReset.invalidUserName", (Object[])null);
     }
-    
-    if (passwordEncoder.matches(passwordResetDto.getPassword(), user.getPassword())) {
-      throw new ConstraintViolationException("error.passwordReset.cannotReusePassword", (Object[])null);
-    }
+
+    verifyAgainstAndProcessPasswordHistory(user, passwordResetDto.getPassword());
     
     user.setPassword(passwordEncoder.encode(passwordResetDto.getPassword()));
     user.setLastPasswordChange(LocalDateTime.now());
     user.setPasswordChangeId(null);
     user.setPasswordChangeIdCreationTime(null);
+    user.addPasswordHistory(new PasswordHistory(user.getPassword()));
   }
 
   @Override
   @Transactional
   public void expirePasswordResetIds() {
     this.userRepository.expirePasswordChangeIds(LocalDateTime.now().minusDays(resetPasswordExpirationDays));
+  }
+  
+  private void verifyAgainstAndProcessPasswordHistory(final User user, final String newPassword) {
+    PasswordHistory oldestHistory = null;
+    
+    for (final PasswordHistory passwordHistory : user.getPasswordHistory()) {
+      if (this.passwordEncoder.matches(newPassword, passwordHistory.getPassword())) {
+        throw new ConstraintViolationException("error.passwordReset.passwordAlreadyUsed", (Object[])null);
+      }
+      
+      if (oldestHistory == null ||
+          passwordHistory.getLastModifiedDate().isBefore(oldestHistory.getLastModifiedDate())) {
+        oldestHistory = passwordHistory;
+      }
+    }
+    
+    if (oldestHistory != null && user.getPasswordHistory().size() >= this.passwordHistorySize) {
+      user.removePasswordHistory(oldestHistory);
+    }
   }
 }

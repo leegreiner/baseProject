@@ -13,6 +13,7 @@ import org.springframework.jdbc.core.PreparedStatementCallback;
 public class TestUtils {
   private static final List<String> TABLES = List.of("revchanges",
       "users_to_roles_aud", "users_to_roles",
+      "password_history_aud", "password_history",
       "users_aud", "users",
       "role_aud", "role",
       "audit_revision_entity");

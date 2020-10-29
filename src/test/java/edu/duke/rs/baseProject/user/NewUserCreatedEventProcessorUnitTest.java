@@ -17,6 +17,7 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.context.MessageSource;
 
+import edu.duke.rs.baseProject.config.ApplicationProperties;
 import edu.duke.rs.baseProject.email.EmailService;
 import edu.duke.rs.baseProject.email.MessageType;
 import edu.duke.rs.baseProject.event.CreatedEvent;
@@ -36,9 +37,10 @@ public class NewUserCreatedEventProcessorUnitTest {
   @BeforeEach
   public void init() {
     MockitoAnnotations.initMocks(this);
-    processor = new NewUserCreatedEventProcessor(emailService, messageSource);
-    processor.setApplicationUrl(URL);
-    processor.setResetPasswordExpirationDays(RESET_PASSWORD_EXPIRATION_DAYS);
+    final ApplicationProperties applicationProperties = new ApplicationProperties();
+    applicationProperties.setUrl(URL);
+    applicationProperties.getSecurity().getPassword().setResetPasswordExpirationDays(RESET_PASSWORD_EXPIRATION_DAYS);
+    processor = new NewUserCreatedEventProcessor(emailService, messageSource, applicationProperties);
   }
   
   @Test

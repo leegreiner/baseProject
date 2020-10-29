@@ -2,10 +2,13 @@ package edu.duke.rs.baseProject.user;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,6 +24,7 @@ import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedEntityGraphs;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
@@ -30,6 +34,8 @@ import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.duke.rs.baseProject.model.BaseEntity;
 import edu.duke.rs.baseProject.role.Role;
@@ -148,6 +154,11 @@ public class User extends BaseEntity implements Serializable {
 	@ToString.Exclude
 	private Set<Role> roles;
 	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+  @JsonIgnore
+  @ToString.Exclude
+	private List<PasswordHistory> passwordHistory = new ArrayList<PasswordHistory>();
+	
 	public String getDisplayName() {
 	  final StringBuffer buf = new StringBuffer();
 	  
@@ -164,5 +175,15 @@ public class User extends BaseEntity implements Serializable {
     }
 	  
 	  return buf.toString();
+	}
+	
+	public void addPasswordHistory(final PasswordHistory passwordHistory) {
+	  this.getPasswordHistory().add(passwordHistory);
+	  passwordHistory.setUser(this);
+	}
+	
+	public void removePasswordHistory(final PasswordHistory passwordHistory) {
+	  this.getPasswordHistory().remove(passwordHistory);
+	  passwordHistory.setUser(null);
 	}
 }

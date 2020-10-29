@@ -3,7 +3,6 @@ package edu.duke.rs.baseProject.user.passwordReset;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
@@ -11,6 +10,7 @@ import org.springframework.transaction.event.TransactionPhase;
 import org.springframework.transaction.event.TransactionalEventListener;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import edu.duke.rs.baseProject.config.ApplicationProperties;
 import edu.duke.rs.baseProject.config.EventConfig;
 import edu.duke.rs.baseProject.email.EmailService;
 import edu.duke.rs.baseProject.email.MessageType;
@@ -23,13 +23,13 @@ import lombok.extern.slf4j.Slf4j;
 @Profile("!samlSecurity")
 public class PasswordResetInititatedProcessor {
   private transient final EmailService emailService;
-  @Value("${app.url}")
   private String applicationUrl;
-  @Value("${app.resetPasswordExpirationDays}")
   private Long resetPasswordExpirationDays;
   
-  public PasswordResetInititatedProcessor(final EmailService emailService) {
+  public PasswordResetInititatedProcessor(final EmailService emailService, final ApplicationProperties applicationProperties) {
     this.emailService = emailService;
+    this.applicationUrl = applicationProperties.getUrl();
+    this.resetPasswordExpirationDays = applicationProperties.getSecurity().getPassword().getResetPasswordExpirationDays();
   }
   
   @Async(EventConfig.ASYNC_TASK_EXECUTOR_BEAN)
