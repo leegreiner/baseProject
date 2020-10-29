@@ -1,5 +1,6 @@
 package edu.duke.rs.baseProject.config;
 
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -276,7 +277,7 @@ public class WebSecurityConfig {
 	
 	@Bean
   public static PasswordEncoder passwordEncoder() {
-      return new BCryptPasswordEncoder();
+      return new BCryptPasswordEncoder(10, new SecureRandom());
   }
 	
 	//used to inject http request
