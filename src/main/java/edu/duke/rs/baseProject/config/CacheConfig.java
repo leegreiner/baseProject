@@ -11,6 +11,8 @@ import org.springframework.util.StringUtils;
 @Configuration
 @EnableCaching
 public class CacheConfig {
+  public static final String BRUTE_FORCE_AUTHENTICATION_CACHE = "bruteForceAuthenticationCache";
+      
   @Bean("methodNameAndParametersKeyGenerator")
   public KeyGenerator keyGenerator() {
     return new MethodNameAndParametersKeyGenerator();

@@ -29,11 +29,14 @@
   </appender>
 
   <root level="INFO">
-    <appender-ref ref="APPLICATION" />
+    <appender-ref ref="CONSOLE" />
   </root>
 
   <springProfile name="local">
     <logger name="edu.duke.rs.baseProject" level="DEBUG" additivity="false">
+      <appender-ref ref="CONSOLE" />
+    </logger>
+    <logger name="org.hibernate.stat" level="DEBUG" additivity="false">
       <appender-ref ref="CONSOLE" />
     </logger>
   </springProfile>

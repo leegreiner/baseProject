@@ -82,5 +82,7 @@ public class ApplicationProperties {
   public static class Hazelcast {
     private String instanceName;
     private int multicastPort;
+    private int bruteForceTtlSeconds;
+    private int bruteForceSize;
   }
 }

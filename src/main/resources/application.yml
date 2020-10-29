@@ -150,6 +150,8 @@ app:
   hazelcast:
     instanceName: baseProject-hazelcast-instance
     multicastPort: 5702
+    bruteForceTtlSeconds: 86400
+    bruteForceSize: 10000
   kubernetes:
     hazelcastDiscoveryService: baseProject-hazelcast-service
     namespace: baseProject
@@ -161,6 +163,7 @@ app:
   resetPasswordExpirationDays: 2
   security:
     disableUnusedAccountsGreaterThanMonths: 12
+    maxBruteForceAttempts: 5
     numberOfLoginAttemptFailuresBeforeTemporaryLock: 3
     temporaryLockSeconds: 300
     password:
@@ -215,7 +218,7 @@ logging:
   level:
 #    org.hibernate.type.descriptor.sql: trace
 #    com.hazelcast: debug
-    edu.duke.drc: debug
+    edu.duke.drc.baseProject: debug
     org.springframework.cache: trace
     org.hibernate.stat: debug
 #    org.springframework.cache: trace

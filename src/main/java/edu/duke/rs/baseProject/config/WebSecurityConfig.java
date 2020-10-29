@@ -35,6 +35,7 @@ import org.springframework.security.web.authentication.logout.HeaderWriterLogout
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter;
 import org.springframework.security.web.header.writers.ClearSiteDataHeaderWriter.Directive;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.context.request.RequestContextListener;
 
 import com.github.ulisesbocchio.spring.boot.security.saml.bean.SAMLConfigurerBean;
 
@@ -277,4 +278,10 @@ public class WebSecurityConfig {
   public static PasswordEncoder passwordEncoder() {
       return new BCryptPasswordEncoder();
   }
+	
+	//used to inject http request
+  @Bean 
+  public RequestContextListener requestContextListener(){
+    return new RequestContextListener();
+  } 
 }

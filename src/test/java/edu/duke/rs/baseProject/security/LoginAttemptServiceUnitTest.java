@@ -15,19 +15,35 @@ import static org.mockito.Mockito.when;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.cache.Cache;
+import org.springframework.cache.Cache.ValueWrapper;
+import org.springframework.cache.CacheManager;
 
+import edu.duke.rs.baseProject.config.CacheConfig;
 import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
 
 public class LoginAttemptServiceUnitTest {
+  private static final String IP_ADDRESS = "1.1.1.1";
+  private static final Integer MAX_BRUTE_FORCE_ATTEMPTS = 3;
   @Mock
   private SecurityProperties securityProperties;
   @Mock
   private UserRepository userRepository;
+  @Mock
+  private HttpServletRequest httpServletRequest;
+  @Mock
+  private CacheManager cacheManager;
+  @Mock
+  private Cache cache;
+  @Mock
+  private ValueWrapper valueWrapper;
   private LoginAttemptServiceImpl loginAttemptService;
   
   @BeforeEach
@@ -35,18 +51,42 @@ public class LoginAttemptServiceUnitTest {
     MockitoAnnotations.initMocks(this);
     when(securityProperties.getNumberOfLoginAttemptFailuresBeforeTemporaryLock()).thenReturn(3);
     when(securityProperties.getTemporaryLockSeconds()).thenReturn(300);
-    loginAttemptService = new LoginAttemptServiceImpl(userRepository, securityProperties);
+    when(securityProperties.getMaxBruteForceAttempts()).thenReturn(MAX_BRUTE_FORCE_ATTEMPTS);
+    when(cacheManager.getCache(CacheConfig.BRUTE_FORCE_AUTHENTICATION_CACHE)).thenReturn(cache);
+    when(httpServletRequest.getRemoteAddr()).thenReturn(IP_ADDRESS);
+    loginAttemptService = new LoginAttemptServiceImpl(userRepository, httpServletRequest, cacheManager, securityProperties);
   }
   
   @Test
-  public void whenLoginFailedAndUserNotFound_thenNothingIsDone() {
+  public void whenLoginFailedUserNotFoundAndIpNotInCache_thenIpAddedToBruteForceCache() {
     final String userName = "abc";
     when(userRepository.findByUsernameIgnoreCase(userName)).thenReturn(Optional.empty());
+    when(cache.get(IP_ADDRESS)).thenReturn(null);
     
     this.loginAttemptService.loginFailed(userName);
     
     verify(userRepository, times(1)).findByUsernameIgnoreCase(userName);
+    verify(cache, times(1)).get(IP_ADDRESS);
+    verify(cache, times(1)).put(IP_ADDRESS, Integer.valueOf(1));
     verifyNoMoreInteractions(userRepository);
+    verifyNoMoreInteractions(cache);
+  }
+  
+  @Test
+  public void whenLoginFailedUserNotFoundAndIpInCache_thenCachedBruteForceIpCountIncremented() {
+    final String userName = "abc";
+    final Integer cacheValue = Integer.valueOf(1);
+    when(userRepository.findByUsernameIgnoreCase(userName)).thenReturn(Optional.empty());
+    when(cache.get(IP_ADDRESS)).thenReturn(valueWrapper);
+    when(valueWrapper.get()).thenReturn(cacheValue);
+    
+    this.loginAttemptService.loginFailed(userName);
+    
+    verify(userRepository, times(1)).findByUsernameIgnoreCase(userName);
+    verify(cache, times(1)).get(IP_ADDRESS);
+    verify(cache, times(1)).put(IP_ADDRESS, cacheValue + 1);
+    verifyNoMoreInteractions(userRepository);
+    verifyNoMoreInteractions(cache);
   }
   
   @Test
@@ -76,6 +116,7 @@ public class LoginAttemptServiceUnitTest {
     assertThat(user.getLastLoggedIn(), nullValue());
     verify(userRepository, times(1)).findByUsernameIgnoreCase(userName);
     verifyNoMoreInteractions(userRepository);
+    verifyNoMoreInteractions(cache);
   }
   
   @Test
@@ -96,8 +137,7 @@ public class LoginAttemptServiceUnitTest {
     assertThat(user.getLastLoggedIn(), nullValue());
     verify(userRepository, times(1)).findByUsernameIgnoreCase(userName);
     verifyNoMoreInteractions(userRepository);
-    
-  
+    verifyNoMoreInteractions(cache);
   }
   
   @Test
@@ -109,6 +149,7 @@ public class LoginAttemptServiceUnitTest {
     
     verify(userRepository, times(1)).findByUsernameIgnoreCase(userName);
     verifyNoMoreInteractions(userRepository);
+    verifyNoMoreInteractions(cache);
   }
   
   @Test
@@ -125,7 +166,9 @@ public class LoginAttemptServiceUnitTest {
     assertThat(user.getInvalidLoginAttempts(), nullValue());
     assertThat(user.getLastLoggedIn(), notNullValue());
     verify(userRepository, times(1)).findByUsernameIgnoreCase(userName);
+    verify(cache, times(1)).evictIfPresent(IP_ADDRESS);
     verifyNoMoreInteractions(userRepository);
+    verifyNoMoreInteractions(cache);
   }
   
   @Test
@@ -154,5 +197,54 @@ public class LoginAttemptServiceUnitTest {
     when(userRepository.findByUsernameIgnoreCase(any(String.class))).thenReturn(Optional.of(user));
     
     assertThat(loginAttemptService.isBlocked(user), is(false));
+  }
+  
+  @Test
+  public void whenXForwardedForIsPresent_thenXForwaredIpUsed() {
+    final String userName = "abc";
+    final String xforwardedForIp = "2.2.2.2";
+    when(userRepository.findByUsernameIgnoreCase(userName)).thenReturn(Optional.empty());
+    when(httpServletRequest.getHeader("X-Forwarded-For")).thenReturn(xforwardedForIp);
+    when(cache.get(IP_ADDRESS)).thenReturn(null);
+    
+    this.loginAttemptService.loginFailed(userName);
+    
+    verify(userRepository, times(1)).findByUsernameIgnoreCase(userName);
+    verify(cache, times(1)).get(xforwardedForIp);
+    verify(cache, times(1)).put(xforwardedForIp, Integer.valueOf(1));
+    verifyNoMoreInteractions(userRepository);
+    verifyNoMoreInteractions(cache);
+  }
+  
+  @Test
+  public void whenClientIpNotInCache_thenIsClientIpBlockedIsFalse() {
+    when(cache.get(IP_ADDRESS)).thenReturn(null);
+    
+    assertThat(this.loginAttemptService.isClientIpBlocked(), is(false));
+    
+    verify(cache, times(1)).get(IP_ADDRESS);
+    verifyNoMoreInteractions(cache);
+  }
+  
+  @Test
+  public void whenClientIpInCacheAndAttemptsLessThanMax_thenIsClientIpBlockedIsFalse() {
+    when(cache.get(IP_ADDRESS)).thenReturn(valueWrapper);
+    when(valueWrapper.get()).thenReturn(MAX_BRUTE_FORCE_ATTEMPTS - 1);
+    
+    assertThat(this.loginAttemptService.isClientIpBlocked(), is(false));
+    
+    verify(cache, times(1)).get(IP_ADDRESS);
+    verifyNoMoreInteractions(cache);
+  }
+  
+  @Test
+  public void whenClientIpInCacheAndAttemptsEqualToMax_thenIsClientIpBlockedIsTrue() {
+    when(cache.get(IP_ADDRESS)).thenReturn(valueWrapper);
+    when(valueWrapper.get()).thenReturn(MAX_BRUTE_FORCE_ATTEMPTS);
+    
+    assertThat(this.loginAttemptService.isClientIpBlocked(), is(true));
+    
+    verify(cache, times(1)).get(IP_ADDRESS);
+    verifyNoMoreInteractions(cache);
   }
 }

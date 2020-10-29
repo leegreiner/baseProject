@@ -14,6 +14,7 @@ public class SecurityProperties {
   private int numberOfLoginAttemptFailuresBeforeTemporaryLock;
   private int temporaryLockSeconds;
   private Password password;
+  private int maxBruteForceAttempts;
   
   @Getter
   @Setter

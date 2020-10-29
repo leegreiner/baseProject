@@ -19,15 +19,19 @@ import com.hazelcast.config.MaxSizeConfig;
 public class HazelcastConfig {
   private static final Integer PARTITION_COUNT = 271;
   private final String namespace;
-  private final String hazelcastDiscoveryService;
+  private final String discoveryService;
   private final String instanceName;
-  private final int hazelcastMulticastPort;
+  private final int multicastPort;
+  private final int bruteForceTtlSeconds;
+  private final int bruteForceSize;
   
   public HazelcastConfig(final ApplicationProperties applicationProperties) {
     this.namespace = applicationProperties.getKubernetes().getNamespace();
-    this.hazelcastDiscoveryService = applicationProperties.getKubernetes().getHazelcastDiscoveryService();
+    this.discoveryService = applicationProperties.getKubernetes().getHazelcastDiscoveryService();
     this.instanceName = applicationProperties.getHazelcast().getInstanceName();
-    this.hazelcastMulticastPort = applicationProperties.getHazelcast().getMulticastPort();
+    this.multicastPort = applicationProperties.getHazelcast().getMulticastPort();
+    this.bruteForceTtlSeconds = applicationProperties.getHazelcast().getBruteForceTtlSeconds();
+    this.bruteForceSize = applicationProperties.getHazelcast().getBruteForceSize();
   }
   
   @Bean
@@ -36,7 +40,7 @@ public class HazelcastConfig {
     final Config config = this.hazelcastBaseConfig();
     
     config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(true);
-    config.getNetworkConfig().getJoin().getMulticastConfig().setMulticastPort(this.hazelcastMulticastPort);
+    config.getNetworkConfig().getJoin().getMulticastConfig().setMulticastPort(this.multicastPort);
     
     return config;
   }
@@ -50,7 +54,7 @@ public class HazelcastConfig {
         config.getNetworkConfig().getJoin().getMulticastConfig().setEnabled(false);
         config.getNetworkConfig().getJoin().getKubernetesConfig().setEnabled(true)
                 .setProperty("namespace", this.namespace)
-                .setProperty("service-name", this.hazelcastDiscoveryService);
+                .setProperty("service-name", this.discoveryService);
     
     return config;
   }
@@ -61,11 +65,10 @@ public class HazelcastConfig {
     config.getMapConfig(HazelcastIndexedSessionRepository.DEFAULT_SESSION_MAP_NAME)
       .addMapAttributeConfig(springSessionAttributeConfig()).addMapIndexConfig(
         new MapIndexConfig(HazelcastIndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE, false));
-
-    config.addMapConfig(roleMapConfig());
+    config.addMapConfig(bruteForceLoginMapConfig());
     
     return config;
-  } 
+  }
   
   private MapAttributeConfig springSessionAttributeConfig() {
     return new MapAttributeConfig()
@@ -73,10 +76,10 @@ public class HazelcastConfig {
         .setExtractor(PrincipalNameExtractor.class.getName());
   }
   
-  private MapConfig roleMapConfig() {
-    return new MapConfig().setName("role")
-        .setTimeToLiveSeconds(0)
-        .setMaxSizeConfig(new MaxSizeConfig(PARTITION_COUNT + 50, MaxSizeConfig.MaxSizePolicy.PER_NODE))
+  private MapConfig bruteForceLoginMapConfig() {
+    return new MapConfig().setName(CacheConfig.BRUTE_FORCE_AUTHENTICATION_CACHE)
+        .setTimeToLiveSeconds(this.bruteForceTtlSeconds)
+        .setMaxSizeConfig(new MaxSizeConfig(PARTITION_COUNT + this.bruteForceSize, MaxSizeConfig.MaxSizePolicy.PER_NODE))
         .setEvictionPolicy(EvictionPolicy.LRU);
   }
 }

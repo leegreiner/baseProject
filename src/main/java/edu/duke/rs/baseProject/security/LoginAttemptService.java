@@ -9,7 +9,8 @@ import edu.duke.rs.baseProject.user.User;
 
 @Validated
 public interface LoginAttemptService {
-  void loginFailed(@NotBlank final String key);
-  void loginSucceeded(@NotBlank final String key);
-  boolean isBlocked(@NotNull final User user);
+  void loginFailed(@NotBlank String username);
+  void loginSucceeded(@NotBlank String username);
+  boolean isBlocked(@NotNull User user);
+  boolean isClientIpBlocked();
 }
