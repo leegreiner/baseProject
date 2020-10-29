@@ -135,7 +135,7 @@ public class UserServiceImpl implements UserService {
     user.setFirstName(userDto.getFirstName().trim());
     user.setMiddleInitial(userDto.getMiddleInitial());
     user.setLastName(userDto.getLastName().trim());
-    user.setPassword(this.passwordGenerator.generate());
+    user.setPassword(this.passwordGenerator.generate()); // set to a password that can't be hashed
     user.setTimeZone(userDto.getTimeZone());
     user.setUsername(userDto.getUsername().trim());
     passwordResetService.initiatePasswordReset(user);
