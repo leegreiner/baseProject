@@ -41,6 +41,7 @@ spring:
         default_schema: baseapp
         jdbc:
           lob:
+            # Fix Postgres JPA Error (Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented).
             non_contextual_creation: true
         show_sql: false
       javax:

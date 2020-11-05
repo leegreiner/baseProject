@@ -19,14 +19,16 @@ import javax.validation.constraints.Size;
 import org.hibernate.envers.Audited;
 
 import edu.duke.rs.baseProject.model.BaseEntity;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @RequiredArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
