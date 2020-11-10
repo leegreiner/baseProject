@@ -37,7 +37,7 @@ public class BaseEntity {
   private LocalDateTime lastModifiedDate;
   
   @Getter
-  @Column(name = "alternate_id", nullable = false, updatable = false)
+  @Column(name = "alternate_id", nullable = false, updatable = false, unique = true)
   @Include
   private UUID alternateId = UUID.randomUUID();
   

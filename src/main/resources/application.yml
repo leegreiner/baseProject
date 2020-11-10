@@ -205,7 +205,7 @@ saml:
      
   jpa:    show-sql: true
     hibernate:      ddl-auto: create-drop
-    open-in-view: true # needed for audit history
+    open-in-view: false # needed for audit history
     properties:      hibernate:
         format_sql: true
         generate_statistics: true
@@ -250,6 +250,9 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.H2Dialect
         default_schema:
+        javax:
+          cache:
+            uri: ehcache.xml
         
   mail:
     host: localhost

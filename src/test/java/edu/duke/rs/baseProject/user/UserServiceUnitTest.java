@@ -6,6 +6,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -166,12 +167,13 @@ public class UserServiceUnitTest {
     final User user = new User();
     user.setId(Long.valueOf(1));
     user.setUsername("abc");
-    when(userRepository.findByAlternateId(user.getAlternateId())).thenReturn(Optional.of(user));
+    when(userRepository.findByAlternateId(eq(user.getAlternateId()),
+        org.mockito.ArgumentMatchers.any(String.class))).thenReturn(Optional.of(user));
     
     final User retrievedUser = service.getUser(user.getAlternateId());
     
     assertThat(retrievedUser, equalTo(user));
-    verify(userRepository, times(1)).findByAlternateId(user.getAlternateId());
+    verify(userRepository, times(1)).findByAlternateId(eq(user.getAlternateId()), any(String.class));
     verifyNoMoreInteractions(userRepository);
   }
   
@@ -362,7 +364,7 @@ public class UserServiceUnitTest {
     when(appPrincipal.getAlternateUserId()).thenReturn(UUID.randomUUID());
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.empty());
-    when(userRepository.findByAlternateId(userDto.getId())).thenReturn(Optional.empty());
+    when(userRepository.findByAlternateId(eq(userDto.getId()), any(String.class))).thenReturn(Optional.empty());
     
     assertThrows(NotFoundException.class, () -> service.save(userDto));
   }
@@ -401,7 +403,8 @@ public class UserServiceUnitTest {
     when(appPrincipal.getAlternateUserId()).thenReturn(UUID.randomUUID());
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.empty());
-    when(userRepository.findByAlternateId(userDto.getId())).thenReturn(Optional.of(foundUser));
+    when(userRepository.findByAlternateId(eq(userDto.getId()),
+        org.mockito.ArgumentMatchers.any(String.class))).thenReturn(Optional.of(foundUser));
     when(roleRepository.findByName(role.getName())).thenReturn(Optional.of(role));
     when(userRepository.save(any(User.class))).thenAnswer(new Answer<User>() {
       @Override
@@ -427,7 +430,7 @@ public class UserServiceUnitTest {
     assertThat(actual.getUsername(), equalTo(username));
     
     verify(userRepository, times(1)).findByEmailIgnoreCase(userDto.getEmail());
-    verify(userRepository, times(1)).findByAlternateId(userDto.getId());
+    verify(userRepository, times(1)).findByAlternateId(eq(userDto.getId()), any(String.class));
     verify(roleRepository, times(1)).findByName(role.getName());
     verify(userRepository, times(1)).save(any(User.class));
     verify(eventPublisher, times(1)).publishEvent(ArgumentMatchers.<UpdatedEvent<User>>any());

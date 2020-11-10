@@ -66,7 +66,7 @@ import lombok.ToString;
   }
 )
 @NamedEntityGraphs({
-  @NamedEntityGraph(name = "user.userAndRoles", attributeNodes = {
+  @NamedEntityGraph(name = UserConstants.USER_AND_ROLES_ENTITY_GRAPH, attributeNodes = {
       @NamedAttributeNode("roles")
   })
 })

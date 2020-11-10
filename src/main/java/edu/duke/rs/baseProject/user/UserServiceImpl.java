@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService {
   
   @Override
   public User getUser(final UUID  userId) {
-    return userRepository.findByAlternateId(userId)
+    return userRepository.findByAlternateId(userId, UserConstants.USER_AND_ROLES_ENTITY_GRAPH)
         .orElseThrow(() -> new NotFoundException("error.userNotFound", new Object[] {userId}));
   }
   

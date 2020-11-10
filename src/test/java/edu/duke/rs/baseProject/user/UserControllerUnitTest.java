@@ -180,7 +180,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     user.setUsername("abc");
     when(userService.getUser(user.getAlternateId())).thenThrow(new NullPointerException());
     
-    final MvcResult result = this.mockMvc.perform(get(UserController.USER_MAPPING, user.getId())
+    final MvcResult result = this.mockMvc.perform(get(UserController.USER_MAPPING, user.getAlternateId())
         .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(ExceptionController.EXCEPTION_ERROR_VIEW))

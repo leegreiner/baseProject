@@ -10,9 +10,14 @@ import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.support.DatabaseStartupValidator;
 
+import edu.duke.rs.baseProject.repository.ExtendedJpaRepositoryImpl;
+
 @Configuration
+@EnableJpaRepositories(basePackages = "edu.duke.rs.baseProject",
+  repositoryBaseClass = ExtendedJpaRepositoryImpl.class)
 @EnableJpaAuditing
 public class JpaConfig {
   @Value("${spring.datasource.hikari.connection-test-query:select 1 from dual}")

@@ -7,23 +7,21 @@ import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
-import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import edu.duke.rs.baseProject.repository.ExtendedJpaRepository;
+
 @Repository
-public interface UserRepository extends JpaRepository<User, Long> {
+public interface UserRepository extends ExtendedJpaRepository<User, Long> {
 	Page<UserListItem> findByLastNameStartingWithIgnoreCase(String lastName, Pageable pageable);
 	Page<UserListItem> findAllBy(Pageable pageable);
 	
-	@EntityGraph("user.userAndRoles")
+	@EntityGraph(UserConstants.USER_AND_ROLES_ENTITY_GRAPH)
 	Optional<User> findByUsernameIgnoreCase(String username);
 	Optional<User> findByEmailIgnoreCase(String email);
 	Optional<User> findByPasswordChangeId(UUID passwordChangeId);
-	
-	@EntityGraph("user.userAndRoles")
-	Optional<User> findByAlternateId(UUID alternateId);
 	
 	@Modifying
 	void expirePasswordChangeIds(@Param("time") LocalDateTime time);

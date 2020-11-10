@@ -22,6 +22,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @Configuration
 public class TomcatConfig implements WebServerFactoryCustomizer<TomcatServletWebServerFactory> {
+  private static final long TOMCAT_THREAD_TIMEOUT_SECONDS = 60;
   @Value("${server.port:8080}")
   private int serverPort;
   @Value("${server.ssl.enabled:false}")
@@ -73,16 +74,16 @@ public class TomcatConfig implements WebServerFactoryCustomizer<TomcatServletWeb
       final Executor executor = this.connector.getProtocolHandler().getExecutor();
       
       if (executor instanceof ThreadPoolExecutor) {
-          try {
-              ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) executor;
-              threadPoolExecutor.shutdown();
-              if (!threadPoolExecutor.awaitTermination(60, TimeUnit.SECONDS)) {
-                  log.warn("Tomcat thread pool did not shut down gracefully within "
-                          + "60 seconds. Proceeding with forceful shutdown");
-              }
-          } catch (InterruptedException ex) {
-              Thread.currentThread().interrupt();
-          }
+        try {
+            ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) executor;
+            threadPoolExecutor.shutdown();
+            if (!threadPoolExecutor.awaitTermination(TOMCAT_THREAD_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
+                log.warn("Tomcat thread pool did not shut down gracefully within "
+                        + TOMCAT_THREAD_TIMEOUT_SECONDS + " seconds. Proceeding with forceful shutdown");
+            }
+        } catch (InterruptedException ex) {
+            Thread.currentThread().interrupt();
+        }
       }
       
       hazelcastInstance.shutdown();

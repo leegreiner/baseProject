@@ -219,7 +219,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
         .andExpect(status().isFound())
         .andReturn();
     
-    final User actual = userRepository.findByAlternateId(user.getAlternateId())
+    final User actual = userRepository.findByAlternateId(user.getAlternateId(), UserConstants.USER_AND_ROLES_ENTITY_GRAPH)
         .orElseThrow(() -> new NotFoundException());
 
     assertThat(result.getResponse().getRedirectedUrl(),
