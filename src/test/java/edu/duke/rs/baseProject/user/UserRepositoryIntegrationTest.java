@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -29,8 +28,6 @@ import edu.duke.rs.baseProject.role.RoleName;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
-  @Autowired
-  private TestEntityManager entityManager;
   @Autowired
   private UserRepository userRepository;
   
@@ -47,17 +44,17 @@ public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
   
   @Test
   public void whenFindByUserNameStartingWithIgnoreCaseUsers_thenReturnUsers() {
-    final Role role = entityManager.persist(new Role(RoleName.USER));
+    final Role role = testEntityManager.persist(new Role(RoleName.USER));
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
     
     User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
-    user1 = entityManager.persist(user1);
+    user1 = testEntityManager.persist(user1);
     User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
-    user2 = entityManager.persist(user2);
+    user2 = testEntityManager.persist(user2);
     User user3 = new User("jimmyjohnson", "password", "Jimmy", "Johnson","jimmyJohnson@gmail.com", roles);
-    user3 = entityManager.persistAndFlush(user3);
-    entityManager.clear();
+    user3 = testEntityManager.persistAndFlush(user3);
+    testEntityManager.clear();
     
     final Page<UserListItem> page = userRepository.findByLastNameStartingWithIgnoreCase(
         "j", PageRequest.of(0, 10, Sort.by(Sort.Direction.ASC, "lastName")));
@@ -78,20 +75,20 @@ public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
   @Test
   public void whenExpirePasswordChangeIds_thenUserPasswordResetFieldsAreNulled() {
     final LocalDateTime now = LocalDateTime.now();
-    final Role role = entityManager.persist(new Role(RoleName.USER));
+    final Role role = testEntityManager.persist(new Role(RoleName.USER));
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
     User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
     user1.setPasswordChangeId(UUID.randomUUID());
     user1.setPasswordChangeIdCreationTime(now.minusDays(3));
-    user1 = entityManager.persist(user1);
+    user1 = testEntityManager.persist(user1);
     User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
     user2.setPasswordChangeId(UUID.randomUUID());
     user2.setPasswordChangeIdCreationTime(now.minusDays(1));
-    user2 = entityManager.persistAndFlush(user2);
+    user2 = testEntityManager.persistAndFlush(user2);
     
     this.userRepository.expirePasswordChangeIds(now.minusDays(2));
-    entityManager.clear();
+    testEntityManager.clear();
     
     user1 = this.userRepository.getOne(user1.getId());
     assertThat(user1.getPasswordChangeId(), nullValue());
@@ -103,20 +100,20 @@ public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
   
   @Test
   public void whenDisableUnusedAccounts_thenUnusedAccountsDisabled() {
-    final Role role = entityManager.persist(new Role(RoleName.USER));
+    final Role role = testEntityManager.persist(new Role(RoleName.USER));
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
     User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
     user1.setLastLoggedIn(LocalDateTime.now().minusYears(1).minusMinutes(1));
     user1.setAccountEnabled(true);
-    entityManager.persist(user1);
+    testEntityManager.persist(user1);
     User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
     user2.setLastLoggedIn(LocalDateTime.now().minusYears(1).plusMinutes(1));
     user2.setAccountEnabled(true);
-    user2 = entityManager.persistAndFlush(user2);
+    user2 = testEntityManager.persistAndFlush(user2);
     
     this.userRepository.disableUnusedAccounts(LocalDateTime.now().minusYears(1));
-    entityManager.clear();
+    testEntityManager.clear();
     
     user1 = this.userRepository.findById(user1.getId()).get();
     user2 = this.userRepository.findById(user2.getId()).get();

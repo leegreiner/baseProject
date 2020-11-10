@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import edu.duke.rs.baseProject.AbstractRepositoryTest;
@@ -26,8 +25,6 @@ import edu.duke.rs.baseProject.user.UserRepository;
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 public class ExtendedJpaRepositoryIntegrationTest extends AbstractRepositoryTest {
-  @Autowired
-  private TestEntityManager entityManager;
   @Autowired
   private UserRepository userRepository;
   @Autowired
@@ -54,12 +51,12 @@ public class ExtendedJpaRepositoryIntegrationTest extends AbstractRepositoryTest
   
   @Test
   public void whenFindByAlternateIdIsFound_thenReturnsEntity() {
-    final Role role = entityManager.persist(new Role(RoleName.USER));
+    final Role role = testEntityManager.persist(new Role(RoleName.USER));
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
     
     User user = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
-    user = entityManager.persistAndFlush(user);
+    user = testEntityManager.persistAndFlush(user);
     
     Optional<User> userOptional = this.userRepository.findByAlternateId(user.getAlternateId());
     
