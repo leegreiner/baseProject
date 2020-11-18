@@ -143,7 +143,7 @@ public class WebSecurityConfig {
         .and()
           .authorizeRequests()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-            .antMatchers("/", "/error/**", "/webfonts/**", "/img/**", "/loginPage", "/users/pwdreset").permitAll()
+            .antMatchers("/", "/error/**", "/webfonts/**", "/img/**", "/loginPage", "/users/pwdreset", "/i18n/**").permitAll()
             .antMatchers("/users/**").hasRole(RoleName.ADMINISTRATOR.name())
             .anyRequest().authenticated()
         .and()
