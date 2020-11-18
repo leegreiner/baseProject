@@ -1,3 +1,5 @@
+'use strict';
+
 var BP_GLOBALS = (function() {
   var my = {}
   
@@ -13,6 +15,13 @@ var BP_GLOBALS = (function() {
 }());
 
 $(document).ready(function() {
+  $.i18n({
+      locale: 'en'
+  });
+  $.i18n().load({
+    'en': 'i18n/en.json'
+  });
+
   if ($.fn.dataTable && $.fn.dataTable.moment) {
     $.fn.dataTable.moment(BP_GLOBALS.getDateTimeFormat());
   }

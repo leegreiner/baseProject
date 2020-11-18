@@ -59,7 +59,15 @@ spring:
   mail:
     default-encoding: UTF-8
     host: smtpgw.duhs.duke.edu
+  
+  main:
+    banner-mode: 'off'
     
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
+        
   quartz:    job-store-type: jdbc
     overwrite-existing-jobs: true
     jdbc:      initialize-schema: always
@@ -73,19 +81,16 @@ spring:
             isClustered: true
           scheduler:
             instanceId: AUTO
-    
-  main:
-    banner-mode: 'off'
-    
-  mvc:
-    hiddenmethod:
-      filter:
-        enabled: true
         
   resources:
     cache:
       cachecontrol:
-        max-age: 8h    
+        max-age: 8h  
+    chain:
+      strategy:
+        content:
+          enabled: true
+          paths: /**
          
   messages:    basename: i18n/messages
              
