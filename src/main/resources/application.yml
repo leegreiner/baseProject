@@ -4,13 +4,12 @@ spring:
   datasource:
     continue-on-error: true
     initialization-mode: never
-    platform: postgresql
-    url: jdbc:postgresql://localhost:5432/devdb?currentSchema=baseapp
-    username: lmg
+    platform: oracle
+    url: jdbc:oracle:thin:@//localhost:1521/ORCLPDB1
+    username: baseapp
     password: 'tta&cno2'
     hikari:      auto-commit: false
-# select 1 from dual for Oracle
-      connection-test-query: select 1
+      connection-test-query: select 1 from dual
       connection-timeout: 30000
       idle-timeout: 600000
       max-lifetime: 1800000
@@ -37,12 +36,12 @@ spring:
             uri: classpath:ehcache.xml
         connection:
           provider_disables_autocommit: true
-        dialect: org.hibernate.dialect.PostgreSQL94Dialect
+        dialect: org.hibernate.dialect.Oracle10gDialect
         default_schema: baseapp
-        jdbc:
-          lob:
+#        jdbc:
+#          lob:
             # Fix Postgres JPA Error (Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented).
-            non_contextual_creation: true
+#            non_contextual_creation: true
         show_sql: false
       javax:
         persistence:
@@ -77,7 +76,7 @@ spring:
         quartz:
           jobStore:
             clusterCheckinInterval: 20000
-            driverDelegateClass: org.quartz.impl.jdbcjobstore.PostgreSQLDelegate
+            driverDelegateClass: org.quartz.impl.jdbcjobstore.oracle.OracleDelegate
             isClustered: true
           scheduler:
             instanceId: AUTO

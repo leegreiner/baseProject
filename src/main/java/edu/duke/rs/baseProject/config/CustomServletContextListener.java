@@ -30,7 +30,7 @@ public class CustomServletContextListener implements ServletContextListener {
   @Override
   public void contextDestroyed(final ServletContextEvent sce) {
     log.debug("Servlet context destruction detected");
-    
+/*    
     final Enumeration<Driver> drivers = DriverManager.getDrivers();
     
     while (drivers.hasMoreElements()) {
@@ -43,7 +43,7 @@ public class CustomServletContextListener implements ServletContextListener {
             log.error(String.format("Error deregistering driver %s", driver), sqlException);
         }
     }
-    
+*/    
     this.hazelcastInstance.shutdown();
   }
 }

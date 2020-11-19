@@ -19,7 +19,7 @@ $(document).ready(function() {
       locale: 'en'
   });
   $.i18n().load({
-    'en': 'i18n/en.json'
+    'en': '/i18n/en.json'
   });
 
   if ($.fn.dataTable && $.fn.dataTable.moment) {

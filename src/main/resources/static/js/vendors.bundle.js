@@ -24063,7 +24063,6 @@ return Popper;
   Object.defineProperty(exports, '__esModule', { value: true });
 
 })));
-//# sourceMappingURL=bootstrap.js.map
 
 /*! @preserve
  * bootbox.js
