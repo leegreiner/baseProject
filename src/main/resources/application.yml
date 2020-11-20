@@ -54,6 +54,7 @@ spring:
   
   liquibase:
     change-log: classpath:/liquibase/changelog/changelog-master.xml
+    tag: "@project.version@"
               
   mail:
     default-encoding: UTF-8
@@ -69,7 +70,6 @@ spring:
         
   quartz:    job-store-type: jdbc
     overwrite-existing-jobs: true
-    jdbc:      initialize-schema: always
     scheduler-name: baseProjectScheduler
     startup-delay: 20
     properties:      org:
