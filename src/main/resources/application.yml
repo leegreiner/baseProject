@@ -36,7 +36,7 @@ spring:
             uri: classpath:ehcache.xml
         connection:
           provider_disables_autocommit: true
-        dialect: org.hibernate.dialect.Oracle10gDialect
+        dialect: org.hibernate.dialect.Oracle12cDialect
         default_schema: baseapp
 #        jdbc:
 #          lob:
