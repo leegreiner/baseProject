@@ -33,7 +33,6 @@ public class JpaConfig {
       dsv.setDataSource(dataSource);
       dsv.setInterval(startupValidationInterval);
       dsv.setTimeout(startupValidationTimeout);
-      dsv.setValidationQuery(validationQuery);
       return dsv;
   }
   

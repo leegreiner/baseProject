@@ -51,7 +51,7 @@ public class PasswordResetServiceUnitTest {
   
   @BeforeEach
   public void init() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     when(applicationProperties.getSecurity().getPassword().getResetPasswordExpirationDays()).thenReturn(EXPIRATION_DAYS);
     when(applicationProperties.getSecurity().getPassword().getHistorySize()).thenReturn(PASSWORD_HISTORY_SIZE);
     service = new PasswordResetServiceImpl(userRepository, passwordEncoder, eventPublisher, securityUtils, applicationProperties);

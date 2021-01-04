@@ -27,7 +27,7 @@ public class BaseWebControllerUnitTest {
   
   @BeforeEach
   public void init() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     baseWebController = new TestBaseWebController(messageSource);
   }
 

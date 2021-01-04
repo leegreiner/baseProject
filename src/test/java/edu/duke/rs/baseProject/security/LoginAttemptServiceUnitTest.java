@@ -48,7 +48,7 @@ public class LoginAttemptServiceUnitTest {
   
   @BeforeEach
   public void init() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     when(securityProperties.getNumberOfLoginAttemptFailuresBeforeTemporaryLock()).thenReturn(3);
     when(securityProperties.getTemporaryLockSeconds()).thenReturn(300);
     when(securityProperties.getMaxBruteForceAttempts()).thenReturn(MAX_BRUTE_FORCE_ATTEMPTS);

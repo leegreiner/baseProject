@@ -23,7 +23,7 @@ public class AuthenticationFailureBadCredentailEventListenerUnitTest {
   
   @BeforeEach
   public void init() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     listener = new AuthenticationFailureBadCredentialsListener(loginAttemptService);
   }
   

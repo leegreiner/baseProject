@@ -30,7 +30,7 @@ public class PasswordResetInititatedProcessorUnitTest {
   
   @BeforeEach
   public void init() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     final ApplicationProperties applicationProperties = new ApplicationProperties();
     applicationProperties.setUrl(URL);
     applicationProperties.getSecurity().getPassword().setResetPasswordExpirationDays(RESET_PASSWORD_EXPIRATION_DAYS);

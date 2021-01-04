@@ -1,10 +1,21 @@
 package edu.duke.rs.baseProject.config;
 
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.Map;
+
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
+import javax.sql.DataSource;
+
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.hazelcast.core.HazelcastInstance;
+import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,12 +31,23 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @WebListener
 public class CustomServletContextListener implements ServletContextListener {
-  private final HazelcastInstance hazelcastInstance;
+  private Map<String, HazelcastInstance> hazelcastInstances;
+  private Map<String, DataSource> datasources;
+  
+  @Override
+  public void contextInitialized(final ServletContextEvent event) {
+    final WebApplicationContext springContext = WebApplicationContextUtils.getWebApplicationContext(event.getServletContext());
+    
+    if (springContext != null) {
+      hazelcastInstances = springContext.getBeansOfType(HazelcastInstance.class);
+      datasources = springContext.getBeansOfType(DataSource.class);
+    }
+  }
   
   @Override
   public void contextDestroyed(final ServletContextEvent sce) {
-    log.debug("Servlet context destruction detected");
-/*    
+    this.datasources.forEach((key, dataSource) -> ((HikariDataSource) dataSource).close());
+    
     final Enumeration<Driver> drivers = DriverManager.getDrivers();
     
     while (drivers.hasMoreElements()) {
@@ -38,7 +60,7 @@ public class CustomServletContextListener implements ServletContextListener {
             log.error(String.format("Error deregistering driver %s", driver), sqlException);
         }
     }
-*/    
-    this.hazelcastInstance.shutdown();
+    
+    this.hazelcastInstances.forEach((key, hazelcastInstance) -> hazelcastInstance.shutdown());
   }
 }

@@ -32,7 +32,7 @@ public class NewSamlUserCreatedEventProcessorUnitTest {
   
   @BeforeEach
   public void init() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     processor = new NewSamlUserCreatedEventProcessor(emailService, messageSource);
     processor.setApplicationUrl(URL);
   }

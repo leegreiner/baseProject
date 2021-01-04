@@ -30,7 +30,7 @@ public class SecurityUtilsUnitTest {
   
   @BeforeEach
   public void init() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     SecurityContextHolder.setContext(securityContext);
   }
   

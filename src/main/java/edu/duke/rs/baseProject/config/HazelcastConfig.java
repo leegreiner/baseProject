@@ -3,16 +3,19 @@ package edu.duke.rs.baseProject.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
+import org.springframework.session.hazelcast.Hazelcast4IndexedSessionRepository;
+import org.springframework.session.hazelcast.Hazelcast4PrincipalNameExtractor;
 import org.springframework.session.hazelcast.HazelcastIndexedSessionRepository;
-import org.springframework.session.hazelcast.PrincipalNameExtractor;
 import org.springframework.session.hazelcast.config.annotation.web.http.EnableHazelcastHttpSession;
 
+import com.hazelcast.config.AttributeConfig;
 import com.hazelcast.config.Config;
+import com.hazelcast.config.EvictionConfig;
 import com.hazelcast.config.EvictionPolicy;
-import com.hazelcast.config.MapAttributeConfig;
+import com.hazelcast.config.IndexConfig;
+import com.hazelcast.config.IndexType;
 import com.hazelcast.config.MapConfig;
-import com.hazelcast.config.MapIndexConfig;
-import com.hazelcast.config.MaxSizeConfig;
+import com.hazelcast.config.MaxSizePolicy;
 
 @Configuration
 @EnableHazelcastHttpSession(maxInactiveIntervalInSeconds = 3600)
@@ -63,23 +66,23 @@ public class HazelcastConfig {
     final Config config = new Config().setInstanceName(this.instanceName);
     
     config.getMapConfig(HazelcastIndexedSessionRepository.DEFAULT_SESSION_MAP_NAME)
-      .addMapAttributeConfig(springSessionAttributeConfig()).addMapIndexConfig(
-        new MapIndexConfig(HazelcastIndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE, false));
+      .addAttributeConfig(springSessionAttributeConfig()).addIndexConfig(
+          new IndexConfig(IndexType.HASH, Hazelcast4IndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE));
     config.addMapConfig(bruteForceLoginMapConfig());
     
     return config;
   }
   
-  private MapAttributeConfig springSessionAttributeConfig() {
-    return new MapAttributeConfig()
-        .setName(HazelcastIndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE)
-        .setExtractor(PrincipalNameExtractor.class.getName());
+  private AttributeConfig springSessionAttributeConfig() {
+    return new AttributeConfig()
+        .setName(Hazelcast4IndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE)
+        .setExtractorClassName(Hazelcast4PrincipalNameExtractor.class.getName());
   }
   
   private MapConfig bruteForceLoginMapConfig() {
     return new MapConfig().setName(CacheConfig.BRUTE_FORCE_AUTHENTICATION_CACHE)
         .setTimeToLiveSeconds(this.bruteForceTtlSeconds)
-        .setMaxSizeConfig(new MaxSizeConfig(PARTITION_COUNT + this.bruteForceSize, MaxSizeConfig.MaxSizePolicy.PER_NODE))
-        .setEvictionPolicy(EvictionPolicy.LRU);
+        .setEvictionConfig(new EvictionConfig()
+            .setEvictionPolicy(EvictionPolicy.LRU).setMaxSizePolicy(MaxSizePolicy.PER_NODE).setSize(PARTITION_COUNT + this.bruteForceSize));
   }
 }

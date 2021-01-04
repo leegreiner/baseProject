@@ -35,7 +35,7 @@ public class LocalDateTimeFormatterUnitTest {
   
   @BeforeEach
   public void init() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     formatter = new LocalDateTimeFormatter(securityUtils);
   }
   

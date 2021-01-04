@@ -23,7 +23,7 @@ public class AuthenticationSuccessEventListenerUnitTest {
   
   @BeforeEach
   public void init() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     listener = new AuthenticationSuccessEventListener(loginAttemptService);
   }
   

@@ -26,7 +26,7 @@ public class PasswordGeneratorUnitTest {
   
   @BeforeEach
   public void init() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     when(passwordEncoder.encode(org.mockito.ArgumentMatchers.any(CharSequence.class))).thenAnswer(new Answer<String>() {
       @Override
       public String answer(InvocationOnMock invocation) throws Throwable {

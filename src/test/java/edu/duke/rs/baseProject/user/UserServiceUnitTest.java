@@ -65,7 +65,7 @@ public class UserServiceUnitTest {
   
   @BeforeEach
   public void init() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     service = new UserServiceImpl(userRepository, roleRepository, passwordGenerator, passwordResetService, eventPublisher, securityUtils);
   }
   

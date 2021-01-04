@@ -23,7 +23,7 @@ public class AuthenticationFailureLockedEventListenerUnitTest {
   
   @BeforeEach
   public void init() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     listener = new AuthenticationFailureLockedEventListener(loginAttemptService);
   }
   

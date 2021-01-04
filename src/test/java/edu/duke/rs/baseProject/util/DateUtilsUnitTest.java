@@ -33,7 +33,7 @@ public class DateUtilsUnitTest {
 
   @BeforeEach
   public void init() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     dateUtils = new DateUtils(securityUtils);
   }
   

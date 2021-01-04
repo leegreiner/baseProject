@@ -27,7 +27,7 @@ public class EmailServiceUnitTest {
   
   @BeforeEach
   public void init() {
-    MockitoAnnotations.initMocks(this);
+    MockitoAnnotations.openMocks(this);
     emailService = new EmailServiceImpl(mailSender, contentBuilder);
   }
   

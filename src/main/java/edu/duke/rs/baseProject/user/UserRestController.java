@@ -37,9 +37,9 @@ public class UserRestController extends BaseRestController {
     
     final Pageable pageable = DataTablesUtils.toPage(input, null, additionalOrders);
     
-    final Page<UserListItem> page = StringUtils.isEmpty(input.getSearch().getValue()) ?
-        userRepository.findAllBy(pageable) :
-        userRepository.findByLastNameStartingWithIgnoreCase(input.getSearch().getValue(), pageable);
+    final Page<UserListItem> page = StringUtils.hasLength(input.getSearch().getValue()) ?
+        userRepository.findByLastNameStartingWithIgnoreCase(input.getSearch().getValue(), pageable) :
+        userRepository.findAllBy(pageable);
          
     return DataTablesUtils.toDataTablesOutput(input, page);
   }

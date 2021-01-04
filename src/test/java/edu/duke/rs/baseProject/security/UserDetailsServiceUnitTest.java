@@ -41,7 +41,7 @@ public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 	
 	@BeforeEach 
 	public void inint() {
-		MockitoAnnotations.initMocks(this);
+		MockitoAnnotations.openMocks(this);
 		when(passwordExpirationStrategy.isPasswordExpired(any(User.class))).thenReturn(false);
 	}
 	
