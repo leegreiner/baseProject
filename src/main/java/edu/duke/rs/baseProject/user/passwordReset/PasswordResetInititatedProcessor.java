@@ -15,9 +15,9 @@ import edu.duke.rs.baseProject.config.EventConfig;
 import edu.duke.rs.baseProject.email.EmailService;
 import edu.duke.rs.baseProject.email.MessageType;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 @Setter
 @Component
 @Profile("!samlSecurity")

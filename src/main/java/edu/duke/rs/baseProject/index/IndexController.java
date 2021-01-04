@@ -7,9 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import edu.duke.rs.baseProject.BaseWebController;
 import edu.duke.rs.baseProject.home.HomeController;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 @Controller
 public class IndexController extends BaseWebController {
   public static final String INDEX_MAPPING = "/";

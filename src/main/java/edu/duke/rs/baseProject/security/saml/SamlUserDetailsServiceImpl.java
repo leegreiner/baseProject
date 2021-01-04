@@ -18,9 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 @Profile("samlSecurity")
 @Service
 public class SamlUserDetailsServiceImpl implements SAMLUserDetailsService {

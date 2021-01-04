@@ -26,10 +26,10 @@ import edu.duke.rs.baseProject.exception.ApplicationException;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.user.history.UserHistoryRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 @RequiredArgsConstructor
-@Slf4j
+@Log4j2
 @Controller
 public class UserController extends BaseWebController {
   public static final String USERS_MAPPING = "/users";

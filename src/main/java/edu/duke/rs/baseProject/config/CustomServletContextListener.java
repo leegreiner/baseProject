@@ -11,6 +11,7 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 import javax.sql.DataSource;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
@@ -18,7 +19,7 @@ import com.hazelcast.core.HazelcastInstance;
 import com.zaxxer.hikari.HikariDataSource;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * Class used to reduce the number of Tomcat shutdown errors about threads and
@@ -27,7 +28,8 @@ import lombok.extern.slf4j.Slf4j;
  * @author Lee Greiner
  *
  */
-@Slf4j
+@Log4j2
+@Profile("!local")
 @RequiredArgsConstructor
 @WebListener
 public class CustomServletContextListener implements ServletContextListener {

@@ -20,10 +20,10 @@ import edu.duke.rs.baseProject.event.CreatedEvent;
 import edu.duke.rs.baseProject.user.passwordReset.PasswordResetController;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 @RequiredArgsConstructor
-@Slf4j
+@Log4j2
 @Setter
 @Component
 @Profile("!samlSecurity")

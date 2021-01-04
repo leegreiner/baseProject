@@ -15,10 +15,10 @@ import org.springframework.web.servlet.ModelAndView;
 import edu.duke.rs.baseProject.BaseWebController;
 import edu.duke.rs.baseProject.exception.ApplicationException;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 @RequiredArgsConstructor
-@Slf4j
+@Log4j2
 @ControllerAdvice(assignableTypes = {BaseWebController.class})
 public class ExceptionController extends BaseWebController {
   public static final String EXCEPTION_ERROR_VIEW = "error/exceptionError";

@@ -18,10 +18,10 @@ import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.util.HttpUtils;
 import io.micrometer.core.annotation.Timed;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 @RequiredArgsConstructor
-@Slf4j
+@Log4j2
 @Controller
 public class UserProfileController extends BaseWebController {
   public static final String USER_PROFILE_MAPPING = "/userProfile";

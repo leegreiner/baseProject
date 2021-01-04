@@ -5,9 +5,9 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 @DisallowConcurrentExecution
 public class ExpirePasswordChangeIdsJob implements Job {
   private transient final PasswordResetService passwordResetService;

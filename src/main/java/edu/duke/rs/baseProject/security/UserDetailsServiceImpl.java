@@ -11,10 +11,10 @@ import edu.duke.rs.baseProject.security.password.PasswordExpirationStrategy;
 import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 @RequiredArgsConstructor
-@Slf4j
+@Log4j2
 @Profile("!samlSecurity")
 @Service("userDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {

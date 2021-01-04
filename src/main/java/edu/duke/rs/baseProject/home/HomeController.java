@@ -4,9 +4,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import edu.duke.rs.baseProject.BaseWebController;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 @Controller
 public class HomeController extends BaseWebController {
   public static final String HOME_MAPPING = "/home";

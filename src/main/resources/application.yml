@@ -80,18 +80,19 @@ spring:
             isClustered: true
           scheduler:
             instanceId: AUTO
-        
-  resources:
-    cache:
-      cachecontrol:
-        max-age: 8h  
-    chain:
-      strategy:
-        content:
-          enabled: true
-          paths: /**
          
   messages:    basename: i18n/messages
+    
+  web:
+    resources:
+      cache:
+        cachecontrol:
+          max-age: 8h
+      chain:
+        strategy:
+          content:
+            enabled: true
+            paths: /**
              
 server:  compression:    enabled: true
   error:
@@ -182,7 +183,10 @@ app:
       
 ---
 spring:
-  profiles: samlSecurity
+  config:
+    activate:
+      on-profile:
+      - samlSecurity   
   
 saml:
   sso:
@@ -204,8 +208,9 @@ saml:
       public-key-pem-location: classpath:/security/public-local.cert
   
 ---
-spring:  profiles: local
-  resources:    cache:      cachecontrol:        no-cache: true
+spring:   
+  config:
+    activate:      on-profile:      - local   
      
   jpa:    show-sql: true
     hibernate:      ddl-auto: create-drop
@@ -219,6 +224,9 @@ saml:
     default-encoding: UTF-8
     host: localhost
     port: 1025
+    
+  web:
+    resources:      cache:        cachecontrol:          no-cache: true
     
 logging:
   level:
@@ -239,7 +247,10 @@ app:
 ---
 
 spring:
-  profiles: test
+  config:
+    activate:
+      on-profile:
+      - test   
     
   datasource:
     platform: h2

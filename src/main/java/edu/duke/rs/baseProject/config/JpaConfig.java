@@ -20,8 +20,6 @@ import edu.duke.rs.baseProject.repository.ExtendedJpaRepositoryImpl;
   repositoryBaseClass = ExtendedJpaRepositoryImpl.class)
 @EnableJpaAuditing
 public class JpaConfig {
-  @Value("${spring.datasource.hikari.connection-test-query:select 1 from dual}")
-  private String validationQuery;
   @Value("${app.datasource.startupValidationInterval:5}")
   private int startupValidationInterval;
   @Value("${app.datasource.startupValidationTimeout:60}")

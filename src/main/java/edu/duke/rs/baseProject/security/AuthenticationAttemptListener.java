@@ -10,9 +10,9 @@ import org.springframework.context.event.EventListener;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.stereotype.Component;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 @Component
 public class AuthenticationAttemptListener {
   private static final String DELIMITER = ":";

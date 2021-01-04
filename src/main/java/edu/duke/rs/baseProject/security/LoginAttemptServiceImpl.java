@@ -15,9 +15,9 @@ import org.springframework.stereotype.Service;
 import edu.duke.rs.baseProject.config.CacheConfig;
 import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 @Service
 public class LoginAttemptServiceImpl implements LoginAttemptService {
   private transient final UserRepository userRepository;

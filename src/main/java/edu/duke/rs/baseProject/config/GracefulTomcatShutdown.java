@@ -9,9 +9,9 @@ import org.springframework.boot.web.embedded.tomcat.TomcatConnectorCustomizer;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextClosedEvent;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 class GracefulTomcatShutdown implements TomcatConnectorCustomizer, ApplicationListener<ContextClosedEvent> {
   private static final long TOMCAT_THREAD_TIMEOUT_SECONDS = 60;
   private volatile Connector connector;

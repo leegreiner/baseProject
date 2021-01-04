@@ -7,10 +7,10 @@ import edu.duke.rs.baseProject.BaseWebController;
 import edu.duke.rs.baseProject.home.HomeController;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 @RequiredArgsConstructor
-@Slf4j
+@Log4j2
 @Controller
 public class LoginController extends BaseWebController {
   public static final String LOGIN_MAPPING = "/loginPage";

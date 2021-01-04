@@ -29,10 +29,10 @@ import edu.duke.rs.baseProject.user.passwordReset.PasswordResetService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
 @RequiredArgsConstructor
-@Slf4j
+@Log4j2
 @Service
 public class UserServiceImpl implements UserService {
   private transient final UserRepository userRepository;

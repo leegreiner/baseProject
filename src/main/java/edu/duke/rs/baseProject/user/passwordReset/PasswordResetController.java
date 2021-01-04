@@ -23,9 +23,9 @@ import edu.duke.rs.baseProject.home.HomeController;
 import edu.duke.rs.baseProject.index.IndexController;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.user.UserController;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 @Controller
 @Profile("!samlSecurity")
 public class PasswordResetController extends BaseWebController {

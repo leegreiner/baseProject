@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import edu.duke.rs.baseProject.BaseWebController;
 import io.micrometer.core.instrument.util.StringUtils;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 @Controller
 public class ApplicationErrorController extends BaseWebController implements ErrorController {
 	public static final String ERROR_MAPPING = "/error";

@@ -16,9 +16,9 @@ import edu.duke.rs.baseProject.datatables.DataTablesInput;
 import edu.duke.rs.baseProject.datatables.DataTablesOutput;
 import edu.duke.rs.baseProject.datatables.DataTablesUtils;
 import io.micrometer.core.annotation.Timed;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 
-@Slf4j
+@Log4j2
 @RestController
 public class UserRestController extends BaseRestController {
   public static final String USERS_MAPPING = API_MAPPING + UserController.USERS_MAPPING;
