@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.session.hazelcast.Hazelcast4IndexedSessionRepository;
 import org.springframework.session.hazelcast.Hazelcast4PrincipalNameExtractor;
-import org.springframework.session.hazelcast.HazelcastIndexedSessionRepository;
 import org.springframework.session.hazelcast.config.annotation.web.http.EnableHazelcastHttpSession;
 
 import com.hazelcast.config.AttributeConfig;
@@ -65,7 +64,7 @@ public class HazelcastConfig {
   private Config hazelcastBaseConfig() {
     final Config config = new Config().setInstanceName(this.instanceName);
     
-    config.getMapConfig(HazelcastIndexedSessionRepository.DEFAULT_SESSION_MAP_NAME)
+    config.getMapConfig(Hazelcast4IndexedSessionRepository.DEFAULT_SESSION_MAP_NAME)
       .addAttributeConfig(springSessionAttributeConfig()).addIndexConfig(
           new IndexConfig(IndexType.HASH, Hazelcast4IndexedSessionRepository.PRINCIPAL_NAME_ATTRIBUTE));
     config.addMapConfig(bruteForceLoginMapConfig());
