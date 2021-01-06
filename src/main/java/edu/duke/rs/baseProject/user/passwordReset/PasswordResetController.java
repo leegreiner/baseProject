@@ -45,7 +45,7 @@ public class PasswordResetController extends BaseWebController {
   @GetMapping(PASSWORD_RESET_INITIATE_MAPPING)
   public String getPasswordReset(@RequestParam(name = PASSWORD_RESET_ID_REQUEST_PARAM, required=false) final UUID passwordChangeId,
       final Model model) {
-    log.debug("In getPasswordReset(): " + passwordChangeId);
+    log.debug("In getPasswordReset():{} ", passwordChangeId);
     final boolean resettingPassword = passwordChangeId == null ? false : true;
     String view;
     

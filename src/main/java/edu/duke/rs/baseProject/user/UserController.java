@@ -50,7 +50,7 @@ public class UserController extends BaseWebController {
   @GetMapping(USERS_MAPPING)
   public String getUsers(@RequestParam(name = ACTION_REQUEST_PARAM, required=false) final String action,
       final Model model) {
-    log.debug("In getUsers()");
+    log.debug(() -> "In getUsers()");
     final boolean newUser = StringUtils.isBlank(action) ? false : true;
     
     if (newUser) {
@@ -63,7 +63,7 @@ public class UserController extends BaseWebController {
   @GetMapping(USER_MAPPING)
   public String getUserDetails(@PathVariable("userId") final UUID userId,
       @RequestParam(name = ACTION_REQUEST_PARAM, required=false) String action, Model model) {
-    log.debug("In getUserDetails: " + userId);
+    log.debug("In getUserDetails: userId={}", userId);
     final boolean editingUser = StringUtils.isBlank(action) ? false : true;
     final User user = this.userService.getUser(userId);
     
@@ -127,7 +127,7 @@ public class UserController extends BaseWebController {
   
   @GetMapping(USER_HISTORY_MAPPING)
   public String getHistory(@PathVariable("userId") final UUID userId, Model model) {
-    log.debug("In getHistory: " + userId);
+    log.debug("In getHistory: userId={} ", () -> userId);
     
     final User user = this.userService.getUser(userId);
     

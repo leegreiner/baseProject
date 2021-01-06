@@ -41,6 +41,6 @@ public class AuthenticationAttemptListener {
           DELIMITER + ((WebAuthenticationDetails) details).getSessionId());
     }
     
-    log.info(message.toString());
+    log.info(() -> message.toString());
   }
 }

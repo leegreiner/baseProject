@@ -40,7 +40,7 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
   @Override
   @Transactional
   public void loginFailed(@NotBlank String username) {
-    log.debug("Login failed for " + username);
+    log.debug("Login failed for {}", () -> username);
     
     this.userRepository.findByUsernameIgnoreCase(username).ifPresentOrElse((user) -> {
       user.setLastInvalidLoginAttempt(LocalDateTime.now());
@@ -57,7 +57,7 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
   @Override
   @Transactional
   public void loginSucceeded(@NotBlank final String username) {
-    log.debug("Login succeeded for " + username);
+    log.debug("Login succeeded for {}", username);
     
     this.userRepository.findByUsernameIgnoreCase(username).ifPresent((user) -> {
       user.setLastLoggedIn(LocalDateTime.now());
@@ -72,7 +72,7 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
     if (user.getLastInvalidLoginAttempt() != null && user.getInvalidLoginAttempts() != null) {
       if (user.getLastInvalidLoginAttempt().plusSeconds(this.temporaryLockSeconds).isAfter(LocalDateTime.now())
           && user.getInvalidLoginAttempts() >= this.numberOfLoginAttemptFailuresBeforeTemporaryLock) {
-        log.debug("User account temporarily disabled for " + user.getUsername());
+        log.debug("User account temporarily disabled for {}", () -> user.getUsername());
         return true;
       }
     }
@@ -90,7 +90,7 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
       final Integer attempts = (Integer) valueWrapper.get();
       
       if (attempts != null && attempts >= this.maxBruteForceAttempts) {
-        log.debug("Client IP is blocked: " + clientIp);
+        log.debug("Client IP is blocked: {}", () -> clientIp);
         return true;
       }
     }
@@ -110,7 +110,7 @@ public class LoginAttemptServiceImpl implements LoginAttemptService {
       
       if (attempts != null && attempts < this.maxBruteForceAttempts) {
         if (++attempts == this.maxBruteForceAttempts) {
-          log.warn("Possible brute for authentication attempt for " + username + " from address " + clientIp);
+          log.warn("Possible brute for authentication attempt for {} from address {}", () -> username, () -> clientIp);
         }
         this.bruteForceLoginCache.put(clientIp, attempts);
       }

@@ -57,9 +57,9 @@ public class CustomServletContextListener implements ServletContextListener {
         
         try {
             DriverManager.deregisterDriver(driver);
-            log.debug(String.format("Deregistering jdbc driver: %s", driver));
+            log.debug("Deregistering jdbc driver {}", () -> driver);
         } catch (final SQLException sqlException) {
-            log.error(String.format("Error deregistering driver %s", driver), sqlException);
+            log.error("Error deregistering driver {}", () -> driver, () -> sqlException);
         }
     }
     

@@ -80,7 +80,7 @@ public class UserServiceImpl implements UserService {
   @Override
   @Transactional
   public User save(final UserDto userDto) {
-    log.debug("In save(): " + userDto.toString());
+    log.debug("In save(): {}", () -> userDto.toString());
     return userDto.getId() == null ? createUser(userDto) : saveUser(userDto);
   }
   

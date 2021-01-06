@@ -21,7 +21,7 @@ public class ApplicationErrorController extends BaseWebController implements Err
 
 	@GetMapping(ERROR_MAPPING)
 	public String handleError(final HttpServletRequest request) {
-	  log.error("In handleError(): " + request.toString());
+	  log.error("In handleError(): {}", () -> request.toString());
 		final Object status = request.getAttribute(RequestDispatcher.ERROR_STATUS_CODE);
 		String result = "/unknownError";
 		

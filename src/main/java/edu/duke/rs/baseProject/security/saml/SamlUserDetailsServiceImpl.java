@@ -44,7 +44,7 @@ public class SamlUserDetailsServiceImpl implements SAMLUserDetailsService {
     final String userName = getSamlAttribute(credential, UID_ATTRIBUTE)
         .orElseThrow(() -> new UsernameNotFoundException("User name attribute note found"));
     
-    log.debug("Received credentials for " + userName);
+    log.debug("Received credentials for {}", userName);
     
     final User user = this.userRepository.findByUsernameIgnoreCase(userName)
         .orElseThrow(() -> new UsernameNotFoundException("User " + userName + " not found"));

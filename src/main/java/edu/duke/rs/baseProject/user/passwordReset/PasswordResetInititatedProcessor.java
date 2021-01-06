@@ -35,8 +35,8 @@ public class PasswordResetInititatedProcessor {
   @Async(EventConfig.ASYNC_TASK_EXECUTOR_BEAN)
   @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
   public void onPasswordResetInitiated(final PasswordResetInitiatedEvent event) {
-    log.debug("Received PasswordResetInitiatedEvent for " +
-        (event.getUser()).toString());
+    log.debug("Received PasswordResetInitiatedEvent for {} ",
+        () -> (event.getUser()).toString());
     final Map<String, Object> content = new HashMap<String, Object>();
     content.put("user", event.getUser());
     content.put("expireDays", resetPasswordExpirationDays);

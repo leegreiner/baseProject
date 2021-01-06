@@ -25,7 +25,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 	@Override
 	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		log.debug("Logging in user " + username);
+		log.debug("Logging in user {}", username);
     
     // see if blocked by ip
     if (this.loginAttemptService.isClientIpBlocked()) {

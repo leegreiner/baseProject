@@ -33,7 +33,7 @@ public class UserProfileController extends BaseWebController {
   @GetMapping(USER_PROFILE_MAPPING)
   @Timed(description = "User profile")
   public String userProfile(Model model) {
-    log.debug("In userProfile()");
+    log.debug(() -> "In userProfile()");
     final UserProfile userProfile = userService.getUserProfile();
     
     model.addAttribute(USER_PROFILE_ATTRIBUTE, userProfile);
@@ -44,7 +44,7 @@ public class UserProfileController extends BaseWebController {
   @PutMapping(USER_PROFILE_MAPPING)
   public String updateUserProfile(@Valid @ModelAttribute final UserProfile userProfile, final BindingResult result,
       final Model model, final RedirectAttributes attributes, final HttpSession httpSession) {
-    log.debug("In updateUserProfile(): ");
+    log.debug("In updateUserProfile(): {}", () -> userProfile.toString());
     
     if (result.hasErrors()) {
       this.addErrorMessage(model, "error.pleaseCorrectErrors", (Object[])null);

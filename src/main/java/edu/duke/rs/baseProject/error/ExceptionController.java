@@ -35,7 +35,7 @@ public class ExceptionController extends BaseWebController {
   @ExceptionHandler(ApplicationException.class)
   public ModelAndView handleApplicationException(final HttpServletRequest request,
       final HttpServletResponse response, final ApplicationException ae) {
-    log.error("In handleApplicationException()", ae);
+    log.error("In handleApplicationException()", () -> ae);
     
     return processError(ae.getMessage(), ae.getMessageArguments());
   }

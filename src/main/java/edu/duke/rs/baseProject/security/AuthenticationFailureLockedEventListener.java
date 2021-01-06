@@ -17,7 +17,7 @@ private transient final LoginAttemptService loginAttemptService;
   
   @Override
   public void onApplicationEvent(final AuthenticationFailureLockedEvent event) {
-    log.debug("Authentication failed for " + event.getAuthentication().getName() + " (locked)");
+    log.debug("Authentication failed for {} (locked)", () -> event.getAuthentication().getName());
     loginAttemptService.loginFailed(event.getAuthentication().getName());
   }
 }

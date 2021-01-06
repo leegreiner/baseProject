@@ -40,7 +40,7 @@ public class NewUserCreatedEventProcessor {
   @TransactionalEventListener(phase = TransactionPhase.AFTER_COMMIT)
   public void onUserCreated(final CreatedEvent<User> event) {
     final User user = (User) event.getSource();
-    log.debug("Received CreatedEvent for " + user.toString());
+    log.debug("Received CreatedEvent for {}", () -> user.toString());
     final Map<String, Object> content = new HashMap<String, Object>();
     
     content.put(USER_NAME_KEY, user.getUsername());

@@ -17,7 +17,7 @@ public class AuthenticationFailureBadCredentialsListener implements ApplicationL
   
   @Override
   public void onApplicationEvent(final AuthenticationFailureBadCredentialsEvent event) {
-    log.debug("Authentication failed for " + event.getAuthentication().getName() + " (bad credentials)");
+    log.debug("Authentication failed for {}, (bad credentials)", () -> event.getAuthentication().getName());
     loginAttemptService.loginFailed(event.getAuthentication().getName());
   }
 }

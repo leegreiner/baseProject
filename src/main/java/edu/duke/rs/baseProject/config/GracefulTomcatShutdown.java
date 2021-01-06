@@ -18,7 +18,7 @@ class GracefulTomcatShutdown implements TomcatConnectorCustomizer, ApplicationLi
   
   @Override
   public void onApplicationEvent(final ContextClosedEvent event) {
-    log.debug("ContextClosedEvent received");
+    log.debug(() -> "ContextClosedEvent received");
     if (connector == null) {
       return;
     }
@@ -32,8 +32,8 @@ class GracefulTomcatShutdown implements TomcatConnectorCustomizer, ApplicationLi
           ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) executor;
           threadPoolExecutor.shutdown();
           if (!threadPoolExecutor.awaitTermination(TOMCAT_THREAD_TIMEOUT_SECONDS, TimeUnit.SECONDS)) {
-              log.warn("Tomcat thread pool did not shut down gracefully within "
-                      + TOMCAT_THREAD_TIMEOUT_SECONDS + " seconds. Proceeding with forceful shutdown");
+              log.warn("Tomcat thread pool did not shut down gracefully within {} seconds. Proceeding with forceful shutdown",
+                  () -> TOMCAT_THREAD_TIMEOUT_SECONDS);
           }
       } catch (InterruptedException ex) {
           Thread.currentThread().interrupt();
