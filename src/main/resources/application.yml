@@ -38,7 +38,11 @@ spring:
           provider_disables_autocommit: true
         dialect: org.hibernate.dialect.Oracle12cDialect
         default_schema: baseapp
-#        jdbc:
+        jdbc:
+          batch_size: 15
+          order_inserts: true
+          order_updates: true
+          batch_versioned_data: true
 #          lob:
             # Fix Postgres JPA Error (Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented).
 #            non_contextual_creation: true

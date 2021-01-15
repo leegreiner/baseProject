@@ -36,8 +36,8 @@ public class AuthenticationSuccessEventListenerUnitTest {
     listener.onApplicationEvent(event);
     
     verify(loginAttemptService, times(1)).loginSucceeded(userName);
-    verify(event, times(2)).getAuthentication();
-    verify(authentication, times(2)).getName();
+    verify(event, times(1)).getAuthentication();
+    verify(authentication, times(1)).getName();
     verifyNoMoreInteractions(loginAttemptService);
     verifyNoMoreInteractions(event);
     verifyNoMoreInteractions(authentication);

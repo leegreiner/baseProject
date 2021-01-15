@@ -36,8 +36,8 @@ public class AuthenticationFailureBadCredentailEventListenerUnitTest {
     listener.onApplicationEvent(event);
     
     verify(loginAttemptService, times(1)).loginFailed(userName);
-    verify(event, times(2)).getAuthentication();
-    verify(authentication, times(2)).getName();
+    verify(event, times(1)).getAuthentication();
+    verify(authentication, times(1)).getName();
     verifyNoMoreInteractions(loginAttemptService);
     verifyNoMoreInteractions(event);
     verifyNoMoreInteractions(authentication);
