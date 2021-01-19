@@ -131,7 +131,7 @@ public class UserRestControllerUnitTest extends AbstractWebUnitTest {
       .thenThrow(new NullPointerException(errorMessage));
     
     final MvcResult result = mockMvc.perform(requestBuilder)
-      .andExpect(status().isBadRequest())
+      .andExpect(status().isInternalServerError())
       .andReturn();
     
     final ErrorInfo errorInfo = new ErrorInfo(errorMessage, AbstractWebTest.LOCAL_HOST + AbstractWebTest.API + UserController.USERS_MAPPING);

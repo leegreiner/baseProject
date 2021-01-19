@@ -22,10 +22,17 @@ public class RestExceptionController extends BaseRestController {
   private transient final MessageSource messageSource;
   
   @ResponseBody
+  @ExceptionHandler(ApplicationException.class)
+  public ResponseEntity<ErrorInfo> handleApplicationException(HttpServletRequest request, HttpServletResponse response,
+      Exception exception) {
+    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getBody(request, response, exception));
+  }
+  
+  @ResponseBody
   @ExceptionHandler(Exception.class)
   public ResponseEntity<ErrorInfo> handleException(HttpServletRequest request, HttpServletResponse response,
       Exception exception) {
-    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(getBody(request, response, exception));
+    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(getBody(request, response, exception));
   }
 
   private ErrorInfo getBody(HttpServletRequest request, HttpServletResponse response,

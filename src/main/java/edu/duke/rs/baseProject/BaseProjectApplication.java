@@ -28,8 +28,10 @@ import edu.duke.rs.baseProject.user.UserRepository;
 public class BaseProjectApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(BaseProjectApplication.class, args);
-		
+	  final SpringApplication springApplication = new SpringApplication(BaseProjectApplication.class);
+	  // -XX:StartFlightRecording:filename=recording.jfr,duration=10s
+	  //springApplication.setApplicationStartup(new FlightRecorderApplicationStartup());
+		springApplication.run(args);
 	}
 	
 	@PostConstruct
