@@ -149,7 +149,7 @@ public class WebSecurityConfig {
         .and()
           .formLogin()
             .loginProcessingUrl("/login")
-            .defaultSuccessUrl("/home", true)
+//            .defaultSuccessUrl("/home", true)
             .failureHandler(authenticationFailureHandler())
         .and()
           .logout()
