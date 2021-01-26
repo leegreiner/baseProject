@@ -31,5 +31,21 @@ var AjaxUtil = {
       return false;
     }
     return true;
+  },
+  csrfParameter: function() {
+       return $("meta[name='_csrf_parameter']").attr("content");
+    },
+  csrfToken: function() {
+    return $("meta[name='_csrf']").attr("content");
+  },
+  csrfHeader: function() {
+    return $("meta[name='_csrf_header']").attr("content");
+  },
+  csrfInput: function() {
+    return '<input id="csrfToken" type="hidden" name="' + AjaxUtil.csrfParameter() + 
+       '" value="' + AjaxUtil.csrfToken() + '"/>';
+  },
+  csrfHeader: function(xhr) {
+    xhr.setRequestHeader(AjaxUtil.csrfHeader(), AjaxUtil.csrfToken());
   }
 };

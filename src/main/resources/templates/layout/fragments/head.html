@@ -22,6 +22,7 @@
     
     <meta sec:authorize="isAuthenticated()" th:if="${_csrf}" name="_csrf" th:content="${_csrf.token}"/>
     <meta sec:authorize="isAuthenticated()" th:if="${_csrf}" name="_csrf_header" th:content="${_csrf.headerName}"/>
+    <meta sec:authorize="isAuthenticated()" th:if="${_csrf}" name="_csrf_parameter" th:content="${_csrf.parameterName}"/>
 
 		<link rel="stylesheet" media="screen, print" th:href="@{/css/vendors.bundle.css}">
     <link rel="stylesheet" media="screen, print" th:href="@{/css/app.bundle.css}">
