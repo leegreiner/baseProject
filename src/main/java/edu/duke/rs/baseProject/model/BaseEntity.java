@@ -23,25 +23,23 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @MappedSuperclass
+@Getter
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
-  @Getter @Setter
   @Column(nullable = false, updatable = false)
   @CreatedDate
   @JsonIgnore
-  private LocalDateTime createdDate = LocalDateTime.now();
+  private LocalDateTime createdDate;
 
-  @Getter @Setter
   @LastModifiedDate
+  @Setter // for testing
   @JsonIgnore
   private LocalDateTime lastModifiedDate;
   
-  @Getter
-  @Column(name = "alternate_id", nullable = false, updatable = false, unique = true)
+  @Column(name = "alternate_id", length = 16, nullable = false, updatable = false, unique = true)
   @Include
   private UUID alternateId = UUID.randomUUID();
   
-  @Getter
   @Version
   private Long version;
 }

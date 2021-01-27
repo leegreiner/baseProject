@@ -59,8 +59,8 @@ import lombok.ToString;
 @Table(name = "users",
   indexes = {
       @Index(name = "UIX_USER_ALT_ID", unique = true, columnList="alternate_id"),
-      @Index(name = "UIX_USER_USERNAME", unique = true, columnList="username"),
-      @Index(name = "UIX_USER_EMAIL", unique = true, columnList="email"),
+      //@Index(name = "UIX_USER_USERNAME", unique = true, columnList="username"),
+      //@Index(name = "UIX_USER_EMAIL", unique = true, columnList="email"),
       @Index(name = "IX_USER_LAST_LOGGED_IN", unique = false, columnList="last_logged_in"),
       @Index(name = "IX_USER_LAST_PWD_CHG_ID", unique = false, columnList="password_chg_id_create_time")
   }

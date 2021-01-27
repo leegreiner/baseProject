@@ -13,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -36,9 +37,13 @@ import lombok.ToString;
 @Entity
 @Audited
 @Table(name = "password_history",
+  uniqueConstraints = {
+    @UniqueConstraint(name="UC_PWD_HIST_PWD", columnNames = "password")  
+  },
   indexes = {
-      @Index(name = "IX_PASSWORD_HISTORY_PWD", unique = true, columnList="password")
-})
+    @Index(name = "IX_PWD_HIST_USER_FK", unique = false, columnList="user_fk")
+  }
+)
 public class PasswordHistory extends BaseEntity implements Serializable {
   private static final long serialVersionUID = 1L;
 
