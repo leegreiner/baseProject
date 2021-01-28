@@ -15,7 +15,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -26,7 +25,6 @@ import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 
 @ExtendWith(SpringExtension.class)
-@DataJpaTest
 public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
   @Autowired
   private UserRepository userRepository;

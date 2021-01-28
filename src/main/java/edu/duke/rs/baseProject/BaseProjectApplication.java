@@ -5,8 +5,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.TimeZone;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,15 +26,11 @@ import edu.duke.rs.baseProject.user.UserRepository;
 public class BaseProjectApplication {
 
 	public static void main(String[] args) {
+	  TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 	  final SpringApplication springApplication = new SpringApplication(BaseProjectApplication.class);
 	  // -XX:StartFlightRecording:filename=recording.jfr,duration=10s
 	  //springApplication.setApplicationStartup(new FlightRecorderApplicationStartup());
 		springApplication.run(args);
-	}
-	
-	@PostConstruct
-	public void started() {
-	  TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 	}
 	
 	@Bean

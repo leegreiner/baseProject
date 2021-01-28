@@ -40,9 +40,11 @@ spring:
         default_schema: baseapp
         jdbc:
           batch_size: 15
+          batch_versioned_data: true
+          fetch_size: 50
           order_inserts: true
           order_updates: true
-          batch_versioned_data: true
+          time_zone: UTC
 #          lob:
             # Fix Postgres JPA Error (Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented).
 #            non_contextual_creation: true
