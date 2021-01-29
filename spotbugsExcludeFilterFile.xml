@@ -13,4 +13,8 @@
       <Bug code="IJU" /> <!-- 'IJU' is the code for bugs related to JUnit test code -->
     </Not>
   </Match>
+  <Match>
+    <!--  ignore JPA generated metadata files -->
+    <Source name="~.*_.java"/>
+  </Match>
 </FindBugsFilter>
