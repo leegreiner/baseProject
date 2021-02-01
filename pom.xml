@@ -21,9 +21,9 @@
     <java.version>11</java.version>
     <oracle.client.version>19.8.0.0</oracle.client.version>
     <oracle.ojdbc.artifactId>ojdbc10</oracle.ojdbc.artifactId>
-    <spring.version>5.3.2</spring.version>
-    <spring.data.jpa.version>2.4.2</spring.data.jpa.version>
-    <spring-cloud.version>3.0.1</spring-cloud.version>
+    <spring.version>5.3.3</spring.version>
+    <spring.data.jpa.version>2.4.3</spring.data.jpa.version>
+    <spring-cloud.version>3.0.2</spring-cloud.version>
     <spring.boot.saml.version>1.17</spring.boot.saml.version>
     <hazelcast.kubernetes.version>2.2.1</hazelcast.kubernetes.version>
     <passay.version>1.6.0</passay.version>
@@ -207,7 +207,7 @@
     <dependency>
         <groupId>com.icegreen</groupId>
         <artifactId>greenmail</artifactId>
-        <version>1.6.0</version>
+        <version>1.6.2</version>
         <scope>test</scope>
         <exclusions>
           <exclusion>
