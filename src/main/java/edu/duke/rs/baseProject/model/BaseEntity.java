@@ -41,5 +41,6 @@ public class BaseEntity {
   private UUID alternateId = UUID.randomUUID();
   
   @Version
+  @Column(nullable = false)
   private Long version;
 }

@@ -1,6 +1,7 @@
 package edu.duke.rs.baseProject.role;
 
 import java.io.Serializable;
+import java.util.Set;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
@@ -9,6 +10,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -54,4 +58,11 @@ public class Role extends BaseEntity implements Serializable {
 	@Column(length = 30, updatable = false, unique = true, nullable = false)
 	@NonNull
 	private RoleName name;
+	
+	@ManyToMany
+  @JoinTable(
+    name = "roles_to_privileges", 
+    joinColumns = @JoinColumn(name = "role_fk", referencedColumnName = "role_id"), 
+    inverseJoinColumns = @JoinColumn(name = "privilege_fk", referencedColumnName = "privilege_id"))
+	private Set<Privilege> privileges;
 }
