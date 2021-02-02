@@ -29,6 +29,8 @@ public class AppPrincipal implements UserDetails {
 		
 		for (final Role role : user.getRoles()) {
 			authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + role.getName().name()));
+			role.getPrivileges().stream()
+			  .forEach(privilege -> authorities.add(new SimpleGrantedAuthority(privilege.getName().name())));
 		}
 	}
 	

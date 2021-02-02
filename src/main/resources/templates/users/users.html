@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html th:replace="~{layout/layout :: layout(~{::customCss}, ~{::breadCrumb}, ~{::content}, ~{::customJs})}"
 	xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
 	layout:decorate="~{layout/layout.html}">
 <body>
   <customCss th:remove="tag">
@@ -19,9 +20,9 @@
           <h2 th:text="#{user.search}">Search</h2>
         </div>
         
-        <div class="panel-container show">
+        <div class="panel-container show" th:with="canEdit=${#authorization.expression('hasAuthority(''EDIT_USERS'')')}">
           <div class="panel-content">
-            <table id="searchResults" class="table table-bordered table-hover table-striped w-100 table-custom">
+            <table id="searchResults" class="table table-bordered table-hover table-striped w-100 table-custom" th:attr="data-edit=${canEdit}">
               <thead class="thead-themed">
                 <tr>
 	                <th th:text="#{lastName}">ln</th>
@@ -38,7 +39,6 @@
       </div>
     </div>
   </content>
-	</content>
 	
 	<customJs th:remove="tag">
 	  <script th:src="@{js/datagrid/datatables/datatables.bundle.js}"></script>

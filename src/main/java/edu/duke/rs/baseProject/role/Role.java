@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -59,10 +60,11 @@ public class Role extends BaseEntity implements Serializable {
 	@NonNull
 	private RoleName name;
 	
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
     name = "roles_to_privileges", 
     joinColumns = @JoinColumn(name = "role_fk", referencedColumnName = "role_id"), 
     inverseJoinColumns = @JoinColumn(name = "privilege_fk", referencedColumnName = "privilege_id"))
+	@ToString.Exclude
 	private Set<Privilege> privileges;
 }

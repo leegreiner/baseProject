@@ -43,6 +43,7 @@ import com.github.ulisesbocchio.spring.boot.security.saml.bean.SAMLConfigurerBea
 import edu.duke.rs.baseProject.error.ApplicationErrorController;
 import edu.duke.rs.baseProject.home.HomeController;
 import edu.duke.rs.baseProject.index.IndexController;
+import edu.duke.rs.baseProject.role.PrivilegeName;
 import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.security.AjaxAwareAccessDeniedHandler;
 import edu.duke.rs.baseProject.security.AjaxAwareExceptionMappingAuthenticationHandler;
@@ -144,7 +145,8 @@ public class WebSecurityConfig {
           .authorizeRequests()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
             .antMatchers("/", "/error/**", "/webfonts/**", "/img/**", "/loginPage", "/users/pwdreset", "/i18n/**").permitAll()
-            .antMatchers("/users/**").hasRole(RoleName.ADMINISTRATOR.name())
+            .antMatchers("/users/**").hasAuthority(PrivilegeName.EDIT_USERS.name())
+            .antMatchers("/users").hasAuthority(PrivilegeName.VIEW_USERS.name())
             .anyRequest().authenticated()
         .and()
           .formLogin()

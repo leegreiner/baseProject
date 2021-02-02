@@ -1,7 +1,7 @@
 package edu.duke.rs.baseProject.role;
 
 public enum PrivilegeName {
-  EDIT_USERS("Edit Users"), LIST_USERS("Read Users");
+  EDIT_USERS("Edit Users"), VIEW_USERS("View Users");
   
   private final String value;
   

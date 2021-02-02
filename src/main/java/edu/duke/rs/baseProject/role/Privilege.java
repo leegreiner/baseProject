@@ -6,6 +6,7 @@ import java.util.Set;
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -56,7 +57,8 @@ public class Privilege extends BaseEntity implements Serializable {
   @Column(length = 30, updatable = false, unique = true, nullable = false)
   @NonNull
   private PrivilegeName name;
-  
-  @ManyToMany(mappedBy = "privileges")
+
+  @ManyToMany(fetch = FetchType.LAZY, mappedBy = "privileges")
+  @ToString.Exclude
   private Set<Role> roles;
 }

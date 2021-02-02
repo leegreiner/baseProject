@@ -20,7 +20,11 @@ var targetPageSetUp = function() {
       { 'data': 'firstName' },
       { 'data': 'username',
         'render': function(data, type, full, meta) {
-          return DataTables.renderLink('/users/', false, 'id', 'username', data, type, full, meta);
+          if ($('#searchResults').data('edit')) { 
+            return DataTables.renderLink('/users/', false, 'id', 'username', data, type, full, meta);
+          } else {
+            return full['username'];
+          }
         }
       },
       { 'data': 'email',

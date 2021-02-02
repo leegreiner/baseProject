@@ -24,6 +24,7 @@ import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedEntityGraphs;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -66,9 +67,16 @@ import lombok.ToString;
   }
 )
 @NamedEntityGraphs({
-  @NamedEntityGraph(name = UserConstants.USER_AND_ROLES_ENTITY_GRAPH, attributeNodes = {
-      @NamedAttributeNode("roles")
-  })
+  @NamedEntityGraph(
+      name = UserConstants.USER_AND_ROLES_ENTITY_GRAPH, 
+      attributeNodes = @NamedAttributeNode(value = "roles", subgraph = "subgraph.roles"), 
+      subgraphs = {
+          @NamedSubgraph(name = "subgraph.roles", 
+              attributeNodes = {
+                  @NamedAttributeNode(value = "privileges")
+              }
+          )
+      })
 })
 @NamedQueries({
   @NamedQuery(
