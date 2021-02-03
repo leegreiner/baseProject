@@ -11,8 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
@@ -38,33 +36,29 @@ import lombok.ToString;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 @ToString(callSuper = true)
 @Entity
-@Table(name = "role",
+@Table(name = "privilege",
   indexes = {
-      @Index(name = "UIX_ROLE_ALT_ID", unique = true, columnList="alternate_id")
+      @Index(name = "UIX_PRIVILEGE_ALT_ID", unique = true, columnList="alternate_id")
   }
 )
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 @Immutable
 @Audited
-public class Role extends BaseEntity implements Serializable {
-	private static final long serialVersionUID = 1L;
-	
-	@Column(name = "role_id")
-	@Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
-  @SequenceGenerator(name="role_seq", sequenceName = "ROLE_SEQ", allocationSize = 1)
-	private Long id;
-	
-	@Column(length = 30, updatable = false, unique = true, nullable = false)
-	@NonNull
-	private RoleName name;
-	
-	@ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(
-    name = "roles_to_privileges", 
-    joinColumns = @JoinColumn(name = "role_fk", referencedColumnName = "role_id"), 
-    inverseJoinColumns = @JoinColumn(name = "privilege_fk", referencedColumnName = "privilege_id"))
-	@ToString.Exclude
-	private Set<Privilege> privileges;
+public class Privilege extends BaseEntity implements Serializable {
+  private static final long serialVersionUID = 1L;
+  
+  @Column(name = "privilege_id")
+  @Id
+  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "privilege_seq")
+  @SequenceGenerator(name="privilege_seq", sequenceName = "PRIVILEGE_SEQ", allocationSize = 1)
+  private Long id;
+  
+  @Column(length = 30, updatable = false, unique = true, nullable = false)
+  @NonNull
+  private PrivilegeName name;
+
+  @ManyToMany(fetch = FetchType.LAZY, mappedBy = "privileges")
+  @ToString.Exclude
+  private Set<Role> roles;
 }

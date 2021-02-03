@@ -14,6 +14,9 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import edu.duke.rs.baseProject.annotations.EnableSAMLSSOWhenProfileActive;
+import edu.duke.rs.baseProject.role.Privilege;
+import edu.duke.rs.baseProject.role.PrivilegeName;
+import edu.duke.rs.baseProject.role.PrivilegeRepository;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.role.RoleRepository;
@@ -36,26 +39,36 @@ public class BaseProjectApplication {
 	@Bean
 	@Profile("local")
 	public CommandLineRunner init(final UserRepository userRepository,
-			final RoleRepository roleRepository, final PasswordEncoder passwordEncoder) {
+			final RoleRepository roleRepository, final PrivilegeRepository privilegeRepository, final PasswordEncoder passwordEncoder) {
 		return (args) -> {
-		  final Set<Role> userRole = new HashSet<Role>();
-      final Set<Role> allRoles = new HashSet<Role>();
-      userRole.add(roleRepository.save(new Role(RoleName.USER)));
-      allRoles.add(roleRepository.save(new Role(RoleName.ADMINISTRATOR)));
-      allRoles.addAll(userRole);
-      userRepository.save(createUser("username", passwordEncoder.encode("password"), "Default", "User","defaultUser@gmail.com", userRole));
-      userRepository.save(createUser("billstafford", passwordEncoder.encode("password"), "Bill", "Stafford","billStafford@gmail.com", userRole));
-      userRepository.save(createUser("briancole", passwordEncoder.encode("password"), "Brian", "Cole","brianCole@gmail.com", userRole));
-      userRepository.save(createUser("samsmith", passwordEncoder.encode("password"), "Sam", "Smith","samSmith@gmail.com", userRole));
-      userRepository.save(createUser("perterpiper", passwordEncoder.encode("password"), "Peter", "Piper","peterPiper@gmail.com", userRole));
-      userRepository.save(createUser("johnjameson", passwordEncoder.encode("password"), "John", "Jameson","johnJameson@gmail.com", userRole));
-      userRepository.save(createUser("fredflannery", passwordEncoder.encode("password"), "Fred", "Flannery","fredFlannery@gmail.com", userRole));
-      userRepository.save(createUser("stevebosworth", passwordEncoder.encode("password"), "Steve", "Bosworth","steveBosworth@gmail.com", userRole));
-      userRepository.save(createUser("harrythompson", passwordEncoder.encode("password"), "Harry", "Thompson","harryThompson@gmail.com", userRole));
-      userRepository.save(createUser("peterparker", passwordEncoder.encode("password"), "Peter", "Parker","peterParker@gmail.com", userRole));
-      userRepository.save(createUser("janejohnson", passwordEncoder.encode("password"), "Jane", "Johnson","janeJohnson@gmail.com", userRole));
-      userRepository.save(createUser("marysmith", passwordEncoder.encode("password"), "Mary", "Smith","marySmith@gmail.com", userRole));
-      userRepository.save(createUser("grein003", passwordEncoder.encode("password"), "Lee", "Greiner","lee.greiner@duke.edu", allRoles));
+		  final Privilege listUsersPrivilege = privilegeRepository.save(new Privilege(PrivilegeName.VIEW_USERS));
+		  final Set<Privilege> userPrivileges = new HashSet<Privilege>();
+		  userPrivileges.add(listUsersPrivilege);
+      final Set<Privilege> administratorPrivileges = new HashSet<Privilege>();
+      administratorPrivileges.add(privilegeRepository.save(listUsersPrivilege));
+      administratorPrivileges.add(privilegeRepository.save(new Privilege(PrivilegeName.EDIT_USERS)));
+      Role userRole = new Role(RoleName.USER);
+      userRole.setPrivileges(userPrivileges);
+      userRole = roleRepository.save(userRole);
+      Role administratorRole = new Role(RoleName.ADMINISTRATOR);
+      administratorRole.setPrivileges(administratorPrivileges);
+      administratorRole = roleRepository.save(administratorRole);
+      final Set<Role> userRoles = Set.of(userRole);
+      final Set<Role> administratorRoles = Set.of(administratorRole);
+
+      userRepository.save(createUser("username", passwordEncoder.encode("password"), "Default", "User","defaultUser@gmail.com", userRoles));
+      userRepository.save(createUser("billstafford", passwordEncoder.encode("password"), "Bill", "Stafford","billStafford@gmail.com", userRoles));
+      userRepository.save(createUser("briancole", passwordEncoder.encode("password"), "Brian", "Cole","brianCole@gmail.com", userRoles));
+      userRepository.save(createUser("samsmith", passwordEncoder.encode("password"), "Sam", "Smith","samSmith@gmail.com", userRoles));
+      userRepository.save(createUser("perterpiper", passwordEncoder.encode("password"), "Peter", "Piper","peterPiper@gmail.com", userRoles));
+      userRepository.save(createUser("johnjameson", passwordEncoder.encode("password"), "John", "Jameson","johnJameson@gmail.com", userRoles));
+      userRepository.save(createUser("fredflannery", passwordEncoder.encode("password"), "Fred", "Flannery","fredFlannery@gmail.com", userRoles));
+      userRepository.save(createUser("stevebosworth", passwordEncoder.encode("password"), "Steve", "Bosworth","steveBosworth@gmail.com", userRoles));
+      userRepository.save(createUser("harrythompson", passwordEncoder.encode("password"), "Harry", "Thompson","harryThompson@gmail.com", userRoles));
+      userRepository.save(createUser("peterparker", passwordEncoder.encode("password"), "Peter", "Parker","peterParker@gmail.com", userRoles));
+      userRepository.save(createUser("janejohnson", passwordEncoder.encode("password"), "Jane", "Johnson","janeJohnson@gmail.com", userRoles));
+      userRepository.save(createUser("marysmith", passwordEncoder.encode("password"), "Mary", "Smith","marySmith@gmail.com", userRoles));
+      userRepository.save(createUser("grein003", passwordEncoder.encode("password"), "Lee", "Greiner","lee.greiner@duke.edu", administratorRoles));
 		};
 	}
 	

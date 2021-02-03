@@ -30,7 +30,7 @@ public class LoginControllerUnitTest extends AbstractWebUnitTest {
   }
 
   @Test
-  @WithMockUser(username = "test", authorities = { "USER" })
+  @WithMockUser(username = "test", authorities = { "VIEW_USERS" })
   public void whenAuthenticated_thenHomeReturned() throws Exception {
     when(securityUtils.userIsAuthenticated()).thenReturn(true);
     

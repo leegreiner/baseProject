@@ -2,6 +2,7 @@ package edu.duke.rs.baseProject.user;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.HashSet;
@@ -22,6 +23,7 @@ import edu.duke.rs.baseProject.datatables.DataTablesInput;
 import edu.duke.rs.baseProject.datatables.DataTablesOutput;
 import edu.duke.rs.baseProject.datatables.DataTablesTestUtils;
 import edu.duke.rs.baseProject.datatables.Search;
+import edu.duke.rs.baseProject.error.ApplicationErrorController;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.role.RoleRepository;
@@ -33,7 +35,7 @@ public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTes
   private RoleRepository roleRepository;
   
   @Test
-  @WithMockUser(username = "test", authorities = { "USER" })
+  @WithMockUser(username = "test", authorities = { "VIEW_USERS" })
   public void whenNoSearchCriteriaProvided_thenResultsIncludeAllUsers() throws Exception {
     final DataTablesInput input = new DataTablesInput();
     input.addColumn("lastName", false, false, "");
@@ -74,7 +76,7 @@ public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTes
   }
   
   @Test
-  @WithMockUser(username = "test", authorities = { "USER" })
+  @WithMockUser(username = "test", authorities = { "VIEW_USERS" })
   public void whenSearchCriteriaProvided_thenResultsAreFiltered() throws Exception {
     final DataTablesInput input = new DataTablesInput();
     input.addColumn("lastName", false, false, "");
@@ -113,6 +115,22 @@ public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTes
       assertThat(output.getData().get(i).getFirstName(), equalTo(expectedResult.get(i).getFirstName()));
       assertThat(output.getData().get(i).getLastName(), equalTo(expectedResult.get(i).getLastName()));
     }
+  }
+  
+  @Test
+  @WithMockUser(username = "test")
+  public void whenNotAuthorized_thenRedirectedToForbiddenErrorPage() throws Exception {
+    final DataTablesInput input = new DataTablesInput();
+    input.addColumn("lastName", false, false, "");
+    input.addOrder("lastName", true);
+    final String params = DataTablesTestUtils.toRequestParameters(input);
+  
+    final RequestBuilder requestBuilder =
+        MockMvcRequestBuilders.get(API + UserController.USERS_MAPPING + "?" + params);
+
+    mockMvc.perform(requestBuilder)
+      .andExpect(status().isFound())
+      .andExpect(redirectedUrl(ApplicationErrorController.ERROR_MAPPING + "?error=403"));
   }
 }
 

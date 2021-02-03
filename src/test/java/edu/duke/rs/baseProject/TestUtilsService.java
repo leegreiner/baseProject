@@ -13,9 +13,11 @@ import org.springframework.transaction.annotation.Transactional;
 public class TestUtilsService {
   private static final String AUDIT_TABLE_NAME_SUFFIX = "_aud";
   private static final List<String> AUDITED_TABLES = List.of(
+      "roles_to_privileges",
       "users_to_roles",
       "password_history",
       "users",
+      "privilege",
       "role");
   private static final List<String> UNAUDITED_TABLES = List.of(
       "revchanges",

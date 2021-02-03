@@ -115,7 +115,6 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         final MvcResult result = this.mockMvc.perform(get(UserController.USER_MAPPING, 1L)
             .with(user(UserDetailsBuilder.build(1L, roleName))))
         .andExpect(status().isFound())
-        .andExpect(status().isFound())
         .andReturn();
     
         assertThat(result.getResponse().getRedirectedUrl(), equalTo(NOT_AUTORIZED_MAPPING));

@@ -32,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
       throw new UsernameNotFoundException("blocked");
     }
     
-		final User user = this.userRepository.findByUsernameIgnoreCase(username)
+		final User user = this.userRepository.getByUsernameIgnoreCase(username)
 				.orElseThrow(() -> new UsernameNotFoundException("User " + username + " not found"));
 		
 		return new AppPrincipal(user, passwordExpirationStrategy.isPasswordExpired(user), loginAttemptService.isBlocked(user));

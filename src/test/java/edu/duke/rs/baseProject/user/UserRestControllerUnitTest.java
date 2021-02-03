@@ -44,7 +44,7 @@ public class UserRestControllerUnitTest extends AbstractWebUnitTest {
   private MessageSource messageSource;
   
   @Test
-  @WithMockUser(username = "test", authorities = { "USER" })
+  @WithMockUser(username = "test", authorities = { "VIEW_USERS" })
   public void whenNoSearchCriteriaProvided_thenFindAllUsers() throws Exception {
     final DataTablesInput input = new DataTablesInput();
     input.addColumn("lastName", false, false, "");
@@ -64,7 +64,7 @@ public class UserRestControllerUnitTest extends AbstractWebUnitTest {
   }
   
   @Test
-  @WithMockUser(username = "test", authorities = { "USER" })
+  @WithMockUser(username = "test", authorities = { "VIEW_USERS" })
   public void whenSearchCriteriaProvided_thenSearchCriteriaIsUsed() throws Exception {
     final DataTablesInput input = new DataTablesInput();
     input.addColumn("lastName", false, false, "");
@@ -86,7 +86,7 @@ public class UserRestControllerUnitTest extends AbstractWebUnitTest {
   }
   
   @Test
-  @WithMockUser(username = "test", authorities = { "USER" })
+  @WithMockUser(username = "test", authorities = { "VIEW_USERS" })
   public void whenAjaxRequestThrowsApplicationException_thenBadRequestReturned() throws Exception {
     final DataTablesInput input = new DataTablesInput();
     input.addColumn("lastName", false, false, "");
@@ -114,7 +114,7 @@ public class UserRestControllerUnitTest extends AbstractWebUnitTest {
   }
   
   @Test
-  @WithMockUser(username = "test", authorities = { "USER" })
+  @WithMockUser(username = "test", authorities = { "VIEW_USERS" })
   public void whenAjaxRequestThrowsException_thenBadRequestReturned() throws Exception {
     final DataTablesInput input = new DataTablesInput();
     input.addColumn("lastName", false, false, "");
@@ -138,5 +138,22 @@ public class UserRestControllerUnitTest extends AbstractWebUnitTest {
     final ObjectMapper mapper = new ObjectMapper();
     
     assertThat(result.getResponse().getContentAsString(), equalToCompressingWhiteSpace(mapper.writeValueAsString(errorInfo)));
+  }
+  
+  @Test
+  @WithMockUser(username = "test")
+  public void whenNotAuthorized_thenForbidden() throws Exception {
+    final DataTablesInput input = new DataTablesInput();
+    input.addColumn("lastName", false, false, "");
+    input.addOrder("lastName", true);
+    input.setSearch(new Search("abc", false));
+    final String params = DataTablesTestUtils.toRequestParameters(input);
+    
+    final RequestBuilder requestBuilder =
+        MockMvcRequestBuilders.get(UserRestController.USERS_MAPPING + "?" + params)
+        .header(HttpUtils.AJAX_REQUEST_HEADER, HttpUtils.AJAX_REQUEST_HEADER_VALUE);
+    
+    mockMvc.perform(requestBuilder)
+      .andExpect(status().isForbidden());
   }
 }
