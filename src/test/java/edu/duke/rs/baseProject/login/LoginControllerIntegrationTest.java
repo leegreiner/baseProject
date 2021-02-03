@@ -20,7 +20,7 @@ public class LoginControllerIntegrationTest extends AbstractWebIntegrationTest {
   }
 
   @Test
-  @WithMockUser(username = "test", authorities = { "USER" })
+  @WithMockUser(username = "test", authorities = { "VIEW_USERS" })
   public void whenAuthenticated_thenHomeReturned() throws Exception {
     this.mockMvc.perform(get(LoginController.LOGIN_MAPPING))
       .andExpect(status().isFound())

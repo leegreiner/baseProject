@@ -18,6 +18,8 @@ public interface UserRepository extends ExtendedJpaRepository<User, Long> {
 	Page<UserListItem> findByLastNameStartingWithIgnoreCase(String lastName, Pageable pageable);
 	Page<UserListItem> findAllBy(Pageable pageable);
 	
+	@EntityGraph(UserConstants.USER_ROLES_AND_PRIVILEGES_ENTITY_GRAPH)
+  Optional<User> getByUsernameIgnoreCase(String username);
 	@EntityGraph(UserConstants.USER_AND_ROLES_ENTITY_GRAPH)
 	Optional<User> findByUsernameIgnoreCase(String username);
 	Optional<User> findByEmailIgnoreCase(String email);

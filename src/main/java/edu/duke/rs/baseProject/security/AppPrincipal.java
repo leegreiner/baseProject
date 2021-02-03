@@ -1,7 +1,7 @@
 package edu.duke.rs.baseProject.security;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.TimeZone;
 import java.util.UUID;
 
@@ -15,7 +15,7 @@ import edu.duke.rs.baseProject.user.User;
 
 public class AppPrincipal implements UserDetails {
 	private static final long serialVersionUID = 1L;
-	private static final String ROLE_PREFIX = "ROLE_";
+	static final String ROLE_PREFIX = "ROLE_";
 	private final User user;
 	private final boolean passwordExpired;
 	private final boolean accountLocked;
@@ -25,12 +25,14 @@ public class AppPrincipal implements UserDetails {
 		this.user = user;
 		this.passwordExpired = passwordExpired;
 		this.accountLocked = accountLocked;
-		authorities = new ArrayList<SimpleGrantedAuthority>();
+		authorities = new HashSet<SimpleGrantedAuthority>();
 		
 		for (final Role role : user.getRoles()) {
 			authorities.add(new SimpleGrantedAuthority(ROLE_PREFIX + role.getName().name()));
-			role.getPrivileges().stream()
-			  .forEach(privilege -> authorities.add(new SimpleGrantedAuthority(privilege.getName().name())));
+			if (role.getPrivileges() != null) {
+  			role.getPrivileges().stream()
+  			  .forEach(privilege -> authorities.add(new SimpleGrantedAuthority(privilege.getName().name())));
+			}
 		}
 	}
 	

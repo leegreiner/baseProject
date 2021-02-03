@@ -21,7 +21,7 @@ public class IndexControllerUnitTest extends AbstractWebUnitTest {
   }
 
   @Test
-  @WithMockUser(username = "test", authorities = { "USER" })
+  @WithMockUser(username = "test", authorities = { "VIEW_USERS" })
   public void whenAuthenticated_thenHomeDisplayed() throws Exception {
     this.mockMvc.perform(get(IndexController.INDEX_MAPPING)).andExpect(status().isFound())
         .andExpect(redirectedUrl(HomeController.HOME_MAPPING));

@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AccountExpiredException;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.CredentialsExpiredException;
@@ -49,6 +50,8 @@ import edu.duke.rs.baseProject.security.AjaxAwareAccessDeniedHandler;
 import edu.duke.rs.baseProject.security.AjaxAwareExceptionMappingAuthenticationHandler;
 import edu.duke.rs.baseProject.security.AjaxAwareLoginUrlAuthenticationEntryPoint;
 import edu.duke.rs.baseProject.security.RestBasicAuthenticationEntryPoint;
+import edu.duke.rs.baseProject.user.UserController;
+import edu.duke.rs.baseProject.user.UserRestController;
 
 @Configuration
 public class WebSecurityConfig {
@@ -145,8 +148,9 @@ public class WebSecurityConfig {
           .authorizeRequests()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
             .antMatchers("/", "/error/**", "/webfonts/**", "/img/**", "/loginPage", "/users/pwdreset", "/i18n/**").permitAll()
-            .antMatchers("/users/**").hasAuthority(PrivilegeName.EDIT_USERS.name())
-            .antMatchers("/users").hasAuthority(PrivilegeName.VIEW_USERS.name())
+            .antMatchers(UserRestController.USERS_MAPPING).hasAuthority(PrivilegeName.VIEW_USERS.name())
+            .antMatchers(HttpMethod.GET, UserController.USERS_MAPPING).hasAuthority(PrivilegeName.VIEW_USERS.name())
+            .antMatchers(UserController.USERS_MAPPING + "/**").hasAuthority(PrivilegeName.EDIT_USERS.name())
             .anyRequest().authenticated()
         .and()
           .formLogin()

@@ -6,6 +6,8 @@ import java.util.TimeZone;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
+import edu.duke.rs.baseProject.role.Privilege;
+import edu.duke.rs.baseProject.role.PrivilegeName;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.security.AppPrincipal;
@@ -21,6 +23,7 @@ public class UserDetailsBuilder {
     for (int i = 0; i < roles.length; i++) {
       final Role role = new Role(roles[i]);
       role.setId(Long.valueOf(i + 1));
+      role.setPrivileges(getRolePrivileges(roles[i]));
       roleEntities.add(role);
     }
     
@@ -34,5 +37,17 @@ public class UserDetailsBuilder {
     user.setTimeZone(TimeZone.getTimeZone("UTC"));
     
     return new AppPrincipal(user, false, false);
+  }
+  
+  private static Set<Privilege> getRolePrivileges(final RoleName roleName) {
+    final Set<Privilege> result = new HashSet<Privilege>();
+    
+    result.add(new Privilege(PrivilegeName.VIEW_USERS));
+    
+    if (roleName.equals(RoleName.ADMINISTRATOR)) {
+      result.add(new Privilege(PrivilegeName.EDIT_USERS));
+    }
+    
+    return result;
   }
 }

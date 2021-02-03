@@ -68,7 +68,7 @@ import lombok.ToString;
 )
 @NamedEntityGraphs({
   @NamedEntityGraph(
-      name = UserConstants.USER_AND_ROLES_ENTITY_GRAPH, 
+      name = UserConstants.USER_ROLES_AND_PRIVILEGES_ENTITY_GRAPH, 
       attributeNodes = @NamedAttributeNode(value = "roles", subgraph = "subgraph.roles"), 
       subgraphs = {
           @NamedSubgraph(name = "subgraph.roles", 
@@ -76,7 +76,11 @@ import lombok.ToString;
                   @NamedAttributeNode(value = "privileges")
               }
           )
-      })
+      }),
+  @NamedEntityGraph(
+      name = UserConstants.USER_AND_ROLES_ENTITY_GRAPH, 
+      attributeNodes = @NamedAttributeNode("roles")
+  )
 })
 @NamedQueries({
   @NamedQuery(
