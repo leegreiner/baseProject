@@ -39,13 +39,14 @@ import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.role.RoleRepository;
 import edu.duke.rs.baseProject.security.AppPrincipal;
-import edu.duke.rs.baseProject.security.SecurityUtils;
+import edu.duke.rs.baseProject.security.PersistentSecurityUtils;
 import edu.duke.rs.baseProject.security.password.PasswordGenerator;
 import edu.duke.rs.baseProject.user.passwordReset.PasswordResetService;
 
 
-
 public class UserServiceUnitTest {
+  private static final String CHANGE_REASON = "Need to update";
+  private static final String CHANGE_PASSWORD = "abc123ABC";
   @Mock
   private AppPrincipal appPrincipal;
   @Mock
@@ -59,7 +60,7 @@ public class UserServiceUnitTest {
   @Mock
   private ApplicationEventPublisher eventPublisher;
   @Mock
-  private SecurityUtils securityUtils;
+  private PersistentSecurityUtils securityUtils;
   
   private UserServiceImpl service;
   
@@ -106,7 +107,6 @@ public class UserServiceUnitTest {
     assertThat(userProfile.getTimeZone(), equalTo(user.getTimeZone()));
     verify(userRepository, times(1)).findById(appPrincipal.getUserId());
     verifyNoMoreInteractions(userRepository);
-    
   }
   
   @Test
@@ -114,7 +114,7 @@ public class UserServiceUnitTest {
     when(securityUtils.getPrincipal()).thenReturn(Optional.empty());
     final UserProfile userProfile = new UserProfile(TimeZone.getTimeZone("GMT"));
     
-    assertThrows(IllegalArgumentException.class, () -> service.updateUserProfile(userProfile));
+    assertThrows(IllegalArgumentException.class, () -> service.updateUserProfile(userProfile), "error.principalNotFound");
   }
   
   @Test
@@ -159,7 +159,7 @@ public class UserServiceUnitTest {
     user.setUsername("abc");
     when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
     
-    assertThrows(NotFoundException.class, () -> service.getUser(user.getAlternateId()));
+    assertThrows(NotFoundException.class, () -> service.getUser(user.getAlternateId()), "error.userNotFound");
   }
   
   @Test
@@ -204,7 +204,7 @@ public class UserServiceUnitTest {
 
     when(userRepository.findByUsernameIgnoreCase(userDto.getUsername())).thenReturn(Optional.of(new User()));
     
-    assertThrows(ConstraintViolationException.class, () -> service.save(userDto));
+    assertThrows(ConstraintViolationException.class, () -> service.save(userDto), "error.duplicateUserName");
   }
   
   @Test
@@ -223,7 +223,7 @@ public class UserServiceUnitTest {
     when(userRepository.findByUsernameIgnoreCase(userDto.getUsername())).thenReturn(Optional.empty());
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.of(new User()));
     
-    assertThrows(ConstraintViolationException.class, () -> service.save(userDto));
+    assertThrows(ConstraintViolationException.class, () -> service.save(userDto), "error.duplicateEmail");
   }
   
   @Test
@@ -246,7 +246,7 @@ public class UserServiceUnitTest {
     when(passwordGenerator.generate()).thenReturn(password);
     when(roleRepository.findByName(role.getName())).thenReturn(Optional.empty());
 
-    assertThrows(NotFoundException.class, () -> service.save(userDto));
+    assertThrows(NotFoundException.class, () -> service.save(userDto), "error.roleNotFound");
   }
   
   @Test
@@ -310,10 +310,12 @@ public class UserServiceUnitTest {
   public void whenUpdatingOwnAccount_thenConstraintViolationExceptionThrown() {
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
+        .changeReason(CHANGE_REASON)
         .email("abc@123.com")
         .firstName("Joe")
         .lastName("Smith")
         .middleInitial("M")
+        .password(CHANGE_PASSWORD)
         .roles(List.of(RoleName.USER.name()))
         .timeZone(TimeZone.getDefault())
         .username("jsmith")
@@ -323,17 +325,49 @@ public class UserServiceUnitTest {
     when(appPrincipal.getAlternateUserId()).thenReturn(userDto.getId());
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     
-    assertThrows(ConstraintViolationException.class, () -> service.save(userDto));
+    assertThrows(ConstraintViolationException.class, () -> service.save(userDto), "error.cantUpdateOwnAccount");
+    
+    verify(securityUtils, times(1)).getPrincipal();
+    verifyNoMoreInteractions(securityUtils);
+  }
+  
+  @Test
+  public void whenUpdatingUserAndCurrentUserPasswordDoesntMatch_thenConstraintViolationExceptionThrown() {
+    final UserDto userDto = UserDto.builder()
+        .accountEnabled(true)
+        .changeReason(CHANGE_REASON)
+        .email("abc@123.com")
+        .firstName("Joe")
+        .lastName("Smith")
+        .middleInitial("M")
+        .password(CHANGE_PASSWORD)
+        .roles(List.of(RoleName.USER.name()))
+        .timeZone(TimeZone.getDefault())
+        .username("jsmith")
+        .id(UUID.randomUUID())
+        .build();
+
+    when(appPrincipal.getAlternateUserId()).thenReturn(UUID.randomUUID());
+    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.currentUserPasswordMatches(userDto.getPassword())).thenReturn(false);
+    
+    assertThrows(ConstraintViolationException.class, () -> service.save(userDto), "error.security.passwordMismatch");
+    
+    verify(securityUtils, times(1)).getPrincipal();
+    verify(securityUtils, times(1)).currentUserPasswordMatches(userDto.getPassword());
+    verifyNoMoreInteractions(securityUtils);
   }
   
   @Test
   public void whenUpdatingUserWithDuplicateEmail_thenConstraintViolationExceptionThrown() {
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
+        .changeReason(CHANGE_REASON)
         .email("abc@123.com")
         .firstName("Joe")
         .lastName("Smith")
         .middleInitial("M")
+        .password(CHANGE_PASSWORD)
         .roles(List.of(RoleName.USER.name()))
         .timeZone(TimeZone.getDefault())
         .username("jsmith")
@@ -342,19 +376,28 @@ public class UserServiceUnitTest {
 
     when(appPrincipal.getAlternateUserId()).thenReturn(UUID.randomUUID());
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.currentUserPasswordMatches(userDto.getPassword())).thenReturn(true);
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.of(new User()));
     
-    assertThrows(ConstraintViolationException.class, () -> service.save(userDto));
+    assertThrows(ConstraintViolationException.class, () -> service.save(userDto), "error.duplicateEmail");
+    
+    verify(securityUtils, times(1)).getPrincipal();
+    verify(securityUtils, times(1)).currentUserPasswordMatches(userDto.getPassword());
+    verify(userRepository, times(1)).findByEmailIgnoreCase(userDto.getEmail());
+    verifyNoMoreInteractions(securityUtils);
+    verifyNoMoreInteractions(userRepository);
   }
   
   @Test
   public void whenUpdatingUserAndUserNotFound_thenNotFoundExceptionThrown() {
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
+        .changeReason(CHANGE_REASON)
         .email("abc@123.com")
         .firstName("Joe")
         .lastName("Smith")
         .middleInitial("M")
+        .password(CHANGE_PASSWORD)
         .roles(List.of(RoleName.USER.name()))
         .timeZone(TimeZone.getDefault())
         .username("jsmith")
@@ -363,10 +406,18 @@ public class UserServiceUnitTest {
 
     when(appPrincipal.getAlternateUserId()).thenReturn(UUID.randomUUID());
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.currentUserPasswordMatches(userDto.getPassword())).thenReturn(true);
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.empty());
     when(userRepository.findByAlternateId(eq(userDto.getId()), any(String.class))).thenReturn(Optional.empty());
     
-    assertThrows(NotFoundException.class, () -> service.save(userDto));
+    assertThrows(NotFoundException.class, () -> service.save(userDto), "error.userNotFound");
+    
+    verify(securityUtils, times(1)).getPrincipal();
+    verify(securityUtils, times(1)).currentUserPasswordMatches(userDto.getPassword());
+    verify(userRepository, times(1)).findByEmailIgnoreCase(userDto.getEmail());
+    verify(userRepository, times(1)).findByAlternateId(any(UUID.class), any(String.class));
+    verifyNoMoreInteractions(securityUtils);
+    verifyNoMoreInteractions(userRepository);
   }
   
   @Test
@@ -390,6 +441,7 @@ public class UserServiceUnitTest {
     foundUser.setUsername(username);
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
+        .changeReason(CHANGE_REASON)
         .email("a" + foundUser.getEmail())
         .firstName("a" + foundUser.getFirstName())
         .lastName("a" + foundUser.getLastName())
@@ -402,6 +454,7 @@ public class UserServiceUnitTest {
 
     when(appPrincipal.getAlternateUserId()).thenReturn(UUID.randomUUID());
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(securityUtils.currentUserPasswordMatches(userDto.getPassword())).thenReturn(true);
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.empty());
     when(userRepository.findByAlternateId(eq(userDto.getId()),
         org.mockito.ArgumentMatchers.any(String.class))).thenReturn(Optional.of(foundUser));
@@ -417,6 +470,7 @@ public class UserServiceUnitTest {
     final User actual = service.save(userDto);
     
     assertThat(actual.getEmail(), equalTo(userDto.getEmail()));
+    assertThat(actual.getChangeReason(),equalTo(userDto.getChangeReason()));
     assertThat(actual.getDisplayName(),
         equalTo(userDto.getFirstName() + " " + userDto.getLastName()));
     assertThat(actual.getFirstName(), equalTo(userDto.getFirstName()));
@@ -429,6 +483,8 @@ public class UserServiceUnitTest {
     assertThat(actual.getTimeZone(), equalTo(userDto.getTimeZone()));
     assertThat(actual.getUsername(), equalTo(username));
     
+    verify(securityUtils, times(1)).getPrincipal();
+    verify(securityUtils, times(1)).currentUserPasswordMatches(userDto.getPassword());
     verify(userRepository, times(1)).findByEmailIgnoreCase(userDto.getEmail());
     verify(userRepository, times(1)).findByAlternateId(eq(userDto.getId()), any(String.class));
     verify(roleRepository, times(1)).findByName(role.getName());
@@ -438,6 +494,7 @@ public class UserServiceUnitTest {
     verifyNoMoreInteractions(roleRepository);
     verifyNoMoreInteractions(passwordGenerator);
     verifyNoMoreInteractions(eventPublisher);
+    verifyNoMoreInteractions(securityUtils);
   }
   
   @Test

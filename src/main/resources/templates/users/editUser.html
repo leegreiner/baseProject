@@ -9,10 +9,10 @@
     <content th:remove="tag">
       <div class="subheader">
         <h1 class="subheader-title">
-          <th:block th:text="#{editUser}" th:remove="tag">User profile</th:block>
+          <th:block th:text="#{editUser}" th:remove="tag">Edit User</th:block>
         </h1>
       </div>
-              
+           
 			<div class="row">
         <div class="col-sm-12 col-lg-8">
           <div id="panelDiv" class="panel">
@@ -113,7 +113,7 @@
                     <div class="col-sm-2 mb-3">
                     </div>
                     
-                    <div class="col-sm-5 mb-3">
+                    <div class="col-sm-5 mb-3 d-flex flex-column justify-content-center">
                       <div class="custom-control custom-checkbox">
                         <input type="checkbox" class="custom-control-input" id="accountEnabled" name="accountEnabled" th:checked="${user.accountEnabled}">
                         <input type="hidden" name="_accountEnabled" th:value="${user.accountEnabled} ? 'on' : 'off'">
@@ -125,7 +125,37 @@
                       </div>
                     </div>
                   </div>
-	   
+                  
+                  <hr class="border border-primary">
+                  
+                  <div class="form-row">
+	                   <div class="col-sm-12 mb-3">
+	                     <label class="form-label" th:for="changeReason" ><span th:text="#{changeReason}" th:remove="tag"></span> <span class="text-danger">*</span></label>
+	                     <input type="text" class="form-control" th:field="*{changeReason}" required/>
+	                     
+	                     <div class="invalid-feedback">
+	                       <th:block th:text="#{validation.changeReason}"></th:block>
+	                     </div>
+	                     <div th:if="${#fields.hasErrors('changeReason')}" class="invalid-feedback d-block">
+	                      <th:block th:errors="*{changeReason}"></th:block>
+	                     </div>
+	                   </div>
+	                 </div>
+	                 
+	                 <div class="form-row">  
+	                   <div class="col-sm-6 mb-3">
+                        <label class="form-label" th:for="password" ><span th:text="#{password}" th:remove="tag"></span> <span class="text-danger">*</span></label>
+                        <input type="password" class="form-control" th:field="*{password}" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$" required/>
+                      
+                        <div class="invalid-feedback">
+                           <th:block th:text="#{validation.password}"></th:block>
+                        </div>
+                        <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback d-block">
+                           <th:block th:errors="*{password}"></th:block>
+                        </div>
+                     </div>
+                  </div>
+                  
 	                <div class="panel-content border-faded border-left-0 border-right-0 border-bottom-0 d-flex flex-row">
 	                  <button id="submitButton" type="submit" class="btn btn-primary ml-auto">
                      <i class="fa fa-check"></i> <span th:text="#{submit}">submit</span>

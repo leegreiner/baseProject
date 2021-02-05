@@ -40,12 +40,14 @@ import edu.duke.rs.baseProject.security.SecurityUtils;
 
 @WebMvcTest(UserProfileController.class)
 public class UserProfileControllerUnitTest extends AbstractWebUnitTest{
+  private static final String EMAIL = "abc@123.com";
   @MockBean
   private UserService userService;
   @MockBean
   private BindingResult bindingResult;
   @MockBean
   private SecurityUtils securityUtils;
+  private UserDetailsBuilder userDetailsBuilder = new UserDetailsBuilder();
   
   @Test
   public void whenNotAuthenticated_thenRedirectToLogin() throws Exception {
@@ -63,7 +65,7 @@ public class UserProfileControllerUnitTest extends AbstractWebUnitTest{
     when(userService.getUserProfile()).thenReturn(userProfile);
     
     this.mockMvc.perform(get(UserProfileController.USER_PROFILE_MAPPING)
-       .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))
+       .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, RoleName.USER))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserProfileController.USER_PROFILE_VIEW))
       .andExpect(model().attribute(UserProfileController.USER_PROFILE_ATTRIBUTE, equalTo(userProfile)));
@@ -80,7 +82,7 @@ public class UserProfileControllerUnitTest extends AbstractWebUnitTest{
     when(userService.getUserProfile()).thenReturn(userProfile);
     
     this.mockMvc.perform(put(UserProfileController.USER_PROFILE_MAPPING).with(csrf()).param("timeZone", "abc")
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, RoleName.USER))))
         .andExpect(view().name(UserProfileController.USER_PROFILE_VIEW))
         .andExpect(model().attribute(BaseWebController.FLASH_ERROR_MESSAGE, equalTo("Please correct the errors below.")));
     
@@ -98,7 +100,7 @@ public class UserProfileControllerUnitTest extends AbstractWebUnitTest{
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(new AppPrincipal(user, false, false)));
     
     this.mockMvc.perform(put(UserProfileController.USER_PROFILE_MAPPING).with(csrf()).param("timeZone", "GMT")
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, RoleName.USER))))
         .andExpect(view().name(UserProfileController.USER_PROFILE_VIEW))
         .andExpect(model().attribute(BaseWebController.FLASH_ERROR_MESSAGE, equalTo("An unknown error has occurred.")));
     
@@ -110,7 +112,7 @@ public class UserProfileControllerUnitTest extends AbstractWebUnitTest{
   
   @Test
   public void whenUserProfilePassed_thenUpdateUserProfileReturnsToHomeView() throws Exception {
-    final UserDetails appUser = UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER);
+    final UserDetails appUser = userDetailsBuilder.build(Long.valueOf(1), EMAIL, RoleName.USER);
     final Set<Role> roles = new HashSet<Role>();
     final User user = new User();
     user.setRoles(roles);

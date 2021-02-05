@@ -14,40 +14,57 @@ import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.user.User;
 
 public class UserDetailsBuilder {
-  private UserDetailsBuilder() {
-  }
+  public static final String PASSWORD = "abc123ABC";
   
-  public static UserDetails build(final Long userId, final RoleName... roles) {
+  public UserDetails build(final Long userId, final String email, final RoleName... roles) {
     final Set<Role> roleEntities = new HashSet<Role>(roles.length);
     
     for (int i = 0; i < roles.length; i++) {
-      final Role role = new Role(roles[i]);
-      role.setId(Long.valueOf(i + 1));
-      role.setPrivileges(getRolePrivileges(roles[i]));
-      roleEntities.add(role);
+      roleEntities.add(createRole(roles[i]));
     }
     
-    final User user = new User();
-    user.setFirstName("John");
-    user.setId(userId);
-    user.setLastName("Smith");
-    user.setUsername("johnsmith");
-    user.setEmail("johnSmith@gmail.com");
-    user.setRoles(roleEntities);
-    user.setTimeZone(TimeZone.getTimeZone("UTC"));
+    final User user = createUser(userId, email, roleEntities);
     
     return new AppPrincipal(user, false, false);
   }
   
-  private static Set<Privilege> getRolePrivileges(final RoleName roleName) {
+  protected User createUser(final Long userId, final String email, final Set<Role> roles) {
+    final User user = new User();
+    user.setFirstName("zzzz");
+    user.setId(userId);
+    user.setLastName("ssss");
+    user.setPassword(createPassword(PASSWORD));
+    user.setUsername("zzzzssss");
+    user.setEmail(email);
+    user.setTimeZone(TimeZone.getTimeZone("UTC"));
+    user.setRoles(roles);
+    
+    return user;
+  }
+  
+  protected Role createRole(final RoleName roleName) {
+    final Role role = new Role(roleName);
+    role.setPrivileges(createRolePrivileges(roleName));
+    return role;
+  }
+  
+  private Set<Privilege> createRolePrivileges(final RoleName roleName) {
     final Set<Privilege> result = new HashSet<Privilege>();
     
-    result.add(new Privilege(PrivilegeName.VIEW_USERS));
+    result.add(createPrivilege(PrivilegeName.VIEW_USERS));
     
     if (roleName.equals(RoleName.ADMINISTRATOR)) {
-      result.add(new Privilege(PrivilegeName.EDIT_USERS));
+      result.add(createPrivilege(PrivilegeName.EDIT_USERS));
     }
     
     return result;
+  }
+  
+  protected Privilege createPrivilege(final PrivilegeName privilegeName) {
+    return new Privilege(privilegeName);
+  }
+  
+  protected String createPassword(final String password) {
+    return password;
   }
 }

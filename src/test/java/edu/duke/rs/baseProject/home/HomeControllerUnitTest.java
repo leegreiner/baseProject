@@ -16,6 +16,8 @@ import edu.duke.rs.baseProject.role.RoleName;
 
 @WebMvcTest(HomeController.class)
 public class HomeControllerUnitTest extends AbstractWebUnitTest {
+  private UserDetailsBuilder userDetailsBuilder = new UserDetailsBuilder();
+  
 	@Test
 	public void whenNotAuthenticated_thenRedirectToLogin() throws Exception {
 		this.mockMvc.perform(get(HomeController.HOME_MAPPING))
@@ -26,7 +28,7 @@ public class HomeControllerUnitTest extends AbstractWebUnitTest {
 	@Test
 	public void whenAuthenticated_thenHomeReturned() throws Exception {
 		this.mockMvc.perform(get(HomeController.HOME_MAPPING)
-		   .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER))))
+		   .with(user(userDetailsBuilder.build(Long.valueOf(1), "abc@123.com", RoleName.USER))))
 			.andExpect(status().isOk())
 			.andExpect(view().name(HomeController.HOME_VIEW));
 	}
