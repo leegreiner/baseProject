@@ -7,11 +7,13 @@ import java.util.Map;
 import java.util.UUID;
 
 import javax.validation.Valid;
+import javax.validation.groups.Default;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import edu.duke.rs.baseProject.BaseWebController;
+import edu.duke.rs.baseProject.dto.ESignedDto;
 import edu.duke.rs.baseProject.exception.ApplicationException;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.user.history.UserHistoryRepository;
@@ -103,7 +106,7 @@ public class UserController extends BaseWebController {
   
   @PutMapping(USER_MAPPING)
   public String updateUser(@PathVariable("userId") final UUID userId,
-      @Valid @ModelAttribute(name = USER_MODEL_ATTRIBUTE) final UserDto user,
+      @Validated({Default.class, ESignedDto.UpdateChecks.class}) @ModelAttribute(name = USER_MODEL_ATTRIBUTE) final UserDto user,
       final BindingResult result, final Model model, final RedirectAttributes attributes) {
     if (result.hasErrors()) {
       this.addErrorMessage(model, "error.pleaseCorrectErrors", (Object[])null);
@@ -166,7 +169,6 @@ public class UserController extends BaseWebController {
         .email(user.getEmail())
         .timeZone(user.getTimeZone())
         .accountEnabled(user.isAccountEnabled())
-        .lastLoggedIn(user.getLastLoggedIn())
         .roles(roles)
         .username(user.getUsername());
     }

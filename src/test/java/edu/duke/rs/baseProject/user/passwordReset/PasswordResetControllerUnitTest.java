@@ -44,12 +44,14 @@ import edu.duke.rs.baseProject.security.SecurityUtils;
 
 @WebMvcTest(PasswordResetController.class)
 public class PasswordResetControllerUnitTest extends AbstractWebUnitTest {
+  private static final String EMAIL = "abc@123.com";
   @MockBean
   private PasswordResetService passwordResetService;
   @MockBean
   private SecurityUtils securityUtils;
   @Autowired
   private MessageSource messageSource;
+  private UserDetailsBuilder userDetailsBuilder = new UserDetailsBuilder();
   
   @Test
   public void whenRequestingInitiatePasswordResetPage_thenPasswordInitiateResetPagePresented() throws Exception {
@@ -156,7 +158,7 @@ public class PasswordResetControllerUnitTest extends AbstractWebUnitTest {
     
     final MvcResult result = this.mockMvc.perform(post(PasswordResetController.PASSWORD_RESET_INITIATE_MAPPING)
         .with(csrf())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER)))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, RoleName.USER)))
         .param("email", dto.getEmail()))
         .andExpect(flash().attribute(BaseWebController.FLASH_FEEDBACK_MESSAGE, not(nullValue())))
         .andReturn();
@@ -276,7 +278,7 @@ public class PasswordResetControllerUnitTest extends AbstractWebUnitTest {
     
     final MvcResult result = this.mockMvc.perform(put(PasswordResetController.PASSWORD_RESET_INITIATE_MAPPING)
         .with(csrf())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.USER)))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, RoleName.USER)))
         .param("passwordChangeId", dto.getPasswordChangeId().toString())
         .param("username", dto.getUsername())
         .param("password", dto.getPassword())

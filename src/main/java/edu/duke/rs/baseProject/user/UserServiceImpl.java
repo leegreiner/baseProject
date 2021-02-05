@@ -23,7 +23,7 @@ import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.role.RoleRepository;
 import edu.duke.rs.baseProject.security.AppPrincipal;
-import edu.duke.rs.baseProject.security.SecurityUtils;
+import edu.duke.rs.baseProject.security.PersistentSecurityUtils;
 import edu.duke.rs.baseProject.security.password.PasswordGenerator;
 import edu.duke.rs.baseProject.user.passwordReset.PasswordResetService;
 import lombok.AccessLevel;
@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
   private transient final PasswordGenerator passwordGenerator;
   private transient final PasswordResetService passwordResetService;
   private transient final ApplicationEventPublisher eventPublisher;
-  private transient final SecurityUtils securityUtils;
+  private transient final PersistentSecurityUtils securityUtils;
   @Setter(AccessLevel.PACKAGE) // for testing
   @Value("${app.security.disableUnusedAccountsGreaterThanMonths:12}")
   private Long disableUnusedAccountsGreaterThanMonths;
@@ -95,6 +95,10 @@ public class UserServiceImpl implements UserService {
       throw new ConstraintViolationException("error.cantUpdateOwnAccount", (Object[]) null);
     }
     
+    if (! securityUtils.currentUserPasswordMatches(userDto.getPassword())) {
+      throw new ConstraintViolationException("error.security.passwordMismatch", (Object[]) null);
+    }
+    
     final Optional<User> userWithEmail = this.userRepository.findByEmailIgnoreCase(userDto.getEmail());
     
     if (userWithEmail.isPresent() && ! userWithEmail.get().getAlternateId().equals(userDto.getId())) {
@@ -109,6 +113,7 @@ public class UserServiceImpl implements UserService {
     user.setLastName(userDto.getLastName().trim());
     user.setMiddleInitial(userDto.getMiddleInitial());
     user.setTimeZone(userDto.getTimeZone());
+    user.setChangeReason(userDto.getChangeReason());
     
     populateRoles(userDto, user);
     

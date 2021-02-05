@@ -63,7 +63,7 @@ public class PasswordResetServiceUnitTest {
 
     when(this.userRepository.findByEmailIgnoreCase(dto.getEmail())).thenReturn(Optional.empty());
     
-    assertThrows(NotFoundException.class, () -> this.service.initiatePasswordReset(dto));
+    assertThrows(NotFoundException.class, () -> this.service.initiatePasswordReset(dto), "error.userNotFound");
   }
   
   @Test
@@ -76,7 +76,7 @@ public class PasswordResetServiceUnitTest {
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(appPrincipal.getEmail()).thenReturn("m" + dto.getEmail() + "");
     
-    assertThrows(ConstraintViolationException.class, () -> this.service.initiatePasswordReset(dto));
+    assertThrows(ConstraintViolationException.class, () -> this.service.initiatePasswordReset(dto), "error.passwordReset.invalidEmail");
   }
   
   @Test
@@ -130,7 +130,7 @@ public class PasswordResetServiceUnitTest {
     
     when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.empty());
     
-    assertThrows(NotFoundException.class, () -> this.service.processPasswordReset(dto));
+    assertThrows(NotFoundException.class, () -> this.service.processPasswordReset(dto), "error.userNotFound");
   }
   
   @Test
@@ -141,7 +141,7 @@ public class PasswordResetServiceUnitTest {
     
     when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.of(user));
     
-    assertThrows(NotFoundException.class, () -> this.service.processPasswordReset(dto));
+    assertThrows(NotFoundException.class, () -> this.service.processPasswordReset(dto), "error.userNotFound");
   }
   
   @Test
@@ -153,7 +153,7 @@ public class PasswordResetServiceUnitTest {
     
     when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.of(user));
     
-    assertThrows(ConstraintViolationException.class, () -> this.service.processPasswordReset(dto));
+    assertThrows(ConstraintViolationException.class, () -> this.service.processPasswordReset(dto), "error.passwordReset.invalidUserName");
   }
   
   @Test
@@ -168,7 +168,7 @@ public class PasswordResetServiceUnitTest {
     when(this.userRepository.findByPasswordChangeId(dto.getPasswordChangeId())).thenReturn(Optional.of(user));
     when(this.passwordEncoder.matches(dto.getPassword(), user.getPassword())).thenReturn(true);
 
-    assertThrows(ConstraintViolationException.class, () -> this.service.processPasswordReset(dto));
+    assertThrows(ConstraintViolationException.class, () -> this.service.processPasswordReset(dto), "error.passwordReset.passwordAlreadyUsed");
   }
   
   @Test
@@ -184,7 +184,7 @@ public class PasswordResetServiceUnitTest {
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(appPrincipal.getUserId()).thenReturn(user.getId() + 1);
     
-    assertThrows(ConstraintViolationException.class, () -> this.service.processPasswordReset(dto));
+    assertThrows(ConstraintViolationException.class, () -> this.service.processPasswordReset(dto), "error.passwordReset.currentlyLoggedInAsDifferentUser");
   }
   
   @Test

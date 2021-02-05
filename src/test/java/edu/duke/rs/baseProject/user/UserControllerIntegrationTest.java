@@ -41,6 +41,7 @@ import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetup;
 
 import edu.duke.rs.baseProject.AbstractWebIntegrationTest;
+import edu.duke.rs.baseProject.PersistentUserDetailsBuilder;
 import edu.duke.rs.baseProject.UserDetailsBuilder;
 import edu.duke.rs.baseProject.exception.NotFoundException;
 import edu.duke.rs.baseProject.login.LoginController;
@@ -51,11 +52,15 @@ import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.user.history.UserHistory;
 
 public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
+  private static final String CHANGE_REASON = "Need to change";
+  private static final String EMAIL = "abc@123.com";
   private GreenMail smtpServer;
   @Autowired
   private UserRepository userRepository;
   @Autowired
   private RoleRepository roleRepository;
+  @Autowired
+  private PersistentUserDetailsBuilder persistentUserDetailsBuilder;
   private Role role;
   
   @BeforeEach
@@ -79,7 +84,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   @Test
   public void whenAdminitrator_thenUsersReturned() throws Exception {
     this.mockMvc.perform(get(UserController.USERS_MAPPING)
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
+        .with(user(persistentUserDetailsBuilder.build(Long.valueOf(1), EMAIL,  RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USERS_VIEW));
   }
@@ -100,7 +105,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     user = userRepository.save(user);
     
     this.mockMvc.perform(get(UserController.USER_MAPPING, user.getAlternateId())
-      .with(user(UserDetailsBuilder.build(user.getId(), RoleName.ADMINISTRATOR))))
+      .with(user(persistentUserDetailsBuilder.build(user.getId(), EMAIL,  RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USER_DETAILS_VIEW))
       .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, equalTo(user)));
@@ -118,7 +123,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   public void whenAdministrator_thenNewUserDisplayReturned() throws Exception {    
     this.mockMvc.perform(get(UserController.USERS_MAPPING)
         .param(UserController.ACTION_REQUEST_PARAM, "new")
-      .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
+      .with(user(persistentUserDetailsBuilder.build(Long.valueOf(1), EMAIL,  RoleName.ADMINISTRATOR))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.NEW_USER_VIEW))
       .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
@@ -139,12 +144,12 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     
     final MvcResult result = this.mockMvc.perform(post(UserController.USERS_MAPPING)
         .with(csrf())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR)))
+        .with(user(persistentUserDetailsBuilder.build(Long.valueOf(1), EMAIL, RoleName.ADMINISTRATOR)))
         .param("email", expected.getEmail())
         .param("firstName", expected.getFirstName())
         .param("lastName", expected.getLastName())
         .param("middleInitial", expected.getMiddleInitial())
-        .param("roles", expected.getRoles().get(0))
+        .param("roles", expected.getRoles().iterator().next())
         .param("timeZone", expected.getTimeZone().getID())
         .param("username", expected.getUsername()))
         .andExpect(status().isFound())
@@ -207,16 +212,20 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     
     final MvcResult result = this.mockMvc.perform(put(UserController.USER_MAPPING, user.getAlternateId())
         .with(csrf())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR)))
+        .with(user(persistentUserDetailsBuilder.build(Long.valueOf(1), EMAIL, RoleName.ADMINISTRATOR)))
         .param("email", expected.getEmail())
         .param("firstName", expected.getFirstName())
         .param("id", expected.getId().toString())
         .param("lastName", expected.getLastName())
         .param("middleInitial", expected.getMiddleInitial())
-        .param("roles", expected.getRoles().get(0))
+        .param("roles", expected.getRoles().iterator().next())
         .param("timeZone", expected.getTimeZone().getID())
-        .param("username", expected.getUsername()))
+        .param("username", expected.getUsername())
+        .param("changeReason", CHANGE_REASON)
+        .param("password", UserDetailsBuilder.PASSWORD))
         .andExpect(status().isFound())
+        .andExpect(redirectedUrl(UriComponentsBuilder.fromPath(UserController.USER_MAPPING)
+            .encode().buildAndExpand(expected.getId()).toString()))
         .andReturn();
     
     final User actual = userRepository.findByAlternateId(user.getAlternateId(), UserConstants.USER_AND_ROLES_ENTITY_GRAPH)
@@ -226,6 +235,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
         equalTo(UriComponentsBuilder.fromPath(UserController.USER_MAPPING)
             .buildAndExpand(actual.getAlternateId()).encode().toUriString()));
 
+    assertThat(actual.getChangeReason(), equalTo(CHANGE_REASON));
     assertThat(actual.getCreatedDate().atZone(ZoneId.systemDefault()).toEpochSecond(),
         equalTo(user.getCreatedDate().atZone(ZoneId.systemDefault()).toEpochSecond()));
     assertThat(actual.getDisplayName(),
@@ -242,11 +252,11 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     assertThat(actual.getUsername(), equalTo(user.getUsername()));
     assertThat(actual.getVersion(), equalTo(user.getVersion() + 1));
   }
-  
+
   @Test
   public void whenUserCreated_thenRecordIsAddedToHistory() throws Exception {
     final UserDto expected = buildUserDto();
-    final AppPrincipal userDetails = (AppPrincipal) UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR);
+    final AppPrincipal userDetails = (AppPrincipal) persistentUserDetailsBuilder.build(Long.valueOf(1), EMAIL,  RoleName.ADMINISTRATOR);
     
     this.mockMvc.perform(post(UserController.USERS_MAPPING)
         .with(csrf())
@@ -255,7 +265,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
         .param("firstName", expected.getFirstName())
         .param("lastName", expected.getLastName())
         .param("middleInitial", expected.getMiddleInitial())
-        .param("roles", expected.getRoles().get(0))
+        .param("roles", expected.getRoles().iterator().next())
         .param("timeZone", expected.getTimeZone().getID())
         .param("username", expected.getUsername()))
         .andExpect(status().isFound());
@@ -264,7 +274,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
         .orElseThrow(() -> new NotFoundException());
     
     final MvcResult result = this.mockMvc.perform(get(UserController.USER_HISTORY_MAPPING, actual.getAlternateId())
-        .with(user(UserDetailsBuilder.build(Long.valueOf(1), RoleName.ADMINISTRATOR))))
+        .with(user(userDetails)))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USER_HISTORY_VIEW))
       .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, equalTo(actual)))

@@ -38,7 +38,7 @@ public class EmailServiceUnitTest {
    when(contentBuilder.build(MessageType.TEST, content)).thenReturn("This is a test");
    doThrow(EmailException.class).when(mailSender).send(any(MimeMessagePreparator.class));
    
-   assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, "abc@123.com", "Test subject", content, null));
+   assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, "abc@123.com", "Test subject", content, null), "error.unableToSendEmail");
   }
   
   @Test

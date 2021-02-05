@@ -107,7 +107,8 @@ public class EmailServiceIntegrationTest extends AbstractWebIntegrationTest {
   public void whenUnableToSendEmail_thenEmailExceptionThrown() {
     smtpServer.stop();
     
-    assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, "abc@123", "Test subject", Collections.emptyMap(), null));
+    assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, "abc@123", "Test subject", Collections.emptyMap(), null),
+        "error.unableToSendEmail");
   }
   
   @Test
@@ -150,6 +151,6 @@ public class EmailServiceIntegrationTest extends AbstractWebIntegrationTest {
     smtpServer.stop();
     
     assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, List.of("abc@123"), List.of("def@123.com"),
-        List.of("ghi@123.com"), "jkl@123.com", "Test subject", Collections.emptyMap(), null));
+        List.of("ghi@123.com"), "jkl@123.com", "Test subject", Collections.emptyMap(), null), "error.unableToSendEmail");
   }
 }
