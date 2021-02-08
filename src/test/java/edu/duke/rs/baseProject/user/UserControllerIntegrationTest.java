@@ -41,6 +41,7 @@ import com.icegreen.greenmail.util.GreenMail;
 import com.icegreen.greenmail.util.ServerSetup;
 
 import edu.duke.rs.baseProject.AbstractWebIntegrationTest;
+import edu.duke.rs.baseProject.PersistentUserBuilder;
 import edu.duke.rs.baseProject.PersistentUserDetailsBuilder;
 import edu.duke.rs.baseProject.UserDetailsBuilder;
 import edu.duke.rs.baseProject.exception.NotFoundException;
@@ -61,6 +62,8 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   private RoleRepository roleRepository;
   @Autowired
   private PersistentUserDetailsBuilder persistentUserDetailsBuilder;
+  @Autowired
+  private PersistentUserBuilder persistentUserBuilder;
   private Role role;
   
   @BeforeEach
@@ -101,8 +104,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
     
-    User user = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
-    user = userRepository.save(user);
+    final User user = persistentUserBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
     
     this.mockMvc.perform(get(UserController.USER_MAPPING, user.getAlternateId())
       .with(user(persistentUserDetailsBuilder.build(user.getId(), EMAIL,  RoleName.ADMINISTRATOR))))
@@ -203,7 +205,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     final UserDto expected = buildUserDto();
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
-    User user = new User(expected.getUsername() + "A", "password", expected.getFirstName() + "B", expected.getLastName() + "C",
+    User user = persistentUserBuilder.build(expected.getUsername() + "A", "password", expected.getFirstName() + "B", expected.getLastName() + "C",
          "D" + expected.getEmail(), roles);
     user.setAccountEnabled(false);
     user = userRepository.save(user);

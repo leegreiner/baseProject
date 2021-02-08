@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import dev.samstevens.totp.secret.SecretGenerator;
 import edu.duke.rs.baseProject.event.CreatedEvent;
 import edu.duke.rs.baseProject.event.UpdatedEvent;
 import edu.duke.rs.baseProject.exception.ConstraintViolationException;
@@ -38,6 +39,7 @@ public class UserServiceImpl implements UserService {
   private transient final UserRepository userRepository;
   private transient final RoleRepository roleRepository;
   private transient final PasswordGenerator passwordGenerator;
+  private transient final SecretGenerator secretGenerator;
   private transient final PasswordResetService passwordResetService;
   private transient final ApplicationEventPublisher eventPublisher;
   private transient final PersistentSecurityUtils securityUtils;
@@ -141,6 +143,7 @@ public class UserServiceImpl implements UserService {
     user.setMiddleInitial(userDto.getMiddleInitial());
     user.setLastName(userDto.getLastName().trim());
     user.setPassword(this.passwordGenerator.generate()); // set to a password that can't be hashed
+    user.setSecret(secretGenerator.generate());
     user.setTimeZone(userDto.getTimeZone());
     user.setUsername(userDto.getUsername().trim());
     passwordResetService.initiatePasswordReset(user);

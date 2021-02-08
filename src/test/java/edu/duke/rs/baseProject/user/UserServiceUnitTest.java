@@ -9,6 +9,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
@@ -31,6 +32,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Sort;
 
+import dev.samstevens.totp.secret.SecretGenerator;
 import edu.duke.rs.baseProject.event.CreatedEvent;
 import edu.duke.rs.baseProject.event.UpdatedEvent;
 import edu.duke.rs.baseProject.exception.ConstraintViolationException;
@@ -56,6 +58,8 @@ public class UserServiceUnitTest {
   @Mock
   private PasswordGenerator passwordGenerator;
   @Mock
+  private SecretGenerator secretGenerator;
+  @Mock
   private PasswordResetService passwordResetService;
   @Mock
   private ApplicationEventPublisher eventPublisher;
@@ -67,7 +71,8 @@ public class UserServiceUnitTest {
   @BeforeEach
   public void init() {
     MockitoAnnotations.openMocks(this);
-    service = new UserServiceImpl(userRepository, roleRepository, passwordGenerator, passwordResetService, eventPublisher, securityUtils);
+    service = new UserServiceImpl(userRepository, roleRepository, passwordGenerator, secretGenerator,
+        passwordResetService, eventPublisher, securityUtils);
   }
   
   @Test
@@ -268,6 +273,7 @@ public class UserServiceUnitTest {
     when(userRepository.findByUsernameIgnoreCase(userDto.getUsername())).thenReturn(Optional.empty());
     when(userRepository.findByEmailIgnoreCase(userDto.getEmail())).thenReturn(Optional.empty());
     when(passwordGenerator.generate()).thenReturn(password);
+    when(secretGenerator.generate()).thenReturn(CHANGE_PASSWORD);
     when(roleRepository.findByName(role.getName())).thenReturn(Optional.of(role));
     when(userRepository.save(any(User.class))).thenAnswer(new Answer<User>() {
       @Override
@@ -288,6 +294,7 @@ public class UserServiceUnitTest {
     assertThat(actual.getLastName(), equalTo(userDto.getLastName()));
     assertThat(actual.getMiddleInitial(), equalTo(userDto.getMiddleInitial()));
     assertThat(actual.getPassword(), equalTo(password));
+    assertThat(actual.getSecret(), equalTo(CHANGE_PASSWORD));
     assertThat(actual.getRoles(), contains(role));
     assertThat(actual.getTimeZone(), equalTo(userDto.getTimeZone()));
     assertThat(actual.getUsername(), equalTo(userDto.getUsername()));
@@ -297,11 +304,13 @@ public class UserServiceUnitTest {
     verify(roleRepository, times(1)).findByName(role.getName());
     verify(userRepository, times(1)).save(any(User.class));
     verify(passwordGenerator, times(1)).generate();
+    verify(secretGenerator, times(1)).generate();
     verify(passwordResetService, times(1)).initiatePasswordReset(any(User.class));
     verify(eventPublisher, times(1)).publishEvent(ArgumentMatchers.<CreatedEvent<User>>any());
     verifyNoMoreInteractions(userRepository);
     verifyNoMoreInteractions(roleRepository);
     verifyNoMoreInteractions(passwordGenerator);
+    verifyNoMoreInteractions(secretGenerator);
     verifyNoMoreInteractions(passwordResetService);
     verifyNoMoreInteractions(eventPublisher);
   }
@@ -436,6 +445,7 @@ public class UserServiceUnitTest {
     foundUser.setLastName("Smith");
     foundUser.setMiddleInitial("M");
     foundUser.setPassword(password);
+    foundUser.setSecret("aaa");
     foundUser.setRoles(roles);
     foundUser.setTimeZone(TimeZone.getDefault());
     foundUser.setUsername(username);
@@ -478,6 +488,7 @@ public class UserServiceUnitTest {
     assertThat(actual.getLastName(), equalTo(userDto.getLastName()));
     assertThat(actual.getMiddleInitial(), equalTo(userDto.getMiddleInitial()));
     assertThat(actual.getPassword(), equalTo(password));
+    assertThat(actual.getSecret(), equalTo("aaa"));
     assertThat(actual.getRoles().size(), equalTo(1));
     assertThat(actual.getRoles(), contains(role));
     assertThat(actual.getTimeZone(), equalTo(userDto.getTimeZone()));
@@ -495,6 +506,7 @@ public class UserServiceUnitTest {
     verifyNoMoreInteractions(passwordGenerator);
     verifyNoMoreInteractions(eventPublisher);
     verifyNoMoreInteractions(securityUtils);
+    verifyNoInteractions(secretGenerator);
   }
   
   @Test

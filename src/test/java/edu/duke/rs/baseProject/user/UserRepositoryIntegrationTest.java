@@ -21,6 +21,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import edu.duke.rs.baseProject.AbstractRepositoryTest;
+import edu.duke.rs.baseProject.UserBuilder;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 
@@ -28,6 +29,7 @@ import edu.duke.rs.baseProject.role.RoleName;
 public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
   @Autowired
   private UserRepository userRepository;
+  private final UserBuilder userBuilder = new UserBuilder();
   
   @Test
   public void whenFindByUserNameStartingWithIgnoreCaseNoUsers_thenReturnNoUsers() {
@@ -46,11 +48,11 @@ public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
     
-    User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
+    User user1 = userBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
     user1 = testEntityManager.persist(user1);
-    User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
+    User user2 = userBuilder.build("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
     user2 = testEntityManager.persist(user2);
-    User user3 = new User("jimmyjohnson", "password", "Jimmy", "Johnson","jimmyJohnson@gmail.com", roles);
+    User user3 = userBuilder.build("jimmyjohnson", "password", "Jimmy", "Johnson","jimmyJohnson@gmail.com", roles);
     user3 = testEntityManager.persistAndFlush(user3);
     testEntityManager.clear();
     
@@ -76,11 +78,11 @@ public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
     final Role role = testEntityManager.persist(new Role(RoleName.USER));
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
-    User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
+    User user1 = userBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
     user1.setPasswordChangeId(UUID.randomUUID());
     user1.setPasswordChangeIdCreationTime(now.minusDays(3));
     user1 = testEntityManager.persist(user1);
-    User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
+    User user2 = userBuilder.build("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
     user2.setPasswordChangeId(UUID.randomUUID());
     user2.setPasswordChangeIdCreationTime(now.minusDays(1));
     user2 = testEntityManager.persistAndFlush(user2);
@@ -101,11 +103,11 @@ public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
     final Role role = testEntityManager.persist(new Role(RoleName.USER));
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
-    User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
+    User user1 = userBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
     user1.setLastLoggedIn(LocalDateTime.now().minusYears(1).minusMinutes(1));
     user1.setAccountEnabled(true);
     testEntityManager.persist(user1);
-    User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
+    User user2 = userBuilder.build("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
     user2.setLastLoggedIn(LocalDateTime.now().minusYears(1).plusMinutes(1));
     user2.setAccountEnabled(true);
     user2 = testEntityManager.persistAndFlush(user2);

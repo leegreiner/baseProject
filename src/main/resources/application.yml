@@ -142,7 +142,13 @@ info:
     name: "@project.name@"
     description: Base Project description
     version: "@project.version@"
-    
+
+totp:
+  secret:
+# if this changes you need to change column length in User    length: 64
+  code:    length: 6
+  time:    period: 15
+        
 logging:  level:    edu.duke.rs: debug
     liquibse: info
 #    org.apache.http.wire: debug
@@ -224,6 +230,8 @@ saml:
     properties:      hibernate:
         format_sql: true
         generate_statistics: true
+        hbm2ddl:
+          import_files: dbdata/importRolesPrivileges.sql,dbdata/importUsers.sql
         show_sql: true
         
   mail:
@@ -239,8 +247,8 @@ logging:
 #    org.hibernate.type.descriptor.sql: trace
 #    com.hazelcast: debug
     edu.duke.drc.baseProject: debug
-    org.springframework.cache: trace
-    org.hibernate.stat: debug
+#    org.springframework.cache: trace
+#    org.hibernate.stat: debug
 #    org.springframework.cache: trace
 #    org.springframework.security: debug
 #    org.springframework.web.servlet.mvc.method.annotation: trace

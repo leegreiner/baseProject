@@ -14,7 +14,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.LocalDateTime;
 import java.util.Set;
-import java.util.TimeZone;
 import java.util.UUID;
 
 import javax.mail.internet.InternetAddress;
@@ -33,6 +32,7 @@ import com.icegreen.greenmail.util.ServerSetup;
 
 import edu.duke.rs.baseProject.AbstractWebIntegrationTest;
 import edu.duke.rs.baseProject.BaseWebController;
+import edu.duke.rs.baseProject.UserBuilder;
 import edu.duke.rs.baseProject.index.IndexController;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
@@ -49,6 +49,7 @@ public class PasswordResetControllerIntegrationTest extends AbstractWebIntegrati
   private RoleRepository roleRepository;
   @Autowired
   private PasswordEncoder passwordEncoder;
+  private UserBuilder userBuilder = new UserBuilder();
 
   private Role role;
   
@@ -66,7 +67,7 @@ public class PasswordResetControllerIntegrationTest extends AbstractWebIntegrati
   
   @Test
   public void whenPasswordResetInitiated_thenResetPasswordFieldsSetAndEmailSent() throws Exception {
-    final User user = userRepository.save(createUser());
+    final User user = this.userRepository.save(createUser());
     
     final MvcResult result = this.mockMvc.perform(post(PasswordResetController.PASSWORD_RESET_INITIATE_MAPPING)
         .with(csrf())
@@ -123,15 +124,7 @@ public class PasswordResetControllerIntegrationTest extends AbstractWebIntegrati
   }
   
   private User createUser() {
-    final User user = new User();
-    user.setEmail("abc@123.com");
-    user.setFirstName("Joe");
-    user.setLastName("Smith");
-    user.setPassword(passwordEncoder.encode(USER_PASSWORD));
-    user.setRoles(Set.of(role));
-    user.setTimeZone(TimeZone.getDefault());
-    user.setUsername("joesmith");
-    
-    return user;
+    return userBuilder.build("joesmith", USER_PASSWORD, "Joe",
+        "Smith", "abc@123.com", Set.of(role));
   }
 }

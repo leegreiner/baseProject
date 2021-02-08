@@ -25,6 +25,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import edu.duke.rs.baseProject.AbstractBaseTest;
+import edu.duke.rs.baseProject.UserBuilder;
 import edu.duke.rs.baseProject.role.Privilege;
 import edu.duke.rs.baseProject.role.PrivilegeName;
 import edu.duke.rs.baseProject.role.Role;
@@ -42,6 +43,7 @@ public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 	private LoginAttemptService loginAttemptService;
 	@InjectMocks
 	private UserDetailsServiceImpl userDetailsService;
+	private UserBuilder userBuilder = new UserBuilder();
 	
 	@BeforeEach 
 	public void inint() {
@@ -75,7 +77,7 @@ public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 		role.setPrivileges(Set.of(privilege));
 		final Set<Role> roles = new HashSet<Role>();
 		roles.add(role);
-		final User user = new User("johnsmith", "johnspassword", "John", "Smith","johnSmith@gmail.com", roles);
+		final User user = userBuilder.build("johnsmith", "johnspassword", "John", "Smith","johnSmith@gmail.com", roles);
 		when(userRepository.getByUsernameIgnoreCase(user.getUsername()))
 			.thenReturn(Optional.of(user));
 		

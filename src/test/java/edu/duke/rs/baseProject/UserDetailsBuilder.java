@@ -15,6 +15,7 @@ import edu.duke.rs.baseProject.user.User;
 
 public class UserDetailsBuilder {
   public static final String PASSWORD = "abc123ABC";
+  public static final String SECRET = "secret";
   
   public UserDetails build(final Long userId, final String email, final RoleName... roles) {
     final Set<Role> roleEntities = new HashSet<Role>(roles.length);
@@ -36,6 +37,7 @@ public class UserDetailsBuilder {
     user.setPassword(createPassword(PASSWORD));
     user.setUsername("zzzzssss");
     user.setEmail(email);
+    user.setSecret(SECRET);
     user.setTimeZone(TimeZone.getTimeZone("UTC"));
     user.setRoles(roles);
     

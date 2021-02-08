@@ -112,6 +112,10 @@ public class User extends ESignedBaseEntity implements Serializable {
 	@Size(min = 8, max = 200)
 	private String password;
 	
+	@Column(length = 64, nullable = false, updatable = false)
+	@NotBlank
+	private String secret;
+	
 	@Column(length = 30, nullable = false)
 	@NonNull
 	@NotBlank
