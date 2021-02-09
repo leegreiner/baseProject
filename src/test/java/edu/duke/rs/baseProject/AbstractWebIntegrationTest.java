@@ -19,6 +19,9 @@ public abstract class AbstractWebIntegrationTest extends AbstractWebTest {
   protected MockMvc mockMvc;
   @Autowired
   private TestUtilsService testUtilsService;
+  @Autowired
+  private PersistentRoleBuilder persistentRoleBuilder;
+ 
   @Value("${app.defaultEmailFrom}")
   protected String defaultMailFrom;
   @Value("${spring.mail.port}")
@@ -27,6 +30,7 @@ public abstract class AbstractWebIntegrationTest extends AbstractWebTest {
   @BeforeEach
   public void resetState() throws Exception {
     this.testUtilsService.resetState();
+    this.persistentRoleBuilder.buildAll();
   }
   
   protected static MimeMessage[] pollForEmail(final GreenMail smtpServer) {

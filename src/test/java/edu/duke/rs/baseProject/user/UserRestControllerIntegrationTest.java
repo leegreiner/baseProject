@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -25,13 +24,9 @@ import edu.duke.rs.baseProject.datatables.DataTablesOutput;
 import edu.duke.rs.baseProject.datatables.DataTablesTestUtils;
 import edu.duke.rs.baseProject.datatables.Search;
 import edu.duke.rs.baseProject.error.ApplicationErrorController;
-import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
-import edu.duke.rs.baseProject.role.RoleRepository;
 
 public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTest {
-  @Autowired
-  private RoleRepository roleRepository;
   @Autowired
   private PersistentUserBuilder persistentUserBuilder;
   
@@ -45,10 +40,7 @@ public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTes
   
     final RequestBuilder requestBuilder =
         MockMvcRequestBuilders.get(API + UserController.USERS_MAPPING + "?" + params);
-    
-    final Role role = roleRepository.save(new Role(RoleName.USER));
-    final Set<Role> roles = new HashSet<Role>();
-    roles.add(role);
+    final Set<RoleName> roles = Set.of(RoleName.USER);
     
     final User user1 = persistentUserBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
     final User user2 = persistentUserBuilder.build("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
@@ -84,10 +76,7 @@ public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTes
     final String params = DataTablesTestUtils.toRequestParameters(input);
     final RequestBuilder requestBuilder =
         MockMvcRequestBuilders.get(API + UserController.USERS_MAPPING + "?" + params);
-    
-    final Role role = roleRepository.save(new Role(RoleName.USER));
-    final Set<Role> roles = new HashSet<Role>();
-    roles.add(role);
+    final Set<RoleName> roles = Set.of(RoleName.USER);
     
     persistentUserBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
     final User user2 = persistentUserBuilder.build("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);

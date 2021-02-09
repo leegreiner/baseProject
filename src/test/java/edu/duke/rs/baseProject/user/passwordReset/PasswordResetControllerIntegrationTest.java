@@ -33,6 +33,7 @@ import com.icegreen.greenmail.util.ServerSetup;
 import edu.duke.rs.baseProject.AbstractWebIntegrationTest;
 import edu.duke.rs.baseProject.BaseWebController;
 import edu.duke.rs.baseProject.UserBuilder;
+import edu.duke.rs.baseProject.exception.NotFoundException;
 import edu.duke.rs.baseProject.index.IndexController;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
@@ -55,7 +56,7 @@ public class PasswordResetControllerIntegrationTest extends AbstractWebIntegrati
   
   @BeforeEach
   public void init() {
-    role = roleRepository.save(new Role(RoleName.USER));
+    role = roleRepository.findByName(RoleName.USER).orElseThrow(() -> new NotFoundException());
     smtpServer = new GreenMail(new ServerSetup(mailPort, null, "smtp"));
     smtpServer.start();
   }

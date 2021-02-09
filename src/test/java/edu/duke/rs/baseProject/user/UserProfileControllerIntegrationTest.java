@@ -32,7 +32,7 @@ public class UserProfileControllerIntegrationTest extends AbstractWebIntegration
   private UserRepository userRepository;
   @Autowired
   private PersistentUserDetailsBuilder persistentUserDetailsBuilder;
-  
+
   @Test
   public void whenNotAuthenticated_thenLoginPageReturned() throws Exception {
     this.mockMvc.perform(get(UserProfileController.USER_PROFILE_MAPPING))
@@ -43,7 +43,7 @@ public class UserProfileControllerIntegrationTest extends AbstractWebIntegration
   @Test
   public void whenAuthenticated_thenUserProfileReturned() throws Exception {   
     this.mockMvc.perform(get(UserProfileController.USER_PROFILE_MAPPING)
-      .with(user(persistentUserDetailsBuilder.build(Long.valueOf(1),EMAIL, RoleName.USER))))
+      .with(user(persistentUserDetailsBuilder.build(EMAIL, RoleName.USER))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserProfileController.USER_PROFILE_VIEW))
       .andExpect(model().attribute(UserProfileController.USER_PROFILE_ATTRIBUTE, notNullValue()));

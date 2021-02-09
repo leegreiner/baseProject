@@ -37,7 +37,7 @@ public class UserDetailsBuilder {
     user.setPassword(createPassword(PASSWORD));
     user.setUsername("zzzzssss");
     user.setEmail(email);
-    user.setSecret(SECRET);
+    user.setSecret(createSecret());
     user.setTimeZone(TimeZone.getTimeZone("UTC"));
     user.setRoles(roles);
     
@@ -45,8 +45,11 @@ public class UserDetailsBuilder {
   }
   
   protected Role createRole(final RoleName roleName) {
+    final Set<Privilege> privileges = this.createRolePrivileges(roleName);
     final Role role = new Role(roleName);
-    role.setPrivileges(createRolePrivileges(roleName));
+    
+    role.setPrivileges(privileges);
+    
     return role;
   }
   
@@ -68,5 +71,9 @@ public class UserDetailsBuilder {
   
   protected String createPassword(final String password) {
     return password;
+  }
+  
+  protected String createSecret() {
+    return SECRET;
   }
 }

@@ -162,7 +162,7 @@ public class UserServiceImpl implements UserService {
       user.setRoles(new HashSet<Role>());
     }
     
-    final Set<RoleName> inComingRoleNames = userDto.getRoles().stream().map(s -> RoleName.valueOf(s)).collect(Collectors.toSet());
+    final Set<RoleName> inComingRoleNames = new HashSet<RoleName>(userDto.getRoles());
     final Set<RoleName> currentRoleNames = user.getRoles().stream().map(r -> r.getName()).collect(Collectors.toSet());
     final Set<RoleName> rolesToRemove = new HashSet<RoleName>(currentRoleNames);
     final Set<RoleName> rolesToAdd = new HashSet<RoleName>(inComingRoleNames);

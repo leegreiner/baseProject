@@ -149,7 +149,7 @@ totp:
   code:    length: 6
   time:    period: 15
         
-logging:  level:    edu.duke.rs: debug
+logging:  level:    edu.duke.rs: info
     liquibse: info
 #    org.apache.http.wire: debug
     
@@ -226,12 +226,10 @@ saml:
      
   jpa:    show-sql: true
     hibernate:      ddl-auto: create-drop
-    open-in-view: false # needed for audit history
+    open-in-view: true # needed for audit history
     properties:      hibernate:
         format_sql: true
-        generate_statistics: true
-        hbm2ddl:
-          import_files: dbdata/importRolesPrivileges.sql,dbdata/importUsers.sql
+#        generate_statistics: true
         show_sql: true
         
   mail:
