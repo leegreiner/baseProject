@@ -6,6 +6,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.Set;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 
@@ -28,7 +30,7 @@ public class HomeControllerUnitTest extends AbstractWebUnitTest {
 	@Test
 	public void whenAuthenticated_thenHomeReturned() throws Exception {
 		this.mockMvc.perform(get(HomeController.HOME_MAPPING)
-		   .with(user(userDetailsBuilder.build(Long.valueOf(1), "abc@123.com", RoleName.USER))))
+		   .with(user(userDetailsBuilder.build(Long.valueOf(1), "abc@123.com", Set.of(RoleName.USER)))))
 			.andExpect(status().isOk())
 			.andExpect(view().name(HomeController.HOME_VIEW));
 	}

@@ -29,7 +29,7 @@ public class PersistentUserBuilder {
     final Set<Role> roles = new HashSet<Role>();
     
     for (final RoleName roleName : rolesNames) {
-      roles.add(this.roleRepository.findByName(roleName)
+      roles.add(this.roleRepository.getByName(roleName)
           .orElseThrow(() -> new IllegalArgumentException("Role " + roleName + " not foud")));
     }
     

@@ -17,12 +17,10 @@ public class UserDetailsBuilder {
   public static final String PASSWORD = "abc123ABC";
   public static final String SECRET = "secret";
   
-  public UserDetails build(final Long userId, final String email, final RoleName... roles) {
-    final Set<Role> roleEntities = new HashSet<Role>(roles.length);
+  public UserDetails build(final Long userId, final String email, final Set<RoleName> roleNames) {
+    final Set<Role> roleEntities = new HashSet<Role>(roleNames.size());
     
-    for (int i = 0; i < roles.length; i++) {
-      roleEntities.add(createRole(roles[i]));
-    }
+    roleNames.forEach(roleName -> roleEntities.add(createRole(roleName)));
     
     final User user = createUser(userId, email, roleEntities);
     

@@ -25,12 +25,12 @@ public class PersistentUserDetailsBuilder extends UserDetailsBuilder {
   private final PasswordEncoder passwordEncoder;
   private final SecretGenerator secretGenerator;
   
-  public UserDetails build(final String email, final RoleName... roles) {
-    return super.build(null, email, roles);
+  public UserDetails build(final String email, final Set<RoleName> roleNames) {
+    return super.build(null, email, roleNames);
   }
   
   @Override
-  public UserDetails build(final Long id, final String email, final RoleName... roles) {
+  public UserDetails build(final Long id, final String email, Set<RoleName> roleNames) {
     throw new IllegalArgumentException("Don't specify id when using persistent entities");
   }
   

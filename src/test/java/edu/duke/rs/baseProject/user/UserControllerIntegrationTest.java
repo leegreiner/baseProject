@@ -80,7 +80,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   @Test
   public void whenAdminitrator_thenUsersReturned() throws Exception {
     this.mockMvc.perform(get(UserController.USERS_MAPPING)
-        .with(user(persistentUserDetailsBuilder.build(EMAIL,  RoleName.ADMINISTRATOR))))
+        .with(user(persistentUserDetailsBuilder.build(EMAIL, Set.of(RoleName.ADMINISTRATOR)))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USERS_VIEW));
   }
@@ -97,7 +97,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     final User user = persistentUserBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", Set.of(RoleName.USER));
     
     this.mockMvc.perform(get(UserController.USER_MAPPING, user.getAlternateId())
-      .with(user(persistentUserDetailsBuilder.build(EMAIL,  RoleName.ADMINISTRATOR))))
+      .with(user(persistentUserDetailsBuilder.build(EMAIL, Set.of(RoleName.ADMINISTRATOR)))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USER_DETAILS_VIEW))
       .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, equalTo(user)));
@@ -115,7 +115,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   public void whenAdministrator_thenNewUserDisplayReturned() throws Exception {    
     this.mockMvc.perform(get(UserController.USERS_MAPPING)
         .param(UserController.ACTION_REQUEST_PARAM, "new")
-      .with(user(persistentUserDetailsBuilder.build(EMAIL,  RoleName.ADMINISTRATOR))))
+      .with(user(persistentUserDetailsBuilder.build(EMAIL, Set.of(RoleName.ADMINISTRATOR)))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.NEW_USER_VIEW))
       .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
@@ -136,7 +136,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     
     final MvcResult result = this.mockMvc.perform(post(UserController.USERS_MAPPING)
         .with(csrf())
-        .with(user(persistentUserDetailsBuilder.build(EMAIL, RoleName.ADMINISTRATOR)))
+        .with(user(persistentUserDetailsBuilder.build(EMAIL, Set.of(RoleName.ADMINISTRATOR))))
         .param("email", expected.getEmail())
         .param("firstName", expected.getFirstName())
         .param("lastName", expected.getLastName())
@@ -202,7 +202,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     
     final MvcResult result = this.mockMvc.perform(put(UserController.USER_MAPPING, user.getAlternateId())
         .with(csrf())
-        .with(user(persistentUserDetailsBuilder.build(EMAIL, RoleName.ADMINISTRATOR)))
+        .with(user(persistentUserDetailsBuilder.build(EMAIL, Set.of(RoleName.ADMINISTRATOR))))
         .param("email", expected.getEmail())
         .param("firstName", expected.getFirstName())
         .param("id", expected.getId().toString())
@@ -246,7 +246,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   @Test
   public void whenUserCreated_thenRecordIsAddedToHistory() throws Exception {
     final UserDto expected = buildUserDto();
-    final AppPrincipal userDetails = (AppPrincipal) persistentUserDetailsBuilder.build(EMAIL,  RoleName.ADMINISTRATOR);
+    final AppPrincipal userDetails = (AppPrincipal) persistentUserDetailsBuilder.build(EMAIL, Set.of(RoleName.ADMINISTRATOR));
     
     this.mockMvc.perform(post(UserController.USERS_MAPPING)
         .with(csrf())

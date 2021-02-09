@@ -22,6 +22,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.Locale;
+import java.util.Set;
 import java.util.UUID;
 
 import org.junit.jupiter.api.Test;
@@ -158,7 +159,7 @@ public class PasswordResetControllerUnitTest extends AbstractWebUnitTest {
     
     final MvcResult result = this.mockMvc.perform(post(PasswordResetController.PASSWORD_RESET_INITIATE_MAPPING)
         .with(csrf())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, RoleName.USER)))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.USER))))
         .param("email", dto.getEmail()))
         .andExpect(flash().attribute(BaseWebController.FLASH_FEEDBACK_MESSAGE, not(nullValue())))
         .andReturn();
@@ -278,7 +279,7 @@ public class PasswordResetControllerUnitTest extends AbstractWebUnitTest {
     
     final MvcResult result = this.mockMvc.perform(put(PasswordResetController.PASSWORD_RESET_INITIATE_MAPPING)
         .with(csrf())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, RoleName.USER)))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.USER))))
         .param("passwordChangeId", dto.getPasswordChangeId().toString())
         .param("username", dto.getUsername())
         .param("password", dto.getPassword())
