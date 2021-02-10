@@ -142,12 +142,6 @@ info:
     name: "@project.name@"
     description: Base Project description
     version: "@project.version@"
-
-totp:
-  secret:
-# if this changes you need to change column length in User    length: 64
-  code:    length: 6
-  time:    period: 15
         
 logging:  level:    edu.duke.rs: info
     liquibse: info
