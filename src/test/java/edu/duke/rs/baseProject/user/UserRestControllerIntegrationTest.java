@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -19,20 +18,17 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import edu.duke.rs.baseProject.AbstractWebIntegrationTest;
+import edu.duke.rs.baseProject.PersistentUserBuilder;
 import edu.duke.rs.baseProject.datatables.DataTablesInput;
 import edu.duke.rs.baseProject.datatables.DataTablesOutput;
 import edu.duke.rs.baseProject.datatables.DataTablesTestUtils;
 import edu.duke.rs.baseProject.datatables.Search;
 import edu.duke.rs.baseProject.error.ApplicationErrorController;
-import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
-import edu.duke.rs.baseProject.role.RoleRepository;
 
 public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTest {
   @Autowired
-  private UserRepository userRepository;
-  @Autowired
-  private RoleRepository roleRepository;
+  private PersistentUserBuilder persistentUserBuilder;
   
   @Test
   @WithMockUser(username = "test", authorities = { "VIEW_USERS" })
@@ -44,17 +40,11 @@ public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTes
   
     final RequestBuilder requestBuilder =
         MockMvcRequestBuilders.get(API + UserController.USERS_MAPPING + "?" + params);
+    final Set<RoleName> roles = Set.of(RoleName.USER);
     
-    final Role role = roleRepository.save(new Role(RoleName.USER));
-    final Set<Role> roles = new HashSet<Role>();
-    roles.add(role);
-    
-    User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
-    user1 = userRepository.save(user1);
-    User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
-    user2 = userRepository.save(user2);
-    User user3 = new User("jimmyjohnson", "password", "Jimmy", "Johnson","jimmyJohnson@gmail.com", roles);
-    user3 = userRepository.save(user3);
+    final User user1 = persistentUserBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
+    final User user2 = persistentUserBuilder.build("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
+    final User user3 = persistentUserBuilder.build("jimmyjohnson", "password", "Jimmy", "Johnson","jimmyJohnson@gmail.com", roles);
 
     final MvcResult result = mockMvc.perform(requestBuilder).andExpect(status().isOk()).andReturn();
     
@@ -86,17 +76,11 @@ public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTes
     final String params = DataTablesTestUtils.toRequestParameters(input);
     final RequestBuilder requestBuilder =
         MockMvcRequestBuilders.get(API + UserController.USERS_MAPPING + "?" + params);
+    final Set<RoleName> roles = Set.of(RoleName.USER);
     
-    final Role role = roleRepository.save(new Role(RoleName.USER));
-    final Set<Role> roles = new HashSet<Role>();
-    roles.add(role);
-    
-    User user1 = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
-    user1 = userRepository.save(user1);
-    User user2 = new User("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
-    user2 = userRepository.save(user2);
-    User user3 = new User("jimmyjohnson", "password", "Jimmy", "Johnson","jimmyJohnson@gmail.com", roles);
-    user3 = userRepository.save(user3);
+    persistentUserBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
+    final User user2 = persistentUserBuilder.build("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
+    final User user3 = persistentUserBuilder.build("jimmyjohnson", "password", "Jimmy", "Johnson","jimmyJohnson@gmail.com", roles);
 
     final MvcResult result = mockMvc.perform(requestBuilder).andExpect(status().isOk()).andReturn();
     

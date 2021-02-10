@@ -4,16 +4,19 @@ import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.validation.constraints.Size;
 
+import org.hibernate.envers.Audited;
+
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+@Getter
+@Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = true)
 @ToString(callSuper = true)
 @MappedSuperclass
-@Getter
-@Setter
+@Audited
 public class ESignedBaseEntity extends BaseEntity {
   @Column(name = "change_reason", length = 1000, nullable = true)
   @Size(max = 1000)

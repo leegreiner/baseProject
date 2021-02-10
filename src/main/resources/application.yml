@@ -142,8 +142,8 @@ info:
     name: "@project.name@"
     description: Base Project description
     version: "@project.version@"
-    
-logging:  level:    edu.duke.rs: debug
+        
+logging:  level:    edu.duke.rs: info
     liquibse: info
 #    org.apache.http.wire: debug
     
@@ -220,10 +220,12 @@ saml:
      
   jpa:    show-sql: true
     hibernate:      ddl-auto: create-drop
-    open-in-view: false # needed for audit history
+    open-in-view: true # needed for audit history
     properties:      hibernate:
         format_sql: true
-        generate_statistics: true
+#        generate_statistics: true
+        hbm2ddl:
+          import_files: dbdata/importSchemaChanges.sql,dbdata/importRolesPrivileges.sql,dbdata/importUsers.sql
         show_sql: true
         
   mail:
@@ -239,8 +241,8 @@ logging:
 #    org.hibernate.type.descriptor.sql: trace
 #    com.hazelcast: debug
     edu.duke.drc.baseProject: debug
-    org.springframework.cache: trace
-    org.hibernate.stat: debug
+#    org.springframework.cache: trace
+#    org.hibernate.stat: debug
 #    org.springframework.cache: trace
 #    org.springframework.security: debug
 #    org.springframework.web.servlet.mvc.method.annotation: trace

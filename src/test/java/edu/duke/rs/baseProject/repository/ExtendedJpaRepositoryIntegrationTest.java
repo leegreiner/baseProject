@@ -11,10 +11,11 @@ import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import edu.duke.rs.baseProject.AbstractRepositoryTest;
+import edu.duke.rs.baseProject.UserBuilder;
+import edu.duke.rs.baseProject.UsrBuilder;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.role.RoleRepository;
@@ -23,12 +24,12 @@ import edu.duke.rs.baseProject.user.UserConstants;
 import edu.duke.rs.baseProject.user.UserRepository;
 
 @ExtendWith(SpringExtension.class)
-@DataJpaTest
 public class ExtendedJpaRepositoryIntegrationTest extends AbstractRepositoryTest {
   @Autowired
   private UserRepository userRepository;
   @Autowired
   private RoleRepository roleRepository;
+  private final UsrBuilder userBuilder = new UserBuilder();
   
   @Test
   public void whenFindByAlternateIdNotFound_thenReturnsEmptyOptional() {
@@ -55,7 +56,8 @@ public class ExtendedJpaRepositoryIntegrationTest extends AbstractRepositoryTest
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
     
-    User user = new User("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
+    User user = userBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", null);
+    user.setRoles(roles);
     user = testEntityManager.persistAndFlush(user);
     
     Optional<User> userOptional = this.userRepository.findByAlternateId(user.getAlternateId());

@@ -1,5 +1,6 @@
 package edu.duke.rs.baseProject.user;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TimeZone;
@@ -11,39 +12,23 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import edu.duke.rs.baseProject.dto.ESignedDto;
-import lombok.Builder;
+import edu.duke.rs.baseProject.role.RoleName;
+import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@SuperBuilder
 @ToString
 public class UserDto extends ESignedDto {
   @NotNull(groups = {UpdateChecks.class})
   private UUID id;
-  
-  @Builder
-  public UserDto(final UUID id, final String username, final String firstName, final String middleInitial,
-      final String lastName, final String email, final TimeZone timeZone, final boolean accountEnabled,
-      final List<String> roles, final String changeReason, final String password) {
-    super(changeReason, password);
-    this.id = id;
-    this.username = username;
-    this.firstName = firstName;
-    this.middleInitial = middleInitial;
-    this.lastName = lastName;
-    this.email = email;
-    this.timeZone = timeZone;
-    this.accountEnabled = accountEnabled;
-    
-    if (roles != null) {
-      this.roles.addAll(roles);
-    }
-  }
-  
+
   @NotBlank
   @Size(min = 4, max = 30)
   private String username;
@@ -63,10 +48,16 @@ public class UserDto extends ESignedDto {
   @Size(max = 320)
   private String email;
   
+  @Default
+  @NotNull(message = "{validation.timeZone}")
   private TimeZone timeZone = TimeZone.getTimeZone("UTC");
 
+  @Default
   private boolean accountEnabled = true;
   
-  @NotEmpty
-  private List<String> roles = new ArrayList<String>();
+  private LocalDateTime lastLoggedIn;
+  
+  @NotEmpty(message = "{validation.roles}")
+  @Default
+  List<RoleName> roles = new ArrayList<RoleName>();
 }

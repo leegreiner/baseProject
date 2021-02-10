@@ -8,6 +8,7 @@ import javax.persistence.EntityListeners;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
+import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
@@ -20,10 +21,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
+@Getter
 @ToString
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @MappedSuperclass
-@Getter
+@Audited
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
   @Column(nullable = false, updatable = false)

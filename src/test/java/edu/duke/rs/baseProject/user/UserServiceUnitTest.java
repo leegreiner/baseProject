@@ -67,7 +67,8 @@ public class UserServiceUnitTest {
   @BeforeEach
   public void init() {
     MockitoAnnotations.openMocks(this);
-    service = new UserServiceImpl(userRepository, roleRepository, passwordGenerator, passwordResetService, eventPublisher, securityUtils);
+    service = new UserServiceImpl(userRepository, roleRepository, passwordGenerator,
+        passwordResetService, eventPublisher, securityUtils);
   }
   
   @Test
@@ -197,7 +198,7 @@ public class UserServiceUnitTest {
         .firstName("Joe")
         .lastName("Smith")
         .middleInitial("M")
-        .roles(List.of(RoleName.USER.name()))
+        .roles(List.of(RoleName.USER))
         .timeZone(TimeZone.getDefault())
         .username("jsmith")
         .build();
@@ -215,7 +216,7 @@ public class UserServiceUnitTest {
         .firstName("Joe")
         .lastName("Smith")
         .middleInitial("M")
-        .roles(List.of(RoleName.USER.name()))
+        .roles(List.of(RoleName.USER))
         .timeZone(TimeZone.getDefault())
         .username("jsmith")
         .build();
@@ -236,7 +237,7 @@ public class UserServiceUnitTest {
         .firstName("Joe")
         .lastName("Smith")
         .middleInitial("M")
-        .roles(List.of(role.getName().name()))
+        .roles(List.of(role.getName()))
         .timeZone(TimeZone.getTimeZone(ZoneId.of("Brazil/East")))
         .username("jsmith")
         .build();
@@ -260,7 +261,7 @@ public class UserServiceUnitTest {
         .firstName("Joe")
         .lastName("Smith")
         .middleInitial("M")
-        .roles(List.of(role.getName().name()))
+        .roles(List.of(role.getName()))
         .timeZone(TimeZone.getTimeZone(ZoneId.of("Brazil/East")))
         .username("jsmith")
         .build();
@@ -316,7 +317,7 @@ public class UserServiceUnitTest {
         .lastName("Smith")
         .middleInitial("M")
         .password(CHANGE_PASSWORD)
-        .roles(List.of(RoleName.USER.name()))
+        .roles(List.of(RoleName.USER))
         .timeZone(TimeZone.getDefault())
         .username("jsmith")
         .id(UUID.randomUUID())
@@ -341,7 +342,7 @@ public class UserServiceUnitTest {
         .lastName("Smith")
         .middleInitial("M")
         .password(CHANGE_PASSWORD)
-        .roles(List.of(RoleName.USER.name()))
+        .roles(List.of(RoleName.USER))
         .timeZone(TimeZone.getDefault())
         .username("jsmith")
         .id(UUID.randomUUID())
@@ -368,7 +369,7 @@ public class UserServiceUnitTest {
         .lastName("Smith")
         .middleInitial("M")
         .password(CHANGE_PASSWORD)
-        .roles(List.of(RoleName.USER.name()))
+        .roles(List.of(RoleName.USER))
         .timeZone(TimeZone.getDefault())
         .username("jsmith")
         .id(UUID.randomUUID())
@@ -398,7 +399,7 @@ public class UserServiceUnitTest {
         .lastName("Smith")
         .middleInitial("M")
         .password(CHANGE_PASSWORD)
-        .roles(List.of(RoleName.USER.name()))
+        .roles(List.of(RoleName.USER))
         .timeZone(TimeZone.getDefault())
         .username("jsmith")
         .id(UUID.randomUUID())
@@ -446,7 +447,7 @@ public class UserServiceUnitTest {
         .firstName("a" + foundUser.getFirstName())
         .lastName("a" + foundUser.getLastName())
         .middleInitial(foundUser.getMiddleInitial() != null ? null : "M")
-        .roles(List.of(role.getName().name()))
+        .roles(List.of(role.getName()))
         .timeZone(TimeZone.getDefault())
         .username(username)
         .id(UUID.randomUUID())

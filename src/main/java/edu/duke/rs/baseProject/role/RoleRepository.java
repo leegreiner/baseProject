@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.persistence.QueryHint;
 
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 
@@ -21,4 +22,7 @@ public interface RoleRepository extends ExtendedJpaRepository<Role, Long> {
     @QueryHint(name = org.hibernate.annotations.QueryHints.CACHE_REGION, value = "noExpireQueryResultsRegion")
   })
 	Optional<Role> findByName(RoleName name);
+
+  @EntityGraph(RoleConstants.ROLE_AND_PRIVILEGES_ENTITY_GRAPH)
+  Optional<Role> getByName(RoleName name);
 }

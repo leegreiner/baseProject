@@ -14,6 +14,9 @@ import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.NamedAttributeNode;
+import javax.persistence.NamedEntityGraph;
+import javax.persistence.NamedEntityGraphs;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
@@ -43,6 +46,11 @@ import lombok.ToString;
       @Index(name = "UIX_ROLE_ALT_ID", unique = true, columnList="alternate_id")
   }
 )
+@NamedEntityGraphs({
+  @NamedEntityGraph(
+      name = RoleConstants.ROLE_AND_PRIVILEGES_ENTITY_GRAPH, 
+      attributeNodes = @NamedAttributeNode(value = "privileges"))
+})
 @Cacheable
 @Cache(usage = CacheConcurrencyStrategy.READ_ONLY)
 @Immutable

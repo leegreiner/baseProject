@@ -27,6 +27,8 @@ import edu.duke.rs.baseProject.BaseWebController;
 import edu.duke.rs.baseProject.dto.ESignedDto;
 import edu.duke.rs.baseProject.exception.ApplicationException;
 import edu.duke.rs.baseProject.role.Role;
+import edu.duke.rs.baseProject.role.RoleName;
+import edu.duke.rs.baseProject.user.UserDto.UserDtoBuilder;
 import edu.duke.rs.baseProject.user.history.UserHistoryRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -155,11 +157,11 @@ public class UserController extends BaseWebController {
   }
   
   private UserDto toUserDto(final User user) {
-    final UserDto.UserDtoBuilder builder = UserDto.builder();
+    final UserDtoBuilder<?, ?> builder = UserDto.builder();
     
     if (user != null) {
-      final List<String> roles = new ArrayList<String>(user.getRoles().size());
-      user.getRoles().stream().forEach(r -> roles.add(r.getName().name()));
+      final List<RoleName> roles = new ArrayList<RoleName>(user.getRoles().size());
+      user.getRoles().stream().forEach(r -> roles.add(r.getName()));
       
       builder
         .id(user.getAlternateId())
@@ -169,6 +171,7 @@ public class UserController extends BaseWebController {
         .email(user.getEmail())
         .timeZone(user.getTimeZone())
         .accountEnabled(user.isAccountEnabled())
+        .lastLoggedIn(user.getLastLoggedIn())
         .roles(roles)
         .username(user.getUsername());
     }
