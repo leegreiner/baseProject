@@ -149,8 +149,7 @@ public class User extends ESignedBaseEntity implements Serializable {
 	
   private LocalDateTime lastPasswordChange;
 	
-	@Column(length = 36, nullable = true)
-	@Type(type = "uuid-char")
+  @Column(name = "password_change_id", length = 16, nullable = true, unique = true)
 	private UUID passwordChangeId;
 	
 	@Column(name = "password_chg_id_create_time", nullable = true)
