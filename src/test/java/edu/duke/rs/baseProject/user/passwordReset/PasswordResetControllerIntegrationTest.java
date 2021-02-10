@@ -32,12 +32,9 @@ import com.icegreen.greenmail.util.ServerSetup;
 
 import edu.duke.rs.baseProject.AbstractWebIntegrationTest;
 import edu.duke.rs.baseProject.BaseWebController;
-import edu.duke.rs.baseProject.UserBuilder;
-import edu.duke.rs.baseProject.exception.NotFoundException;
+import edu.duke.rs.baseProject.PersistentUserBuilder;
 import edu.duke.rs.baseProject.index.IndexController;
-import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
-import edu.duke.rs.baseProject.role.RoleRepository;
 import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
 
@@ -47,16 +44,12 @@ public class PasswordResetControllerIntegrationTest extends AbstractWebIntegrati
   @Autowired
   private UserRepository userRepository;
   @Autowired
-  private RoleRepository roleRepository;
-  @Autowired
   private PasswordEncoder passwordEncoder;
-  private UserBuilder userBuilder = new UserBuilder();
-
-  private Role role;
+  @Autowired
+  private PersistentUserBuilder persistentUserBuilder;
   
   @BeforeEach
   public void init() {
-    role = roleRepository.findByName(RoleName.USER).orElseThrow(() -> new NotFoundException());
     smtpServer = new GreenMail(new ServerSetup(mailPort, null, "smtp"));
     smtpServer.start();
   }
@@ -68,7 +61,7 @@ public class PasswordResetControllerIntegrationTest extends AbstractWebIntegrati
   
   @Test
   public void whenPasswordResetInitiated_thenResetPasswordFieldsSetAndEmailSent() throws Exception {
-    final User user = this.userRepository.save(createUser());
+    final User user = createUser();
     
     final MvcResult result = this.mockMvc.perform(post(PasswordResetController.PASSWORD_RESET_INITIATE_MAPPING)
         .with(csrf())
@@ -125,7 +118,7 @@ public class PasswordResetControllerIntegrationTest extends AbstractWebIntegrati
   }
   
   private User createUser() {
-    return userBuilder.build("joesmith", USER_PASSWORD, "Joe",
-        "Smith", "abc@123.com", Set.of(role));
+    return this.persistentUserBuilder.build("joesmith", USER_PASSWORD, "Joe",
+        "Smith", "abc@123.com", Set.of(RoleName.USER));
   }
 }

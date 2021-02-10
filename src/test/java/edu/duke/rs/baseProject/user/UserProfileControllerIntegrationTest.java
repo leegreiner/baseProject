@@ -28,6 +28,7 @@ import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.security.AppPrincipal;
 
 public class UserProfileControllerIntegrationTest extends AbstractWebIntegrationTest {
+  private static final String USER_NAME = "username1";
   private static final String EMAIL = "abc@123.com";
   @Autowired
   private UserRepository userRepository;
@@ -44,7 +45,7 @@ public class UserProfileControllerIntegrationTest extends AbstractWebIntegration
   @Test
   public void whenAuthenticated_thenUserProfileReturned() throws Exception {   
     this.mockMvc.perform(get(UserProfileController.USER_PROFILE_MAPPING)
-      .with(user(persistentUserDetailsBuilder.build(EMAIL, Set.of(RoleName.USER)))))
+      .with(user(persistentUserDetailsBuilder.build(USER_NAME, EMAIL, Set.of(RoleName.USER)))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserProfileController.USER_PROFILE_VIEW))
       .andExpect(model().attribute(UserProfileController.USER_PROFILE_ATTRIBUTE, notNullValue()));
@@ -52,7 +53,7 @@ public class UserProfileControllerIntegrationTest extends AbstractWebIntegration
   
   @Test
   public void whenUserProfilePassed_thenUpdateUserProfileReturnsToHomeView() throws Exception {
-    final AppPrincipal appPrincipal = (AppPrincipal) persistentUserDetailsBuilder.build(EMAIL, Set.of(RoleName.USER));
+    final AppPrincipal appPrincipal = (AppPrincipal) persistentUserDetailsBuilder.build(USER_NAME, EMAIL, Set.of(RoleName.USER));
     
     this.mockMvc.perform(put(UserProfileController.USER_PROFILE_MAPPING)
         .with(user(appPrincipal))

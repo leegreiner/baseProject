@@ -11,7 +11,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -26,8 +26,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import edu.duke.rs.baseProject.AbstractBaseTest;
 import edu.duke.rs.baseProject.UserBuilder;
-import edu.duke.rs.baseProject.role.Privilege;
-import edu.duke.rs.baseProject.role.PrivilegeName;
+import edu.duke.rs.baseProject.UsrBuilder;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.security.password.PasswordExpirationStrategy;
@@ -43,7 +42,7 @@ public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 	private LoginAttemptService loginAttemptService;
 	@InjectMocks
 	private UserDetailsServiceImpl userDetailsService;
-	private UserBuilder userBuilder = new UserBuilder();
+	private UsrBuilder userBuilder = new UserBuilder();
 	
 	@BeforeEach 
 	public void inint() {
@@ -72,12 +71,8 @@ public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 	
 	@Test
 	public void whenUserFound_thenUserDetailsReturned() {
-	  final Privilege privilege = new Privilege(PrivilegeName.VIEW_USERS);
-		final Role role = new Role(RoleName.USER);
-		role.setPrivileges(Set.of(privilege));
-		final Set<Role> roles = new HashSet<Role>();
-		roles.add(role);
-		final User user = userBuilder.build("johnsmith", "johnspassword", "John", "Smith","johnSmith@gmail.com", roles);
+		final User user = userBuilder.build("johnsmith", "johnspassword", "John", "Smith","johnSmith@gmail.com", Set.of(RoleName.USER));
+		
 		when(userRepository.getByUsernameIgnoreCase(user.getUsername()))
 			.thenReturn(Optional.of(user));
 		
@@ -85,12 +80,16 @@ public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 		
 		assertThat(userDetails.getUsername(), equalToIgnoringCase(user.getUsername()));
 		assertThat(userDetails.getPassword(), equalToIgnoringCase(user.getPassword()));
-		assertThat(userDetails.getAuthorities().size(), equalTo(2));
 		
-		final List<String> authorityNames = List.of(privilege.getName().name(), AppPrincipal.ROLE_PREFIX + role.getName().name());
+		final List<String> expectedAuthorities = new ArrayList<String>();
+    for (final Role role : user.getRoles()) {
+      expectedAuthorities.add(AppPrincipal.ROLE_PREFIX + role.getName().name());
+      role.getPrivileges().forEach(privilege -> expectedAuthorities.add(privilege.getName().name()));
+    }
+		assertThat(userDetails.getAuthorities().size(), equalTo(expectedAuthorities.size()));
 		
 		userDetails.getAuthorities().stream().forEach(authority -> {
-		  assertThat(authorityNames, hasItem(authority.getAuthority()));
+		  assertThat(expectedAuthorities, hasItem(authority.getAuthority()));
 		});
 		
 		verify(loginAttemptService, times(1)).isClientIpBlocked();

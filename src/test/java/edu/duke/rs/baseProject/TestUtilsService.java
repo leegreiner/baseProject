@@ -1,9 +1,15 @@
 package edu.duke.rs.baseProject;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
 
+import org.hibernate.Session;
+import org.hibernate.jdbc.ReturningWork;
 import org.springframework.cache.CacheManager;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
@@ -11,18 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class TestUtilsService {
-  private static final String AUDIT_TABLE_NAME_SUFFIX = "_aud";
-  private static final List<String> AUDITED_TABLES = List.of(
-      "roles_to_privileges",
-      "users_to_roles",
-      "password_history",
-      "users",
-      "privilege",
-      "role");
-  private static final List<String> UNAUDITED_TABLES = List.of(
-      "revchanges",
-      "audit_revision_entity");
-  
+  private static final List<String> EXCLUDED_TABLES = List.of("DATABASECHANGELOG","DATABASECHANGELOGLOCK");
   private final EntityManager entityManager;
   private final CacheManager cacheManager;
   
@@ -43,12 +38,8 @@ public class TestUtilsService {
     // for h2 only
     this.entityManager.createNativeQuery("SET REFERENTIAL_INTEGRITY FALSE").executeUpdate();
     
-    UNAUDITED_TABLES.stream().forEach(tableName -> this.entityManager.createNativeQuery("TRUNCATE TABLE " + tableName).executeUpdate());
-    
-    AUDITED_TABLES.stream().forEach(tableName -> {
-      this.entityManager.createNativeQuery("TRUNCATE TABLE " + tableName + AUDIT_TABLE_NAME_SUFFIX).executeUpdate();
-      this.entityManager.createNativeQuery("TRUNCATE TABLE " + tableName).executeUpdate();
-    });
+    this.getTableNames()
+      .forEach(tableName -> this.entityManager.createNativeQuery("TRUNCATE TABLE " + tableName).executeUpdate());
 
     // for h2 only
     this.entityManager.createNativeQuery("SET REFERENTIAL_INTEGRITY TRUE").executeUpdate();
@@ -62,5 +53,26 @@ public class TestUtilsService {
         .filter(it -> it != null)
         .forEach(it -> it.clear());
     }
+  }
+  
+  private List<String> getTableNames() {
+    return this.entityManager.unwrap(Session.class).doReturningWork(new ReturningWork<List<String>>() {
+      @Override
+      public List<String> execute(final Connection connection) throws SQLException {
+        final ResultSet tableRefs = connection.getMetaData()
+            .getTables(connection.getCatalog(), null,null, List.of("TABLE").toArray(new String[0]));
+        final List<String> tableNames = new ArrayList<String>();
+        
+        while(tableRefs.next()) {
+          final String tableName = tableRefs.getString("TABLE_NAME");
+          
+          if (! EXCLUDED_TABLES.contains(tableName)) {
+            tableNames.add(tableRefs.getString("TABLE_NAME"));
+          }
+        }
+
+        return tableNames;
+      }
+    });
   }
 }

@@ -230,6 +230,8 @@ saml:
     properties:      hibernate:
         format_sql: true
 #        generate_statistics: true
+        hbm2ddl:
+          import_files: dbdata/importSchemaChanges.sql,dbdata/importRolesPrivileges.sql,dbdata/importUsers.sql
         show_sql: true
         
   mail:
