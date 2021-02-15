@@ -139,7 +139,7 @@ public class WebSecurityConfig {
       }
       
       http
-        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.ALWAYS)
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
         .and()
           .exceptionHandling()
             .accessDeniedHandler(accessDeniedHandler())
