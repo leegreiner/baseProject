@@ -28,7 +28,6 @@
                   <th th:text="#{revision}">revision</th>
                   <th th:text="#{revisionType}">type</th>
                   <th th:text="#{time}">time</th>
-                  <th th:text="#{initiator}">initiator</th>
                   <th th:text="#{userName}">user name</th>
                   <th th:text="#{firstName}">first name</th>
                   <th th:text="#{initial}">middle initial</th>
@@ -41,6 +40,8 @@
                   <th th:text="#{passwordChangeId}">password change id</th>
                   <th th:text="#{passwordChangeIdTime}">password change id time</th>
                   <th th:text="#{roles}">roles</th>
+                  <th th:text="#{initiator}">initiator</th>
+                  <th th:text="#{changeReason}">change reason</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -48,7 +49,6 @@
 	                   <td nowrap th:text="${history.revision}">revision</td>
 	                   <td nowrap th:text="${history.revisionType}">revision type</td>
 	                   <td nowrap th:text="${{history.eventTime}}">time</td>
-	                   <td nowrap th:text="${history.initiator}">initiator</td>
 	                   <td nowrap th:text="${history.user.username}">user name</td>
 	                   <td nowrap th:text="${history.user.firstName}">first name</td>
 	                   <td nowrap th:text="${history.user.middleInitial}">initial</td>
@@ -60,7 +60,9 @@
 	                   <td nowrap th:text="${{history.user.lastPasswordChange}}">last password change</td>
 	                   <td nowrap th:text="${history.user.passwordChangeId}">password change id</td>
 	                   <td nowrap th:text="${{history.user.passwordChangeIdCreationTime}}">last change id creation time</td>
-	                   <td nowrap th:text="${{history.user.roles}}">roles</td>
+	                   <td nowrap th:text="${{history.user.roles}}">roles</td>	                   
+                     <td nowrap th:text="${history.initiator}">initiator</td>
+                     <td nowrap th:text="${history.user.changeReason}">change reason</td>
 	                 </tr>
 	               </tbody>
             </table>
