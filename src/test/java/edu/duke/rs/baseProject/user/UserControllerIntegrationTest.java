@@ -212,7 +212,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
         .param("roles", expected.getRoles().get(0).name())
         .param("timeZone", expected.getTimeZone().getID())
         .param("username", expected.getUsername())
-        .param("changeReason", CHANGE_REASON)
+        .param("reasonForChange", CHANGE_REASON)
         .param("password", PersistentUserDetailsBuilder.PASSWORD))
         .andExpect(status().isFound())
         .andExpect(redirectedUrl(UriComponentsBuilder.fromPath(UserController.USER_MAPPING)
@@ -226,7 +226,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
         equalTo(UriComponentsBuilder.fromPath(UserController.USER_MAPPING)
             .buildAndExpand(actual.getAlternateId()).encode().toUriString()));
 
-    assertThat(actual.getChangeReason(), equalTo(CHANGE_REASON));
+    assertThat(actual.getReasonForChange(), equalTo(CHANGE_REASON));
     assertThat(actual.getCreatedDate().atZone(ZoneId.systemDefault()).toEpochSecond(),
         equalTo(user.getCreatedDate().atZone(ZoneId.systemDefault()).toEpochSecond()));
     assertThat(actual.getDisplayName(),

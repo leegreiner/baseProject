@@ -41,7 +41,7 @@
                   <th th:text="#{passwordChangeIdTime}">password change id time</th>
                   <th th:text="#{roles}">roles</th>
                   <th th:text="#{initiator}">initiator</th>
-                  <th th:text="#{changeReason}">change reason</th>
+                  <th th:text="#{reasonForChange}">change reason</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -62,7 +62,7 @@
 	                   <td nowrap th:text="${{history.user.passwordChangeIdCreationTime}}">last change id creation time</td>
 	                   <td nowrap th:text="${{history.user.roles}}">roles</td>	                   
                      <td nowrap th:text="${history.initiator}">initiator</td>
-                     <td nowrap th:text="${history.user.changeReason}">change reason</td>
+                     <td nowrap th:text="${history.user.reasonForChange}">change reason</td>
 	                 </tr>
 	               </tbody>
             </table>

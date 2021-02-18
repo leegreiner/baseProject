@@ -130,14 +130,14 @@
                   
                   <div class="form-row">
 	                   <div class="col-sm-12 mb-3">
-	                     <label class="form-label" th:for="changeReason" ><span th:text="#{changeReason}" th:remove="tag"></span> <span class="text-danger">*</span></label>
-	                     <input type="text" class="form-control" th:field="*{changeReason}" required/>
+	                     <label class="form-label" th:for="reasonForChange" ><span th:text="#{reasonForChange}" th:remove="tag"></span> <span class="text-danger">*</span></label>
+	                     <input type="text" class="form-control" th:field="*{reasonForChange}" required/>
 	                     
 	                     <div class="invalid-feedback">
-	                       <th:block th:text="#{validation.changeReason}"></th:block>
+	                       <th:block th:text="#{validation.reasonForChange}"></th:block>
 	                     </div>
-	                     <div th:if="${#fields.hasErrors('changeReason')}" class="invalid-feedback d-block">
-	                      <th:block th:errors="*{changeReason}"></th:block>
+	                     <div th:if="${#fields.hasErrors('reasonForChange')}" class="invalid-feedback d-block">
+	                      <th:block th:errors="*{reasonForChange}"></th:block>
 	                     </div>
 	                   </div>
 	                 </div>
@@ -145,10 +145,10 @@
 	                 <div class="form-row">  
 	                   <div class="col-sm-6 mb-3">
                         <label class="form-label" th:for="password" ><span th:text="#{password}" th:remove="tag"></span> <span class="text-danger">*</span></label>
-                        <input type="password" class="form-control" th:field="*{password}" pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,16}$" required/>
+                        <input type="password" class="form-control" th:field="*{password}" required/>
                       
                         <div class="invalid-feedback">
-                           <th:block th:text="#{validation.password}"></th:block>
+                           <th:block th:text="#{validation.currentUsersPassword.invalid}"></th:block>
                         </div>
                         <div th:if="${#fields.hasErrors('password')}" class="invalid-feedback d-block">
                            <th:block th:errors="*{password}"></th:block>

@@ -46,6 +46,7 @@ import edu.duke.rs.baseProject.exception.NotFoundException;
 import edu.duke.rs.baseProject.login.LoginController;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
+import edu.duke.rs.baseProject.security.PersistentSecurityUtils;
 import edu.duke.rs.baseProject.user.history.UserHistory;
 import edu.duke.rs.baseProject.user.history.UserHistoryRepository;
 
@@ -58,6 +59,8 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   private UserService userService;
   @MockBean
   private UserHistoryRepository userHistoryRepository;
+  @MockBean
+  private PersistentSecurityUtils persistentSecurityUtils;
   @Autowired
   private MessageSource messageSource;
   private UserDetailsBuilder userDetailsBuilder = new UserDetailsBuilder();
@@ -302,6 +305,8 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     userDto.setEmail(null);
     userDto.setId(UUID.randomUUID());
     
+    when(persistentSecurityUtils.currentUserPasswordMatches(CHANGE_PASSWORD)).thenReturn(true);
+    
     this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
         .with(csrf())
         .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
@@ -325,6 +330,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     userDto.setId(UUID.randomUUID());
     final String errorMessage = "not found";
     
+    when(persistentSecurityUtils.currentUserPasswordMatches(CHANGE_PASSWORD)).thenReturn(true);
     when(userService.save(any(UserDto.class))).thenThrow(new NotFoundException(errorMessage, (Object[])null));
     
     this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
@@ -338,7 +344,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .param("roles", userDto.getRoles().get(0).name())
         .param("timeZone", userDto.getTimeZone().getID())
         .param("username", userDto.getUsername())
-        .param("changeReason", CHANGE_REASON)
+        .param("reasonForChange", CHANGE_REASON)
         .param("password", CHANGE_PASSWORD))
         .andExpect(view().name(UserController.EDIT_USER_VIEW))
         .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
@@ -354,6 +360,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     final UserDto userDto = buildUserDto();
     userDto.setId(user.getAlternateId());
     
+    when(persistentSecurityUtils.currentUserPasswordMatches(CHANGE_PASSWORD)).thenReturn(true);
     when(userService.save(any(UserDto.class))).thenReturn(user);
     
     final MvcResult result = this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
@@ -367,7 +374,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .param("roles", userDto.getRoles().get(0).name())
         .param("timeZone", userDto.getTimeZone().getID())
         .param("username", userDto.getUsername())
-        .param("changeReason", CHANGE_REASON)
+        .param("reasonForChange", CHANGE_REASON)
         .param("password", CHANGE_PASSWORD))
         .andExpect(flash().attribute(BaseWebController.FLASH_FEEDBACK_MESSAGE, not(nullValue())))
         .andReturn();
@@ -385,42 +392,14 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     final UserDto userDto = buildUserDto();
     userDto.setId(user.getAlternateId());
     
+    when(persistentSecurityUtils.currentUserPasswordMatches(CHANGE_PASSWORD)).thenReturn(true);
     when(userService.save(any(UserDto.class))).thenReturn(user);
     
+    // reason
     this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
         .with(csrf())
         .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
-        .param("email", userDto.getEmail())
-        .param("firstName", userDto.getFirstName())
-        .param("lastName", userDto.getLastName())
-        .param("middleInitial", userDto.getMiddleInitial())
-        .param("roles", userDto.getRoles().get(0).name())
-        .param("timeZone", userDto.getTimeZone().getID())
-        .param("username", userDto.getUsername()))
-        .andExpect(status().isOk())
-        .andExpect(view().name(UserController.EDIT_USER_VIEW))
-        .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
-        .andExpect(model().attribute(BaseWebController.FLASH_ERROR_MESSAGE, equalTo("Please correct the errors below.")));
-    
-    this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
-        .with(csrf())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
-        .param("email", userDto.getEmail())
-        .param("firstName", userDto.getFirstName())
-        .param("lastName", userDto.getLastName())
-        .param("middleInitial", userDto.getMiddleInitial())
-        .param("roles", userDto.getRoles().get(0).name())
-        .param("timeZone", userDto.getTimeZone().getID())
-        .param("username", userDto.getUsername())
-        .param("changeReason", CHANGE_REASON))
-        .andExpect(status().isOk())
-        .andExpect(view().name(UserController.EDIT_USER_VIEW))
-        .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
-        .andExpect(model().attribute(BaseWebController.FLASH_ERROR_MESSAGE, equalTo("Please correct the errors below.")));
-    
-    this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
-        .with(csrf())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
+        .param("id", userDto.getId().toString())
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
         .param("lastName", userDto.getLastName())
@@ -429,6 +408,44 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .param("timeZone", userDto.getTimeZone().getID())
         .param("username", userDto.getUsername())
         .param("password", CHANGE_PASSWORD))
+        .andExpect(status().isOk())
+        .andExpect(view().name(UserController.EDIT_USER_VIEW))
+        .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
+        .andExpect(model().attribute(BaseWebController.FLASH_ERROR_MESSAGE, equalTo("Please correct the errors below.")));
+    
+    // password
+    this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
+        .with(csrf())
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
+        .param("id", userDto.getId().toString())
+        .param("email", userDto.getEmail())
+        .param("firstName", userDto.getFirstName())
+        .param("lastName", userDto.getLastName())
+        .param("middleInitial", userDto.getMiddleInitial())
+        .param("roles", userDto.getRoles().get(0).name())
+        .param("timeZone", userDto.getTimeZone().getID())
+        .param("username", userDto.getUsername())
+        .param("reasonForChange", CHANGE_REASON))
+        .andExpect(status().isOk())
+        .andExpect(view().name(UserController.EDIT_USER_VIEW))
+        .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
+        .andExpect(model().attribute(BaseWebController.FLASH_ERROR_MESSAGE, equalTo("Please correct the errors below.")));
+    
+    when(persistentSecurityUtils.currentUserPasswordMatches(CHANGE_PASSWORD)).thenReturn(false);
+    // incorrect password
+    this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
+        .with(csrf())
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
+        .param("id", userDto.getId().toString())
+        .param("email", userDto.getEmail())
+        .param("firstName", userDto.getFirstName())
+        .param("lastName", userDto.getLastName())
+        .param("middleInitial", userDto.getMiddleInitial())
+        .param("roles", userDto.getRoles().get(0).name())
+        .param("timeZone", userDto.getTimeZone().getID())
+        .param("username", userDto.getUsername())
+        .param("password", CHANGE_PASSWORD + "a")
+        .param("reasonForChange", CHANGE_REASON))
         .andExpect(status().isOk())
         .andExpect(view().name(UserController.EDIT_USER_VIEW))
         .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))

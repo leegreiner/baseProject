@@ -18,7 +18,7 @@ import lombok.ToString;
 @MappedSuperclass
 @Audited
 public class ESignedBaseEntity extends BaseEntity {
-  @Column(name = "change_reason", length = 1000, nullable = true)
+  @Column(name = "reason_for_change", length = 1000, nullable = true)
   @Size(max = 1000)
-  private String changeReason;
+  private String reasonForChange;
 }

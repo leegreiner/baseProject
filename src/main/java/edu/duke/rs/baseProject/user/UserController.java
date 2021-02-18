@@ -24,12 +24,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import edu.duke.rs.baseProject.BaseWebController;
-import edu.duke.rs.baseProject.dto.ESignedDto;
 import edu.duke.rs.baseProject.exception.ApplicationException;
 import edu.duke.rs.baseProject.role.Role;
 import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.user.UserDto.UserDtoBuilder;
 import edu.duke.rs.baseProject.user.history.UserHistoryRepository;
+import edu.duke.rs.baseProject.validator.groups.Update;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 
@@ -108,7 +108,7 @@ public class UserController extends BaseWebController {
   
   @PutMapping(USER_MAPPING)
   public String updateUser(@PathVariable("userId") final UUID userId,
-      @Validated({Default.class, ESignedDto.UpdateChecks.class}) @ModelAttribute(name = USER_MODEL_ATTRIBUTE) final UserDto user,
+      @Validated({Default.class, Update.class}) @ModelAttribute(name = USER_MODEL_ATTRIBUTE) final UserDto user,
       final BindingResult result, final Model model, final RedirectAttributes attributes) {
     if (result.hasErrors()) {
       this.addErrorMessage(model, "error.pleaseCorrectErrors", (Object[])null);

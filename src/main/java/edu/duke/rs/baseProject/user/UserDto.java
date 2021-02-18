@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 
 import edu.duke.rs.baseProject.dto.ESignedDto;
 import edu.duke.rs.baseProject.role.RoleName;
+import edu.duke.rs.baseProject.validator.groups.Update;
 import lombok.Builder.Default;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,7 +27,7 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 @ToString
 public class UserDto extends ESignedDto {
-  @NotNull(groups = {UpdateChecks.class})
+  @NotNull(groups = {Update.class})
   private UUID id;
 
   @NotBlank
