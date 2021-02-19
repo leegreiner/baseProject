@@ -30,9 +30,9 @@ public class AuditQueryUtilsUnitTest {
   
   @Test
   public void whenResults_thenGetAuditQueryResultsReturnsResults() {
-    final AuditRevisionEntity auditRevisionEntity1 = new AuditRevisionEntity(Long.valueOf(1), "John Smith");
+    final AuditRevisionEntity auditRevisionEntity1 = new AuditRevisionEntity(Long.valueOf(1), "John Smith", null);
     final Object[] item1 = new Object[] {"a test", auditRevisionEntity1, RevisionType.ADD};
-    final AuditRevisionEntity auditRevisionEntity2 = new AuditRevisionEntity(Long.valueOf(2), "Jane Smith");
+    final AuditRevisionEntity auditRevisionEntity2 = new AuditRevisionEntity(Long.valueOf(2), "Jane Smith", null);
     final Object[] item2 = new Object[] {"another test", auditRevisionEntity2, RevisionType.MOD};
     final List<Object[]> resultList = List.of(item1, item2);
     when(auditQuery.getResultList()).thenReturn(resultList);

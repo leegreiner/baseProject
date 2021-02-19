@@ -16,11 +16,13 @@ public class EntityHistory {
   private final RevisionType revisionType;
   private final LocalDateTime eventTime;
   private final String initiator;
+  private final String reasonForChange;
   
   public EntityHistory(final AuditRevisionEntity auditRevisionEntity, final RevisionType revisionType) {
     this.revision = auditRevisionEntity.getId();
     this.revisionType = revisionType;
     this.eventTime = Instant.ofEpochMilli(auditRevisionEntity.getTimestamp()).atZone(ZoneId.systemDefault()).toLocalDateTime();
     this.initiator = auditRevisionEntity.getInitiator();
+    this.reasonForChange = auditRevisionEntity.getReasonForChange();
   }
 }

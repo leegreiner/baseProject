@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 public class EventHistoryUnitTest {
   @Test
   public void whenConstructorCalled_thenObjectCreatedCorrectly() {
-    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(Long.valueOf(1), "John Smith");
+    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(Long.valueOf(1), "John Smith", "abc");
     final LocalDateTime now = Instant.ofEpochMilli(1568745972000L).atZone(ZoneId.systemDefault()).toLocalDateTime();
     auditRevisionEntity.setTimestamp(1568745972000L);
     final RevisionType revisionType = RevisionType.ADD;
@@ -23,5 +23,6 @@ public class EventHistoryUnitTest {
     assertThat(entityHistory.getInitiator()).isEqualTo(auditRevisionEntity.getInitiator());
     assertThat(entityHistory.getRevision()).isEqualTo(auditRevisionEntity.getId());
     assertThat(entityHistory.getRevisionType()).isEqualTo(revisionType);
+    assertThat(entityHistory.getReasonForChange()).isEqualTo(auditRevisionEntity.getReasonForChange());
   }
 }

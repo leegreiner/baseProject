@@ -441,7 +441,6 @@ public class UserServiceUnitTest {
     final User actual = service.save(userDto);
     
     assertThat(actual.getEmail(), equalTo(userDto.getEmail()));
-    assertThat(actual.getReasonForChange(),equalTo(userDto.getReasonForChange()));
     assertThat(actual.getDisplayName(),
         equalTo(userDto.getFirstName() + " " + userDto.getLastName()));
     assertThat(actual.getFirstName(), equalTo(userDto.getFirstName()));

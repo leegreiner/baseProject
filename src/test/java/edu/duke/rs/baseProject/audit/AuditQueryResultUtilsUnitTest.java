@@ -19,7 +19,7 @@ public class AuditQueryResultUtilsUnitTest {
   
   @Test
   public void whenTypeDoesntMatch_thenEntityIsNull() {
-    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(Long.valueOf(1), "John Smith");
+    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(Long.valueOf(1), "John Smith", null);
     final Object[] item = new Object[] {LocalDateTime.now(), auditRevisionEntity, RevisionType.ADD};
     final AuditQueryResult<String> result = AuditQueryResultUtils.getAuditQueryResult(item, String.class);
     
@@ -40,7 +40,7 @@ public class AuditQueryResultUtilsUnitTest {
   
   @Test
   public void whenRevisionTypeDoesntMatch_thenRevisionIsNull() {
-    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(Long.valueOf(1), "John Smith");
+    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(Long.valueOf(1), "John Smith", null);
     final Object[] item = new Object[] {"a test", auditRevisionEntity, new String("abc")};
     final AuditQueryResult<String> result = AuditQueryResultUtils.getAuditQueryResult(item, String.class);
     
@@ -51,7 +51,7 @@ public class AuditQueryResultUtilsUnitTest {
   
   @Test
   public void whenItemValueValid_thenAllFieldsPopulated() {
-    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(Long.valueOf(1), "John Smith");
+    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(Long.valueOf(1), "John Smith", null);
     final Object[] item = new Object[] {"a test", auditRevisionEntity, RevisionType.ADD};
     final AuditQueryResult<String> result = AuditQueryResultUtils.getAuditQueryResult(item, String.class);
     

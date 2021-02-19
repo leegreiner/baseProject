@@ -18,7 +18,7 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = true, of = {"userId"})
 @NoArgsConstructor
 @AllArgsConstructor
-@RevisionEntity(UserRevisionListener.class)
+@RevisionEntity(AuditRevisionListener.class)
 public class AuditRevisionEntity extends DefaultTrackingModifiedEntitiesRevisionEntity {
   private static final long serialVersionUID = 1L;
   
@@ -26,4 +26,7 @@ public class AuditRevisionEntity extends DefaultTrackingModifiedEntitiesRevision
   
   @Column(length = 100, nullable = false)
   private String initiator;
+  
+  @Column(length = 1000, nullable = true)
+  private String reasonForChange;
 }

@@ -14,7 +14,7 @@ import org.mockito.MockitoAnnotations;
 import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 
-public class UserRevisionListenerUnitTest {
+public class AuditRevisionListenerUnitTest {
   @Mock
   private AppPrincipal appPrincipal;
   @Mock
@@ -30,12 +30,12 @@ public class UserRevisionListenerUnitTest {
     final AuditRevisionEntity are = new AuditRevisionEntity();
     when(securityUtils.getPrincipal()).thenReturn(Optional.empty());
     
-    final UserRevisionListener listener = new UserRevisionListener();
+    final AuditRevisionListener listener = new AuditRevisionListener();
     
     listener.newRevision(are);
     
     assertThat(are.getUserId(), equalTo(null));
-    assertThat(are.getInitiator(), equalTo(UserRevisionListener.SYSTEM_USER));
+    assertThat(are.getInitiator(), equalTo(AuditRevisionListener.SYSTEM_USER));
   }
   
   @Test
@@ -45,7 +45,7 @@ public class UserRevisionListenerUnitTest {
     when(appPrincipal.getUserId()).thenReturn(Long.valueOf(1));
     when(appPrincipal.getDisplayName()).thenReturn("Joe Smith");
     
-    final UserRevisionListener listener = new UserRevisionListener(securityUtils);
+    final AuditRevisionListener listener = new AuditRevisionListener(securityUtils);
     
     listener.newRevision(are);
     

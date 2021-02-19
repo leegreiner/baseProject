@@ -4,15 +4,16 @@ import org.hibernate.envers.RevisionListener;
 
 import edu.duke.rs.baseProject.security.SecurityUtils;
 
-public class UserRevisionListener implements RevisionListener {
+public class AuditRevisionListener implements RevisionListener {
+  private final AuditContextHolder auditContextHolder = new AuditContextHolder();
   private transient final SecurityUtils securityUtils;
   public static final String SYSTEM_USER = "System";
   
-  public UserRevisionListener(final SecurityUtils securityUtils) {
+  public AuditRevisionListener(final SecurityUtils securityUtils) {
     this.securityUtils = securityUtils;
   }
   
-  public UserRevisionListener() {
+  public AuditRevisionListener() {
     this(new SecurityUtils());
   }
   
@@ -24,5 +25,7 @@ public class UserRevisionListener implements RevisionListener {
       are.setUserId(appPrincipal.getUserId());
       are.setInitiator(appPrincipal.getDisplayName());
     }, () -> are.setInitiator(SYSTEM_USER));
+    
+    are.setReasonForChange(this.auditContextHolder.getContext().getReasonForChange());
   }
 }

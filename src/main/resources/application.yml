@@ -221,7 +221,7 @@ saml:
      
   jpa:    show-sql: true
     hibernate:      ddl-auto: create-drop
-    open-in-view: false # needed for audit history
+    open-in-view: true # needed for audit history
     properties:      hibernate:
         format_sql: true
 #        generate_statistics: true

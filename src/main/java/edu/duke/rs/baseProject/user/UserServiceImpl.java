@@ -25,6 +25,7 @@ import edu.duke.rs.baseProject.role.RoleRepository;
 import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.security.password.PasswordGenerator;
+import edu.duke.rs.baseProject.service.AuditableService;
 import edu.duke.rs.baseProject.user.passwordReset.PasswordResetService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,7 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 @Log4j2
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends AuditableService implements UserService {
   private transient final UserRepository userRepository;
   private transient final RoleRepository roleRepository;
   private transient final PasswordGenerator passwordGenerator;
@@ -109,7 +110,8 @@ public class UserServiceImpl implements UserService {
     user.setLastName(userDto.getLastName().trim());
     user.setMiddleInitial(userDto.getMiddleInitial());
     user.setTimeZone(userDto.getTimeZone());
-    user.setReasonForChange(userDto.getReasonForChange());
+    
+    this.getAuditContext().setReasonForChange(userDto.getReasonForChange());
     
     populateRoles(userDto, user);
     

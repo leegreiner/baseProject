@@ -226,7 +226,6 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
         equalTo(UriComponentsBuilder.fromPath(UserController.USER_MAPPING)
             .buildAndExpand(actual.getAlternateId()).encode().toUriString()));
 
-    assertThat(actual.getReasonForChange(), equalTo(CHANGE_REASON));
     assertThat(actual.getCreatedDate().atZone(ZoneId.systemDefault()).toEpochSecond(),
         equalTo(user.getCreatedDate().atZone(ZoneId.systemDefault()).toEpochSecond()));
     assertThat(actual.getDisplayName(),

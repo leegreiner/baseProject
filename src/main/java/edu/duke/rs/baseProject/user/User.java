@@ -38,7 +38,7 @@ import org.hibernate.envers.Audited;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import edu.duke.rs.baseProject.model.ESignedBaseEntity;
+import edu.duke.rs.baseProject.model.BaseEntity;
 import edu.duke.rs.baseProject.role.Role;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.EqualsAndHashCode;
@@ -89,7 +89,7 @@ import lombok.ToString;
       query = "update User user set user.accountEnabled = false where user.accountEnabled = true and user.lastLoggedIn < :date")
   
 })
-public class User extends ESignedBaseEntity implements Serializable {
+public class User extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Column(name = "user_id")
