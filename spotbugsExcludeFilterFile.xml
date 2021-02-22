@@ -5,6 +5,10 @@
     <Method name="parse" />
     <Bug pattern="NP_NONNULL_RETURN_VIOLATION"/>
   </Match>
+  <Match>
+   <Class name="edu.duke.rs.baseProject.config.AuditingJpaTransactionManager" />
+   <Bug pattern="SE_NO_SERIALVERSIONID,SE_BAD_FIELD" />
+  </Match>
   <!-- ignore all bugs in test classes, except for those bugs specifically relating to JUnit tests -->
   <!-- i.e. filter bug if ( classIsJUnitTest && ! bugIsRelatedToJUnit ) -->
   <Match>

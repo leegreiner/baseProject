@@ -7,9 +7,9 @@ import org.springframework.transaction.TransactionDefinition;
 
 import edu.duke.rs.baseProject.audit.AuditContextHolder;
 
+@SuppressWarnings("serial")
 public class AuditingJpaTransactionManager extends JpaTransactionManager {
-  private static final long serialVersionUID = 1L;
-  final AuditContextHolder auditContextHolder = new AuditContextHolder();
+  private final AuditContextHolder auditContextHolder = new AuditContextHolder();
   
   public AuditingJpaTransactionManager() {
     super();

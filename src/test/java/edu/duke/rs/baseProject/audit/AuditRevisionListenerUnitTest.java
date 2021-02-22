@@ -8,17 +8,17 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import edu.duke.rs.baseProject.security.AppPrincipal;
-import edu.duke.rs.baseProject.security.SecurityUtils;
 
 public class AuditRevisionListenerUnitTest {
   @Mock
   private AppPrincipal appPrincipal;
-  @Mock
-  private SecurityUtils securityUtils;
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private AuditContextHolder auditContextHolder;
   
   @BeforeEach
   public void init() {
@@ -28,7 +28,7 @@ public class AuditRevisionListenerUnitTest {
   @Test
   public void whenPrincipalNotFound_thenAuditRevisionEntityUserIdNotChanged() {
     final AuditRevisionEntity are = new AuditRevisionEntity();
-    when(securityUtils.getPrincipal()).thenReturn(Optional.empty());
+    when(auditContextHolder.getContext().getCurrentUser()).thenReturn(Optional.empty());
     
     final AuditRevisionListener listener = new AuditRevisionListener();
     
@@ -41,11 +41,11 @@ public class AuditRevisionListenerUnitTest {
   @Test
   public void whenPrincipalFoundAndIsAnAppPrincipal_thenAuditRevisionEntityUserIdAndInitiatorSetToUser() {
     final AuditRevisionEntity are = new AuditRevisionEntity();
-    when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
+    when(auditContextHolder.getContext().getCurrentUser()).thenReturn(Optional.of(appPrincipal));
     when(appPrincipal.getUserId()).thenReturn(Long.valueOf(1));
     when(appPrincipal.getDisplayName()).thenReturn("Joe Smith");
     
-    final AuditRevisionListener listener = new AuditRevisionListener(securityUtils);
+    final AuditRevisionListener listener = new AuditRevisionListener(auditContextHolder);
     
     listener.newRevision(are);
     
