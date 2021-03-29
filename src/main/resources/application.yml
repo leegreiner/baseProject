@@ -6,7 +6,7 @@ spring:
     continue-on-error: true
     initialization-mode: never
     platform: oracle
-    url: jdbc:oracle:thin:@//192.168.1.33:1521/ORCLPDB1
+    url: jdbc:oracle:thin:@//localhost:1521/ORCLPDB1
     username: baseapp
     password: 'tta&cno2'
     hikari:      auto-commit: false
@@ -30,6 +30,7 @@ spring:
           use_query_cache: true
           region:
             factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
+          envers store_data_at_delete: true
         javax:
           cache:
             missing_cache_strategy: create-warn
@@ -57,6 +58,7 @@ spring:
       org:
         hibernate:
           envers:
+            store_data_at_delete: true
             track_entities_changed_in_revision: true
   
   liquibase:
