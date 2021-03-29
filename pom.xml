@@ -23,7 +23,7 @@
     <oracle.ojdbc.artifactId>ojdbc10</oracle.ojdbc.artifactId>
     <spring.version>5.3.5</spring.version>
     <spring.data.jpa.version>2.4.6</spring.data.jpa.version>
-    <spring-cloud.version>3.0.3</spring-cloud.version>
+    <spring-cloud.version>3.0.2</spring-cloud.version>
     <spring.boot.saml.version>1.17</spring.boot.saml.version>
     <hazelcast.kubernetes.version>2.2.2</hazelcast.kubernetes.version>
     <passay.version>1.6.0</passay.version>
@@ -89,6 +89,11 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-config</artifactId>
+      <version>${spring-cloud.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.cloud</groupId>
+      <artifactId>spring-cloud-starter-bootstrap</artifactId>
       <version>${spring-cloud.version}</version>
     </dependency>
     <dependency>
