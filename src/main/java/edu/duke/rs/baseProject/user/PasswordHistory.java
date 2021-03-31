@@ -38,7 +38,7 @@ import lombok.ToString;
 @Audited
 @Table(name = "password_history",
   uniqueConstraints = {
-    @UniqueConstraint(name="UC_PWD_HIST_PWD", columnNames = "password")  
+    @UniqueConstraint(name="UC_PWD_HIST_USER_PWD", columnNames = {"user_fk", "password"})  
   },
   indexes = {
     @Index(name = "IX_PWD_HIST_USER_FK", unique = false, columnList="user_fk")
