@@ -165,7 +165,7 @@ public class WebSecurityConfig {
             .addLogoutHandler(new HeaderWriterLogoutHandler(new ClearSiteDataHeaderWriter(Directive.CACHE, Directive.COOKIES, Directive.STORAGE)))
             .permitAll()
             .deleteCookies("SESSION")
-              .invalidateHttpSession(true);
+            .invalidateHttpSession(true);
     }
     
     @Bean
