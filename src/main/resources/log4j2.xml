@@ -5,12 +5,29 @@
       <PatternLayout
         pattern="%style{%d{ISO8601}}{black} %highlight{%-5level }[%style{%t}{bright,blue}] %style{%C{1.}}{bright,yellow}:%L: %msg%n%throwable" />
     </Console>
+<!--  uncomment to enable splunk - see https://github.com/devadyuti/integration-repo/tree/master/spring-log4j2-splunk
+    <SplunkHttp
+      name="splunkhttp"
+      url="https://localhost:8088"
+      token="99f70e4a-abd2-4586-abe4-f490c44026a2"
+      host="localhost"
+      index="baseapp_idx"
+      type="raw"
+      source="http-log-event"
+      sourcetype="_json"
+      messageFormat="text"
+      disableCertificateValidation="true"
+      >
+      <PatternLayout pattern="%m" />
+    </SplunkHttp>
+-->
   </Appenders>
 
   <Loggers>
     <!-- LOG everything at INFO level -->
     <Root level="info">
       <AppenderRef ref="Console" />
+<!--        <AppenderRef ref="splunkhttp" /> uncomment to enable splunk -->
     </Root>
   </Loggers>
   
