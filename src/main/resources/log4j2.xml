@@ -9,7 +9,7 @@
     <SplunkHttp
       name="splunkhttp"
       url="https://localhost:8088"
-      token="99f70e4a-abd2-4586-abe4-f490c44026a2"
+      token="<splunk token>"
       host="localhost"
       index="baseapp_idx"
       type="raw"
