@@ -17,6 +17,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 
 import edu.duke.rs.baseProject.StubServletOutputStream;
+import edu.duke.rs.baseProject.login.LoginController;
 import edu.duke.rs.baseProject.util.HttpUtils;
 
 public class AjaxAwareLoginUrlAuthenticationEntryPointUnitTest {
@@ -24,7 +25,7 @@ public class AjaxAwareLoginUrlAuthenticationEntryPointUnitTest {
   private HttpServletRequest httpServletRequest;
   @Mock
   private HttpServletResponse httpServletResponse;
-  private static final AjaxAwareLoginUrlAuthenticationEntryPoint HANDLER = new AjaxAwareLoginUrlAuthenticationEntryPoint("/loginPage");
+  private static final AjaxAwareLoginUrlAuthenticationEntryPoint HANDLER = new AjaxAwareLoginUrlAuthenticationEntryPoint(LoginController.LOGIN_MAPPING);
   
   @BeforeEach
   public void init() {
