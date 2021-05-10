@@ -13,7 +13,7 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 @Controller
 public class LoginController extends BaseWebController {
-  public static final String LOGIN_MAPPING = "/loginPage";
+  public static final String LOGIN_MAPPING = "/login";
 	static final String LOGIN_VIEW = "login";
 	private transient final SecurityUtils securityUtils;
 

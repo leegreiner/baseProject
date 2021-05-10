@@ -113,7 +113,7 @@ public class WebSecurityConfig {
   @EnableWebSecurity
   @Order(2)
   public static class ApplicationConfigurationAdapter extends WebSecurityConfigurerAdapter {
-    private static final String LOGIN_PAGE = "/loginPage";
+    private static final String LOGIN_PAGE = "/login";
     @Value("${server.ssl.enabled:false}")
     private boolean sslEnabled;
     @Autowired
@@ -147,15 +147,13 @@ public class WebSecurityConfig {
         .and()
           .authorizeRequests()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-            .antMatchers("/", "/error/**", "/webfonts/**", "/img/**", "/loginPage", "/users/pwdreset", "/i18n/**").permitAll()
+            .antMatchers("/", "/error/**", "/webfonts/**", "/img/**", "/login", "/users/pwdreset", "/i18n/**").permitAll()
             .antMatchers(UserRestController.USERS_MAPPING).hasAuthority(PrivilegeName.VIEW_USERS.name())
             .antMatchers(UserController.USERS_MAPPING + "/**").hasAuthority(PrivilegeName.EDIT_USERS.name())
             .antMatchers(HttpMethod.GET, UserController.USERS_MAPPING).hasAuthority(PrivilegeName.VIEW_USERS.name())
             .anyRequest().authenticated()
         .and()
           .formLogin()
-            .loginProcessingUrl("/login")
-//            .defaultSuccessUrl("/home", true)
             .failureHandler(authenticationFailureHandler())
         .and()
           .logout()
