@@ -5,6 +5,7 @@ import java.util.Set;
 
 import javax.persistence.Cacheable;
 import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -66,6 +67,7 @@ public class Role extends BaseEntity implements Serializable {
 	
 	@Column(length = 30, updatable = false, unique = true, nullable = false)
 	@NonNull
+	@Convert(converter = RoleName.Converter.class)
 	private RoleName name;
 	
 	@ManyToMany(fetch = FetchType.LAZY)

@@ -1,6 +1,9 @@
 package edu.duke.rs.baseProject.role;
 
-public enum RoleName {
+import edu.duke.rs.baseProject.converter.AbstractEnumConverter;
+import edu.duke.rs.baseProject.converter.PersistableEnum;
+
+public enum RoleName implements PersistableEnum<String> {
   ADMINISTRATOR("Administrator"), USER("User");
   
   private final String value;
@@ -11,5 +14,11 @@ public enum RoleName {
   
   public String getValue() {
     return this.value;
+  }
+  
+  public static class Converter extends AbstractEnumConverter<RoleName, String> {
+    public Converter() {
+        super(RoleName.class);
+    }
   }
 }

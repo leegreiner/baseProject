@@ -22,8 +22,8 @@
     <oracle.client.version>19.8.0.0</oracle.client.version>
     <oracle.ojdbc.artifactId>ojdbc10</oracle.ojdbc.artifactId>
 <!--      <splunk.version>1.8.0</splunk.version> uncomment to enable splunk -->
-    <spring.version>5.3.5</spring.version>
-    <spring.data.jpa.version>2.4.6</spring.data.jpa.version>
+    <spring.version>5.3.6</spring.version>
+    <spring.data.jpa.version>2.4.8</spring.data.jpa.version>
     <spring-cloud.version>3.0.2</spring-cloud.version>
     <spring.boot.saml.version>1.17</spring.boot.saml.version>
     <hazelcast.kubernetes.version>2.2.2</hazelcast.kubernetes.version>
@@ -333,7 +333,7 @@
           <dependency>
             <groupId>org.liquibase.ext</groupId>
             <artifactId>liquibase-hibernate5</artifactId>
-            <version>4.3.2</version>
+            <version>4.3.3</version>
           </dependency>
           <dependency>
             <groupId>org.springframework</groupId>
