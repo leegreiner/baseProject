@@ -2,10 +2,15 @@
 spring:
   application:    name: "@project.name@"
 
+  cloud:
+    config:
+      enabled: 'false'
+    discovery:
+      client:
+        composite-indicator:
+          enabled: 'false'
+          
   datasource:
-    continue-on-error: true
-    initialization-mode: never
-    platform: oracle
     url: jdbc:oracle:thin:@//192.168.1.33:1521/ORCLPDB1
     username: baseapp
     password: 'tta&cno2'
@@ -71,7 +76,10 @@ spring:
   
   main:
     banner-mode: 'off'
-    
+  
+  messages:
+    basename: i18n/messages
+     
   mvc:
     hiddenmethod:
       filter:
@@ -89,9 +97,13 @@ spring:
             isClustered: true
           scheduler:
             instanceId: AUTO
-         
-  messages:    basename: i18n/messages
-    
+  
+  sql: 
+    init:
+      continue-on-error: true
+      enabled: false
+      platform: oracle
+       
   web:
     resources:
       cache:
@@ -264,7 +276,6 @@ spring:
       - test   
     
   datasource:
-    platform: h2
     url: jdbc:h2:mem:test;DB_CLOSE_ON_EXIT=FALSE
     username: sa
     password: 
@@ -283,6 +294,10 @@ spring:
   mail:
     host: localhost
     port: 9999
+    
+  sql: 
+    init:
+      platform: h2
     
 logging:
   level:

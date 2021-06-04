@@ -12,7 +12,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import com.icegreen.greenmail.util.GreenMail;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+  properties = {"spring.cloud.config.enabled=false"})
 @AutoConfigureMockMvc
 @Sql("/dbdata/importRolesPrivileges.sql")
 public abstract class AbstractWebIntegrationTest extends AbstractWebTest {
