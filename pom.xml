@@ -22,6 +22,8 @@
     <oracle.client.version>19.8.0.0</oracle.client.version>
     <oracle.ojdbc.artifactId>ojdbc10</oracle.ojdbc.artifactId>
 <!--      <splunk.version>1.8.0</splunk.version> uncomment to enable splunk -->
+    <spring.version>5.3.7</spring.version>
+    <spring.data.jpa.version>2.5.1</spring.data.jpa.version>
     <spring.boot.saml.version>1.17</spring.boot.saml.version>
     <hazelcast.kubernetes.version>2.2.2</hazelcast.kubernetes.version>
     <passay.version>1.6.0</passay.version>
@@ -342,10 +344,12 @@
           <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-beans</artifactId>
+            <version>${spring.version}</version>
           </dependency>
           <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-jpa</artifactId>
+            <version>${spring.data.jpa.version}</version>
           </dependency>
         </dependencies>
       </plugin>
