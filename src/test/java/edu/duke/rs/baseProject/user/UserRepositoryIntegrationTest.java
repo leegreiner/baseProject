@@ -96,10 +96,10 @@ public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
     this.userRepository.expirePasswordChangeIds(now.minusDays(2));
     testEntityManager.clear();
     
-    user1 = this.userRepository.getOne(user1.getId());
+    user1 = this.userRepository.getById(user1.getId());
     assertThat(user1.getPasswordChangeId(), nullValue());
     assertThat(user1.getPasswordChangeIdCreationTime(),nullValue());
-    user2 = this.userRepository.getOne(user2.getId());
+    user2 = this.userRepository.getById(user2.getId());
     assertThat(user2.getPasswordChangeId(), notNullValue());
     assertThat(user2.getPasswordChangeIdCreationTime(), notNullValue());
   }
