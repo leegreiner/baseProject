@@ -46,6 +46,10 @@ var AjaxUtil = {
        '" value="' + AjaxUtil.csrfToken() + '"/>';
   },
   csrfHeader: function(xhr) {
-    xhr.setRequestHeader(AjaxUtil.csrfHeader(), AjaxUtil.csrfToken());
+    var csrfHeader = AjaxUtil.csrfHeader();
+    
+    if (csrfHeader) {
+      xhr.setRequestHeader(csrfHeader, AjaxUtil.csrfToken());
+    }
   }
 };

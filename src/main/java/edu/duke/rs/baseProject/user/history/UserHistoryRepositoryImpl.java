@@ -33,7 +33,7 @@ public class UserHistoryRepositoryImpl implements UserHistoryRepository {
         .add(AuditEntity.id().eq(userId));
     
     return AuditQueryUtils.getAuditQueryResults(auditQuery, User.class).stream()
-        .map(x -> getUserHistory(x))
+        .map(UserHistoryRepositoryImpl::getUserHistory)
         .collect(Collectors.toList());
   }
 
