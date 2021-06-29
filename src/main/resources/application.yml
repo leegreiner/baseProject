@@ -1,4 +1,56 @@
+info:
+  app:
+    name: "@project.name@"
+    description: Base Project description
+    version: "@project.version@"
 
+logging:
+  level:
+    edu.duke.rs: info
+    liquibse: info
+#    org.apache.http.wire: debug
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: true
+    
+server:
+  compression:
+    enabled: true
+  error:
+    whitelabel:
+      enabled: false
+  port: 8080
+  ssl:
+    ciphers: TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA256, TLS_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+    enabled-protocols: TLSv1.2,TLSv1.3
+    enabled: false
+    key-store: classpath:keystore.p12
+#   encrypt_key abc123    
+    key-store-password: '{cipher}f04a152e702ddaa5039a13cfa98fc11437803467e704a72d9edd7a7eb24b09f3'
+    key-store-type: PKCS12
+    key-alias: tomcat
+    protocol: TLS
+  tomcat:
+    basedir: /opt/apps/baseProject
+    accesslog:
+      directory: logs
+      enabled: true
+      pattern: '%h %l %u %t "%r" %s %b %{X-Forwarded-For}i "%{Referer}i" "%{User-Agent}i"'
+      request-attributes-enabled: true
+      rotate: true
+      suffix: .log
+    mbeanregistry:
+      enabled : true
+          
 spring:
   application:    name: "@project.name@"
 
@@ -115,53 +167,9 @@ spring:
             enabled: true
             paths: /**
              
-server:  compression:    enabled: true
-  error:
-    whitelabel:
-      enabled: false
-  port: 8080
-  ssl:
-    ciphers: TLS_ECDHE_RSA_WITH_3DES_EDE_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA, TLS_RSA_WITH_AES_128_CBC_SHA256, TLS_RSA_WITH_AES_128_GCM_SHA256, TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256, TLS_RSA_WITH_AES_256_CBC_SHA, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA, TLS_RSA_WITH_AES_256_CBC_SHA256, TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384, TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
-    enabled-protocols: TLSv1.2,TLSv1.3
-    enabled: false
-    key-store: classpath:keystore.p12
-#   encrypt_key abc123    
-    key-store-password: '{cipher}f04a152e702ddaa5039a13cfa98fc11437803467e704a72d9edd7a7eb24b09f3'
-    key-store-type: PKCS12
-    key-alias: tomcat
-    protocol: TLS
-  tomcat:
-    basedir: /opt/apps/baseProject    accesslog:
-      directory: logs      enabled: true
-      pattern: '%h %l %u %t "%r" %s %b %{X-Forwarded-For}i "%{Referer}i" "%{User-Agent}i"'
-      request-attributes-enabled: true
-      rotate: true
-      suffix: .log
-    mbeanregistry:
-      enabled : true
-    
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-
-  endpoint:
-    health:
-      show-details: always
-      probes:
-        enabled: true
-    
-info:
-  app:
-    name: "@project.name@"
-    description: Base Project description
-    version: "@project.version@"
-        
-logging:  level:    edu.duke.rs: info
-    liquibse: info
-#    org.apache.http.wire: debug
-    
+springfox:
+  documentation:    enabled: false
+ 
 app:
   datasource:
     startupValidationInterval: 5
@@ -229,6 +237,17 @@ saml:
       public-key-pem-location: classpath:/security/public-local.cert
   
 ---
+
+logging:
+  level:
+#    org.hibernate.type.descriptor.sql: trace
+#    com.hazelcast: debug
+    edu.duke.drc.baseProject: debug
+#    org.springframework.cache: trace
+#    org.hibernate.stat: debug
+#    org.springframework.cache: trace
+#    org.springframework.security: debug
+#    org.springframework.web.servlet.mvc.method.annotation: trace
 spring:   
   config:
     activate:      on-profile:      - local   
@@ -250,17 +269,10 @@ saml:
     
   web:
     resources:      cache:        cachecontrol:          no-cache: true
-    
-logging:
-  level:
-#    org.hibernate.type.descriptor.sql: trace
-#    com.hazelcast: debug
-    edu.duke.drc.baseProject: debug
-#    org.springframework.cache: trace
-#    org.hibernate.stat: debug
-#    org.springframework.cache: trace
-#    org.springframework.security: debug
-#    org.springframework.web.servlet.mvc.method.annotation: trace
+
+springfox:
+  documentation:
+    enabled: true
     
 app:
   google:

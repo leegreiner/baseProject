@@ -16,10 +16,13 @@ import edu.duke.rs.baseProject.datatables.DataTablesInput;
 import edu.duke.rs.baseProject.datatables.DataTablesOutput;
 import edu.duke.rs.baseProject.datatables.DataTablesUtils;
 import io.micrometer.core.annotation.Timed;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
 @RestController
+@Api(value="baseapp")
 public class UserRestController extends BaseRestController {
   public static final String USERS_MAPPING = API_MAPPING + UserController.USERS_MAPPING;
   private transient final UserRepository userRepository;
@@ -29,6 +32,7 @@ public class UserRestController extends BaseRestController {
   }
   
   @GetMapping(API_MAPPING + UserController.USERS_MAPPING)
+  @ApiOperation(value = "Search for users")
   @Timed(description = "Search users")
   public DataTablesOutput<UserListItem> searchUsers(@Valid DataTablesInput input) {
     log.debug("In searchUsers(): {}", () -> input.toString());

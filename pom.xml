@@ -25,6 +25,7 @@
     <spring.version>5.3.8</spring.version>
     <spring.data.jpa.version>2.5.1</spring.data.jpa.version>
     <spring.boot.saml.version>1.17</spring.boot.saml.version>
+    <springfox.version>3.0.0</springfox.version>
     <hazelcast.kubernetes.version>2.2.2</hazelcast.kubernetes.version>
     <passay.version>1.6.0</passay.version>
     <jacoco.version>0.8.5</jacoco.version>
@@ -110,6 +111,16 @@
     <dependency>
       <groupId>org.springframework.cloud</groupId>
       <artifactId>spring-cloud-starter-config</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.springfox</groupId>
+      <artifactId>springfox-boot-starter</artifactId>
+      <version>${springfox.version}</version>
+    </dependency>
+    <dependency>
+    <groupId>io.springfox</groupId>
+      <artifactId>springfox-swagger-ui</artifactId>
+      <version>${springfox.version}</version>
     </dependency>
     <dependency>
       <groupId>org.hibernate</groupId>
