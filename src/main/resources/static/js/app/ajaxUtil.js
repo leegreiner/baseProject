@@ -45,7 +45,7 @@ var AjaxUtil = {
     return '<input id="csrfToken" type="hidden" name="' + AjaxUtil.csrfParameter() + 
        '" value="' + AjaxUtil.csrfToken() + '"/>';
   },
-  csrfHeader: function(xhr) {
+  setCsrfToken: function(xhr) {
     var csrfHeader = AjaxUtil.csrfHeader();
     
     if (csrfHeader) {

@@ -6,7 +6,7 @@ info:
 
 logging:
   level:
-    edu.duke.rs: info
+    edu.duke.rs.baseProject: info
     liquibse: info
 #    org.apache.http.wire: debug
 
@@ -242,7 +242,7 @@ logging:
   level:
 #    org.hibernate.type.descriptor.sql: trace
 #    com.hazelcast: debug
-    edu.duke.drc.baseProject: debug
+    edu.duke.rs.baseProject: debug
 #    org.springframework.cache: trace
 #    org.hibernate.stat: debug
 #    org.springframework.cache: trace
@@ -314,7 +314,7 @@ spring:
 logging:
   level:
     root: off
-    edu.duke.rs: off
+    edu.duke.rs.baseProject: off
     org.springframework: off
     
 server:
