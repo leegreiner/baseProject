@@ -3,7 +3,6 @@ package edu.duke.rs.baseProject.audit;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-import org.hibernate.envers.DefaultTrackingModifiedEntitiesRevisionEntity;
 import org.hibernate.envers.RevisionEntity;
 
 import lombok.AllArgsConstructor;
@@ -19,7 +18,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @RevisionEntity(AuditRevisionListener.class)
-public class AuditRevisionEntity extends DefaultTrackingModifiedEntitiesRevisionEntity {
+public class AuditRevisionEntity extends TrackingModifiedEntitiesRevisionEntity {
+  @SuppressWarnings("unused")
   private static final long serialVersionUID = 1L;
   
   private Long userId;
