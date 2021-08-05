@@ -72,7 +72,6 @@ spring:
       idle-timeout: 600000
       max-lifetime: 1800000
       maximum-pool-size: 8
-      minimum-idle: 0
       initialization-fail-timeout: -1
       pool-name: baseapphikaripool
     
@@ -218,23 +217,14 @@ spring:
       - samlSecurity   
   
 saml:
-  sso:
-    default-success-url: /home
-    default-failure-url: /error?error=404
-    idp-selection-page-url: /idpselection
-    idp:
-      metadata-location: classpath:/security/idp-duke.xml
-    logout:
-      default-target-url: https://shib.oit.duke.edu/cgi-bin/logout.pl?returnto=http://www.yahoo.com
-    metadata-generator:
-      entity-id: https://wearables-local.dcri.duke.edu
-    metadata-manager:
-      refresh-check-interval: 0
-    extended-metadata:
-      idp-discovery-enabled: false
-    key-manager:
-      private-key-der-location: classpath:/security/private-local.der
-      public-key-pem-location: classpath:/security/public-local.cert
+  keystore:
+    location: classpath:saml/samlKeystore.jks
+    password: '{cipher}ec8a0cc266ceb9c74273d2bbe6562840bcd9aca45bf9924cc61f45e2007245a1'
+    alias: duke
+  idp: https://shib.oit.duke.edu/shibboleth-idp
+  sp: http://samltest.drc.duke.edu
+# needed for Duke SAML logout
+  logoutRedirectUrl: https://shib.oit.duke.edu/cgi-bin/logout.pl?logoutWithoutPrompt=1&returnto=http://www.duke.edu
   
 ---
 
@@ -277,7 +267,7 @@ springfox:
 app:
   google:
     analysicsTrackingId: UA-143586895-1
-  url: 'https://localhost:8443'
+  url: 'https://localhost:8080'
   
 ---
 

@@ -1,10 +1,11 @@
 package edu.duke.rs.baseProject.datatables;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import lombok.Data;
-
 import java.util.Collections;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
+import lombok.Data;
 
 @Data
 public class DataTablesOutput<T> {

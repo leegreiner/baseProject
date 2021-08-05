@@ -6,11 +6,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 
-import edu.duke.rs.baseProject.annotations.EnableSAMLSSOWhenProfileActive;
-
 @SpringBootApplication
 @ServletComponentScan
-@EnableSAMLSSOWhenProfileActive("samlSecurity")
 public class BaseProjectApplication {
 
 	public static void main(String[] args) {

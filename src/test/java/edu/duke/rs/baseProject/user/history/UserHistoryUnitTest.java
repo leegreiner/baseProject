@@ -20,7 +20,7 @@ public class UserHistoryUnitTest {
     auditRevisionEntity.setTimestamp(1568745972000L);
     final RevisionType revisionType = RevisionType.ADD;
     final User user = new User();
-    user.setId(Long.valueOf(auditRevisionEntity.getId() + 1));
+    user.setId(Long.valueOf(auditRevisionEntity.getUserId() + 1));
     user.setUsername("abc123Abc");
     
     final UserHistory entityHistory = new UserHistory(user, auditRevisionEntity, revisionType);

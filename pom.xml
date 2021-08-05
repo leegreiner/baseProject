@@ -24,7 +24,7 @@
 <!--      <splunk.version>1.8.0</splunk.version> uncomment to enable splunk -->
     <spring.version>5.3.8</spring.version>
     <spring.data.jpa.version>2.5.1</spring.data.jpa.version>
-    <spring.boot.saml.version>1.17</spring.boot.saml.version>
+    <spring.security.saml.version>1.0.10.RELEASE</spring.security.saml.version>
     <springfox.version>3.0.0</springfox.version>
     <hazelcast.kubernetes.version>2.2.2</hazelcast.kubernetes.version>
     <passay.version>1.6.0</passay.version>
@@ -190,9 +190,9 @@
       <version>${oracle.client.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.github.ulisesbocchio</groupId>
-      <artifactId>spring-boot-security-saml</artifactId>
-      <version>${spring.boot.saml.version}</version>
+      <groupId>org.springframework.security.extensions</groupId>
+      <artifactId>spring-security-saml2-core</artifactId>
+      <version>${spring.security.saml.version}</version>
     </dependency>
     <dependency>
       <groupId>org.passay</groupId>
@@ -520,5 +520,13 @@
       -->
     </plugins>
   </build>
+  
+  <repositories>
+    <repository>
+      <id>Shibboleth</id>
+      <name>Shibboleth</name>
+      <url>https://build.shibboleth.net/nexus/content/repositories/releases/</url>
+    </repository>
+  </repositories>
 
 </project>
