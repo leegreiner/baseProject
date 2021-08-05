@@ -3,8 +3,8 @@ package edu.duke.rs.baseProject.util;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.TimeZone;
+import java.util.stream.Collectors;
 
 public class TimeZoneDisplay {
   private static final ZoneId UTC_ZONE_ID = TimeZone.getTimeZone("UTC").toZoneId();

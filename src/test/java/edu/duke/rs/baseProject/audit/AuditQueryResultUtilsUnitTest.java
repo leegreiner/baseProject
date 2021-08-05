@@ -2,8 +2,9 @@ package edu.duke.rs.baseProject.audit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.time.LocalDateTime;
+
 import org.hibernate.envers.RevisionType;
-import org.joda.time.LocalDateTime;
 import org.junit.jupiter.api.Test;
 
 public class AuditQueryResultUtilsUnitTest {
