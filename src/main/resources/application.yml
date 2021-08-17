@@ -87,15 +87,15 @@ spring:
           region:
             factory_class: org.hibernate.cache.jcache.JCacheRegionFactory
           envers store_data_at_delete: true
+        connection:
+          provider_disables_autocommit: true
+        default_schema: baseapp
+        dialect: org.hibernate.dialect.Oracle12cDialect
         javax:
           cache:
             missing_cache_strategy: create-warn
             provider: org.ehcache.jsr107.EhcacheCachingProvider
             uri: classpath:ehcache.xml
-        connection:
-          provider_disables_autocommit: true
-        dialect: org.hibernate.dialect.Oracle12cDialect
-        default_schema: baseapp
         jdbc:
           batch_size: 15
           batch_versioned_data: true
@@ -106,6 +106,8 @@ spring:
 #          lob:
             # Fix Postgres JPA Error (Method org.postgresql.jdbc.PgConnection.createClob() is not yet implemented).
 #            non_contextual_creation: true
+        query:
+          in_clause_parameter_padding: true
         show_sql: false
       javax:
         persistence:
