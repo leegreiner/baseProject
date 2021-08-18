@@ -18,7 +18,6 @@ import javax.persistence.ManyToMany;
 import javax.persistence.NamedAttributeNode;
 import javax.persistence.NamedEntityGraph;
 import javax.persistence.NamedEntityGraphs;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -59,10 +58,9 @@ import lombok.ToString;
 public class Role extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@Column(name = "role_id")
+	@Column(name = "role_id", updatable = false, nullable = false)
 	@Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "role_seq")
-  @SequenceGenerator(name="role_seq", sequenceName = "ROLE_SEQ", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(length = 30, updatable = false, unique = true, nullable = false)

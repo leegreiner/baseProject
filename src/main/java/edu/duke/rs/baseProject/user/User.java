@@ -26,7 +26,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
@@ -92,10 +91,9 @@ import lombok.ToString;
 public class User extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Column(name = "user_id")
+	@Column(name = "user_id", updatable = false, nullable = false)
 	@Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
-  @SequenceGenerator(name = "user_seq", sequenceName = "USER_SEQ", allocationSize = 1)
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
 	@Column(length = 30, unique = true, nullable = false)

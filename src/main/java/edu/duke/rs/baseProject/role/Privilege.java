@@ -13,7 +13,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Index;
 import javax.persistence.ManyToMany;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.Cache;
@@ -49,10 +48,9 @@ import lombok.ToString;
 public class Privilege extends BaseEntity implements Serializable {
   private static final long serialVersionUID = 1L;
   
-  @Column(name = "privilege_id")
+  @Column(name = "privilege_id", updatable = false, nullable = false)
   @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "privilege_seq")
-  @SequenceGenerator(name="privilege_seq", sequenceName = "PRIVILEGE_SEQ", allocationSize = 1)
+  @GeneratedValue(strategy=GenerationType.IDENTITY)
   private Long id;
   
   @Column(length = 30, updatable = false, unique = true, nullable = false)
