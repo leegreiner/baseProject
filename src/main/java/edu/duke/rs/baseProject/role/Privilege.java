@@ -48,12 +48,12 @@ import lombok.ToString;
 public class Privilege extends BaseEntity implements Serializable {
   private static final long serialVersionUID = 1L;
   
-  @Column(name = "privilege_id", updatable = false, nullable = false)
+  @Column(name = "privilege_id")
   @Id
   @GeneratedValue(strategy=GenerationType.IDENTITY)
   private Long id;
   
-  @Column(length = 30, updatable = false, unique = true, nullable = false)
+  @Column(length = 30)
   @NonNull
   @Convert(converter = PrivilegeName.Converter.class)
   private PrivilegeName name;

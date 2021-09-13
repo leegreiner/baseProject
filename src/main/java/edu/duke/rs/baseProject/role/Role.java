@@ -58,12 +58,12 @@ import lombok.ToString;
 public class Role extends BaseEntity implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	@Column(name = "role_id", updatable = false, nullable = false)
+	@Column(name = "role_id")
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(length = 30, updatable = false, unique = true, nullable = false)
+	@Column(length = 30)
 	@NonNull
 	@Convert(converter = RoleName.Converter.class)
 	private RoleName name;
