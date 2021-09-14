@@ -189,11 +189,14 @@
       <artifactId>${oracle.ojdbc.artifactId}</artifactId>
       <version>${oracle.client.version}</version>
     </dependency>
+    
+    <!-- Spring SAML core 1.0.10 references velocity and commons-io with CVE's. -->
     <dependency>
       <groupId>org.springframework.security.extensions</groupId>
       <artifactId>spring-security-saml2-core</artifactId>
       <version>${spring.security.saml.version}</version>
     </dependency>
+    
     <dependency>
       <groupId>org.passay</groupId>
       <artifactId>passay</artifactId>
