@@ -18,7 +18,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 
-public class EmailServiceUnitTest {
+import edu.duke.rs.baseProject.AbstractBaseTest;
+
+public class EmailServiceUnitTest extends AbstractBaseTest {
   @Mock
   private JavaMailSender mailSender;
   @Mock
@@ -34,20 +36,21 @@ public class EmailServiceUnitTest {
   @Test
   public void whenEmailIsNotAbleToBeSent_thenEmailExceptionThrown() {
    final Map<String, Object> content = new HashMap<String, Object>();
-   content.put("message", "This is a test");
-   when(contentBuilder.build(MessageType.TEST, content)).thenReturn("This is a test");
+   content.put("message", easyRandom.nextObject(String.class));
+   when(contentBuilder.build(MessageType.TEST, content)).thenReturn(easyRandom.nextObject(String.class));
    doThrow(EmailException.class).when(mailSender).send(any(MimeMessagePreparator.class));
    
-   assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, "abc@123.com", "Test subject", content, null), "error.unableToSendEmail");
+   assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, "abc@123.com", easyRandom.nextObject(String.class), content, null),
+       "error.unableToSendEmail");
   }
   
   @Test
   public void whenValidEmailRequestWithContent_thenEmailSent() {
    final Map<String, Object> content = new HashMap<String, Object>();
-   content.put("message", "This is a test");
-   when(contentBuilder.build(MessageType.TEST, content)).thenReturn("This is a test");
+   content.put("message", easyRandom.nextObject(String.class));
+   when(contentBuilder.build(MessageType.TEST, content)).thenReturn(easyRandom.nextObject(String.class));
    
-   emailService.send(MessageType.TEST, "abc@123.com", "Test subject", content, null);
+   emailService.send(MessageType.TEST, "abc@123.com", easyRandom.nextObject(String.class), content, null);
    
    verifyNoMoreInteractions(contentBuilder);
    verify(mailSender, times(1)).send(any(MimeMessagePreparator.class));
@@ -57,10 +60,10 @@ public class EmailServiceUnitTest {
   @Test
   public void whenValidEmailRequestWithoutContent_thenEmailSent() {
    final Map<String, Object> content = new HashMap<String, Object>();
-   content.put("message", "This is a test");
-   when(contentBuilder.build(MessageType.TEST, content)).thenReturn("This is a test");
+   content.put("message", easyRandom.nextObject(String.class));
+   when(contentBuilder.build(MessageType.TEST, content)).thenReturn(easyRandom.nextObject(String.class));
    
-   emailService.send(MessageType.TEST, "abc@123.com", "Test subject", null, null);
+   emailService.send(MessageType.TEST, "abc@123.com", easyRandom.nextObject(String.class), null, null);
    
    verifyNoMoreInteractions(contentBuilder);
    verify(mailSender, times(1)).send(any(MimeMessagePreparator.class));

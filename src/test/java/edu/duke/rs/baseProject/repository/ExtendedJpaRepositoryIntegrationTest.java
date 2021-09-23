@@ -5,9 +5,11 @@ import static org.hamcrest.Matchers.equalTo;
 
 import java.util.HashSet;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
+import org.jeasy.random.randomizers.EmailRandomizer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,12 +27,13 @@ import edu.duke.rs.baseProject.user.UserRepository;
 
 @ExtendWith(SpringExtension.class)
 public class ExtendedJpaRepositoryIntegrationTest extends AbstractRepositoryTest {
+  private static final EmailRandomizer EMAIL_RANDOMIZER = new EmailRandomizer(new Random().nextLong());
   @Autowired
   private UserRepository userRepository;
   @Autowired
   private RoleRepository roleRepository;
   private final UsrBuilder userBuilder = new UserBuilder();
-  
+
   @Test
   public void whenFindByAlternateIdNotFound_thenReturnsEmptyOptional() {
     Optional<User> userOptional = this.userRepository.findByAlternateId(UUID.randomUUID());
@@ -56,7 +59,8 @@ public class ExtendedJpaRepositoryIntegrationTest extends AbstractRepositoryTest
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
     
-    User user = userBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", null);
+    User user = userBuilder.build(easyRandom.nextObject(String.class), easyRandom.nextObject(String.class),
+        easyRandom.nextObject(String.class), easyRandom.nextObject(String.class), EMAIL_RANDOMIZER.getRandomValue(), null);
     user.setRoles(roles);
     user = testEntityManager.persistAndFlush(user);
     

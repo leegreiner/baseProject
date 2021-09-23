@@ -9,10 +9,13 @@ import java.time.ZoneId;
 import org.hibernate.envers.RevisionType;
 import org.junit.jupiter.api.Test;
 
-public class EventHistoryUnitTest {
+import edu.duke.rs.baseProject.AbstractBaseTest;
+
+public class EventHistoryUnitTest extends AbstractBaseTest {
   @Test
   public void whenConstructorCalled_thenObjectCreatedCorrectly() {
-    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(Long.valueOf(1), "John Smith", "abc");
+    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(easyRandom.nextLong(), easyRandom.nextObject(String.class),
+        easyRandom.nextObject(String.class));
     final LocalDateTime now = Instant.ofEpochMilli(1568745972000L).atZone(ZoneId.systemDefault()).toLocalDateTime();
     auditRevisionEntity.setTimestamp(1568745972000L);
     final RevisionType revisionType = RevisionType.ADD;

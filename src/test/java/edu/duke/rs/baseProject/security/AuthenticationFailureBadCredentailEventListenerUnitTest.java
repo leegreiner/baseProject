@@ -12,7 +12,9 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.security.authentication.event.AuthenticationFailureBadCredentialsEvent;
 import org.springframework.security.core.Authentication;
 
-public class AuthenticationFailureBadCredentailEventListenerUnitTest {
+import edu.duke.rs.baseProject.AbstractBaseTest;
+
+public class AuthenticationFailureBadCredentailEventListenerUnitTest extends AbstractBaseTest {
   @Mock
   private LoginAttemptServiceImpl loginAttemptService;
   @Mock
@@ -29,7 +31,7 @@ public class AuthenticationFailureBadCredentailEventListenerUnitTest {
   
   @Test
   public void whenBadCredentailEventReceived_thenLoginAttemptServiceCalled() {
-    final String userName = "abc";
+    final String userName = easyRandom.nextObject(String.class);
     when(authentication.getName()).thenReturn(userName);
     when(event.getAuthentication()).thenReturn(authentication);
     

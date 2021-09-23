@@ -16,7 +16,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-public class DataTablesUtilsTest {
+import edu.duke.rs.baseProject.AbstractBaseTest;
+
+public class DataTablesUtilsTest extends AbstractBaseTest {
   @Test
   public void whenInputtOnlyHasStartAndLength_thenResultIsUnsorted() {
     final DataTablesInput input = new DataTablesInput();
@@ -34,13 +36,15 @@ public class DataTablesUtilsTest {
   
   @Test
   public void whenInputHasSort_thenResultIsSorted() {
+    final String colName1 = easyRandom.nextObject(String.class);
+    final String colName2 = easyRandom.nextObject(String.class);
     final DataTablesInput input = new DataTablesInput();
     input.setStart(20);
     input.setLength(10);
-    input.addColumn("lastName", false, true, "");
-    input.addColumn("firstName", false, true, "");
-    input.addOrder("lastName", false);
-    input.addOrder("firstName", true);
+    input.addColumn(colName1, false, true, "");
+    input.addColumn(colName2, false, true, "");
+    input.addOrder(colName1, false);
+    input.addOrder(colName2, true);
     
     final Pageable result = DataTablesUtils.toPage(input, null, null);
     
@@ -49,28 +53,32 @@ public class DataTablesUtilsTest {
     assertThat(result.getPageSize(),equalTo(input.getLength()));
     assertThat(result.getSort().isSorted(), equalTo(true));
     
-    Sort.Order sortOrder = result.getSort().getOrderFor("lastName");
+    Sort.Order sortOrder = result.getSort().getOrderFor(colName1);
     assertThat(sortOrder, notNullValue());
     assertThat(sortOrder.getDirection(), equalTo(Sort.Direction.DESC));
     
-    sortOrder = result.getSort().getOrderFor("firstName");
+    sortOrder = result.getSort().getOrderFor(colName2);
     assertThat(sortOrder, notNullValue());
     assertThat(sortOrder.getDirection(), equalTo(Sort.Direction.ASC));
   }
   
   @Test
   public void whenInputHasRenamedColumns_thenResultHasRenamedColumns() {
+    final String colName1 = easyRandom.nextObject(String.class);
+    final String colName2 = easyRandom.nextObject(String.class);
     final DataTablesInput input = new DataTablesInput();
     input.setStart(20);
     input.setLength(10);
-    input.addColumn("lastName", false, true, "");
-    input.addColumn("firstName", false, true, "");
-    input.addOrder("lastName", false);
-    input.addOrder("firstName", true);
+    input.addColumn(colName1, false, true, "");
+    input.addColumn(colName2, false, true, "");
+    input.addOrder(colName1, false);
+    input.addOrder(colName2, true); 
     
     final Map<String, String> renamedColumns = new HashMap<String, String>(input.getColumns().size());
-    renamedColumns.put("lastName", "renamedLastName");
-    renamedColumns.put("firstName", "renamedFirstName");
+    final String renamedColName1 = easyRandom.nextObject(String.class);
+    final String renamedColName2 = easyRandom.nextObject(String.class);
+    renamedColumns.put(colName1, renamedColName1);
+    renamedColumns.put(colName2, renamedColName2);
     
     final Pageable result = DataTablesUtils.toPage(input, renamedColumns, null);
     
@@ -79,32 +87,38 @@ public class DataTablesUtilsTest {
     assertThat(result.getPageSize(),equalTo(input.getLength()));
     assertThat(result.getSort().isSorted(), equalTo(true));
     
-    Sort.Order sortOrder = result.getSort().getOrderFor("renamedLastName");
+    Sort.Order sortOrder = result.getSort().getOrderFor(renamedColName1);
     assertThat(sortOrder, notNullValue());
     assertThat(sortOrder.getDirection(), equalTo(Sort.Direction.DESC));
     
-    sortOrder = result.getSort().getOrderFor("renamedFirstName");
+    sortOrder = result.getSort().getOrderFor(renamedColName2);
     assertThat(sortOrder, notNullValue());
     assertThat(sortOrder.getDirection(), equalTo(Sort.Direction.ASC));
   }
   
   @Test
   public void whenAdditionalOrderFieldGiven_thenResultHasAdditionalSortOrders() {
+    final String colName1 = easyRandom.nextObject(String.class);
+    final String colName2 = easyRandom.nextObject(String.class);
     final DataTablesInput input = new DataTablesInput();
     input.setStart(20);
     input.setLength(10);
-    input.addColumn("lastName", false, true, "");
-    input.addColumn("firstName", false, true, "");
-    input.addOrder("lastName", false);
-    input.addOrder("firstName", true);
+    input.addColumn(colName1, false, true, "");
+    input.addColumn(colName2, false, true, "");
+    input.addOrder(colName1, false);
+    input.addOrder(colName2, true);
     
     final Map<String, String> renamedColumns = new HashMap<String, String>(input.getColumns().size());
-    renamedColumns.put("lastName", "renamedLastName");
-    renamedColumns.put("firstName", "renamedFirstName");
+    final String renamedColName1 = easyRandom.nextObject(String.class);
+    final String renamedColName2 = easyRandom.nextObject(String.class);
+    renamedColumns.put(colName1, renamedColName1);
+    renamedColumns.put(colName2, renamedColName2);
     
     final List<String> additionalOrders = new ArrayList<String>();
-    additionalOrders.add("id");
-    additionalOrders.add("name");
+    final String orderName1 = easyRandom.nextObject(String.class);
+    final String orderName2 = easyRandom.nextObject(String.class);
+    additionalOrders.add(orderName1);
+    additionalOrders.add(orderName2);
     
     final Pageable result = DataTablesUtils.toPage(input, renamedColumns, additionalOrders);
     
@@ -113,19 +127,19 @@ public class DataTablesUtilsTest {
     assertThat(result.getPageSize(),equalTo(input.getLength()));
     assertThat(result.getSort().isSorted(), equalTo(true));
     
-    Sort.Order sortOrder = result.getSort().getOrderFor("renamedLastName");
+    Sort.Order sortOrder = result.getSort().getOrderFor(renamedColName1);
     assertThat(sortOrder, notNullValue());
     assertThat(sortOrder.getDirection(), equalTo(Sort.Direction.DESC));
     
-    sortOrder = result.getSort().getOrderFor("renamedFirstName");
+    sortOrder = result.getSort().getOrderFor(renamedColName2);
     assertThat(sortOrder, notNullValue());
     assertThat(sortOrder.getDirection(), equalTo(Sort.Direction.ASC));
     
-    sortOrder = result.getSort().getOrderFor("id");
+    sortOrder = result.getSort().getOrderFor(orderName1);
     assertThat(sortOrder, notNullValue());
     assertThat(sortOrder.getDirection(), equalTo(Sort.Direction.ASC));
     
-    sortOrder = result.getSort().getOrderFor("name");
+    sortOrder = result.getSort().getOrderFor(orderName2);
     assertThat(sortOrder, notNullValue());
     assertThat(sortOrder.getDirection(), equalTo(Sort.Direction.ASC));
   }
@@ -138,8 +152,8 @@ public class DataTablesUtilsTest {
     
     final Pageable pageable = DataTablesUtils.toPage(input, null, null);
     final List<String> strings = new ArrayList<String>();
-    strings.add("a");
-    strings.add("b");
+    strings.add(easyRandom.nextObject(String.class));
+    strings.add(easyRandom.nextObject(String.class));
     final Page<String> page = new PageImpl<String>(strings, pageable, 100L);
     final DataTablesOutput<String> output = DataTablesUtils.toDataTablesOutput(input, page);
     
@@ -151,7 +165,7 @@ public class DataTablesUtilsTest {
   @Test
   public void whenSortAdded_thenSortIsPresent() {
     final Pageable page = PageRequest.of(1, 100);
-    final Sort sort = Sort.by("abc");
+    final Sort sort = Sort.by(easyRandom.nextObject(String.class));
     
     final Pageable result = DataTablesUtils.addSort(page, sort);
     

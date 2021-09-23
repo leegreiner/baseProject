@@ -9,9 +9,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
+import org.jeasy.random.randomizers.EmailRandomizer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,7 @@ import edu.duke.rs.baseProject.role.RoleName;
 
 @ExtendWith(SpringExtension.class)
 public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
+  private static final EmailRandomizer EMAIL_RANDOMIZER = new EmailRandomizer(new Random().nextLong());
   @Autowired
   private UserRepository userRepository;
   private final UsrBuilder userBuilder = new UserBuilder();
@@ -49,13 +52,19 @@ public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
     
-    User user1 = userBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", null);
+    User user1 = userBuilder.build(easyRandom.nextObject(String.class), easyRandom.nextObject(String.class), easyRandom.nextObject(String.class),
+        easyRandom.nextObject(String.class), EMAIL_RANDOMIZER.getRandomValue(), null);
+    user1.setLastName("Smith");
     user1.setRoles(roles);
     user1 = testEntityManager.persist(user1);
-    User user2 = userBuilder.build("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", null);
+    User user2 = userBuilder.build(easyRandom.nextObject(String.class), easyRandom.nextObject(String.class), easyRandom.nextObject(String.class),
+        easyRandom.nextObject(String.class), EMAIL_RANDOMIZER.getRandomValue(), null);
+    user2.setLastName("Johnson");
     user2.setRoles(roles);
     user2 = testEntityManager.persist(user2);
-    User user3 = userBuilder.build("jimmyjohnson", "password", "Jimmy", "Johnson","jimmyJohnson@gmail.com", null);
+    User user3 = userBuilder.build(easyRandom.nextObject(String.class), easyRandom.nextObject(String.class), easyRandom.nextObject(String.class),
+        easyRandom.nextObject(String.class), EMAIL_RANDOMIZER.getRandomValue(), null);
+    user3.setLastName("Jackson");
     user3.setRoles(roles);
     user3 = testEntityManager.persistAndFlush(user3);
     testEntityManager.clear();
@@ -82,12 +91,14 @@ public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
     final Role role = testEntityManager.persist(new Role(RoleName.USER));
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
-    User user1 = userBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", null);
+    User user1 = userBuilder.build(easyRandom.nextObject(String.class), easyRandom.nextObject(String.class), easyRandom.nextObject(String.class),
+        easyRandom.nextObject(String.class), EMAIL_RANDOMIZER.getRandomValue(), null);
     user1.setRoles(roles);
     user1.setPasswordChangeId(UUID.randomUUID());
     user1.setPasswordChangeIdCreationTime(now.minusDays(3));
     user1 = testEntityManager.persist(user1);
-    User user2 = userBuilder.build("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", null);
+    User user2 = userBuilder.build(easyRandom.nextObject(String.class), easyRandom.nextObject(String.class), easyRandom.nextObject(String.class),
+        easyRandom.nextObject(String.class), EMAIL_RANDOMIZER.getRandomValue(), null);
     user2.setRoles(roles);
     user2.setPasswordChangeId(UUID.randomUUID());
     user2.setPasswordChangeIdCreationTime(now.minusDays(1));
@@ -109,12 +120,15 @@ public class UserRepositoryIntegrationTest extends AbstractRepositoryTest {
     final Role role = testEntityManager.persist(new Role(RoleName.USER));
     final Set<Role> roles = new HashSet<Role>();
     roles.add(role);
-    User user1 = userBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", null);
+    
+    User user1 = userBuilder.build(easyRandom.nextObject(String.class), easyRandom.nextObject(String.class), easyRandom.nextObject(String.class),
+        easyRandom.nextObject(String.class), EMAIL_RANDOMIZER.getRandomValue(), null);
     user1.setRoles(roles);
     user1.setLastLoggedIn(LocalDateTime.now().minusYears(1).minusMinutes(1));
     user1.setAccountEnabled(true);
     testEntityManager.persist(user1);
-    User user2 = userBuilder.build("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", null);
+    User user2 = userBuilder.build(easyRandom.nextObject(String.class), easyRandom.nextObject(String.class), easyRandom.nextObject(String.class),
+        easyRandom.nextObject(String.class), EMAIL_RANDOMIZER.getRandomValue(), null);
     user2.setRoles(roles);
     user2.setLastLoggedIn(LocalDateTime.now().minusYears(1).plusMinutes(1));
     user2.setAccountEnabled(true);

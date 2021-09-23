@@ -13,12 +13,16 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.flash;
 
 import java.time.LocalDateTime;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
+import org.jeasy.random.randomizers.EmailRandomizer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -39,7 +43,9 @@ import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
 
 public class PasswordResetControllerIntegrationTest extends AbstractWebIntegrationTest {
-  private static final String USER_PASSWORD = "abc123ABC";
+  private static final String USER_PASSWORD =
+      new EasyRandom(new EasyRandomParameters().seed(new Random().nextLong()).stringLengthRange(10, 15)).nextObject(String.class);
+  private static final EmailRandomizer EMAIL_RANDOMIZER = new EmailRandomizer(new Random().nextLong());
   private GreenMail smtpServer;
   @Autowired
   private UserRepository userRepository;
@@ -118,7 +124,7 @@ public class PasswordResetControllerIntegrationTest extends AbstractWebIntegrati
   }
   
   private User createUser() {
-    return this.persistentUserBuilder.build("joesmith", USER_PASSWORD, "Joe",
-        "Smith", "abc@123.com", Set.of(RoleName.USER));
+    return this.persistentUserBuilder.build(easyRandom.nextObject(String.class), USER_PASSWORD,
+        easyRandom.nextObject(String.class), easyRandom.nextObject(String.class), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.USER));
   }
 }

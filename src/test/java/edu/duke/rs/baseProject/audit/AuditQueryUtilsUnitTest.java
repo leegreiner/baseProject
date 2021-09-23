@@ -12,7 +12,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-public class AuditQueryUtilsUnitTest {
+import edu.duke.rs.baseProject.AbstractBaseTest;
+
+public class AuditQueryUtilsUnitTest extends AbstractBaseTest {
   @Mock
   private AuditQuery auditQuery;
   
@@ -30,10 +32,10 @@ public class AuditQueryUtilsUnitTest {
   
   @Test
   public void whenResults_thenGetAuditQueryResultsReturnsResults() {
-    final AuditRevisionEntity auditRevisionEntity1 = new AuditRevisionEntity(Long.valueOf(1), "John Smith", null);
-    final Object[] item1 = new Object[] {"a test", auditRevisionEntity1, RevisionType.ADD};
-    final AuditRevisionEntity auditRevisionEntity2 = new AuditRevisionEntity(Long.valueOf(2), "Jane Smith", null);
-    final Object[] item2 = new Object[] {"another test", auditRevisionEntity2, RevisionType.MOD};
+    final AuditRevisionEntity auditRevisionEntity1 = new AuditRevisionEntity(easyRandom.nextLong(), easyRandom.nextObject(String.class), null);
+    final Object[] item1 = new Object[] {easyRandom.nextObject(String.class), auditRevisionEntity1, RevisionType.ADD};
+    final AuditRevisionEntity auditRevisionEntity2 = new AuditRevisionEntity(easyRandom.nextLong(), easyRandom.nextObject(String.class), null);
+    final Object[] item2 = new Object[] {easyRandom.nextObject(String.class), auditRevisionEntity2, RevisionType.MOD};
     final List<Object[]> resultList = List.of(item1, item2);
     when(auditQuery.getResultList()).thenReturn(resultList);
     

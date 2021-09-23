@@ -13,7 +13,9 @@ import javax.validation.ValidatorFactory;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class FieldsValueMatchValidatorUnitTest {
+import edu.duke.rs.baseProject.AbstractBaseTest;
+
+public class FieldsValueMatchValidatorUnitTest extends AbstractBaseTest {
   private static Validator validator;
 
   @BeforeAll
@@ -25,7 +27,7 @@ public class FieldsValueMatchValidatorUnitTest {
   @Test
   public void whenFieldsMatch_thenValidatorReturnsNoViolations() {
     final FieldsMatchDto dto = new FieldsMatchDto();
-    dto.setField1("a test");
+    dto.setField1(easyRandom.nextObject(String.class));
     dto.setField2(dto.getField1());
     
     Set<ConstraintViolation<FieldsMatchDto>> constraintViolations = validator.validate(dto);
@@ -44,7 +46,7 @@ public class FieldsValueMatchValidatorUnitTest {
   @Test
   public void whenFieldsDoNotMatch_thenValidatorReturnsViolations() {
     final FieldsMatchDto dto = new FieldsMatchDto();
-    dto.setField1("a test");
+    dto.setField1(easyRandom.nextObject(String.class));
     dto.setField2(dto.getField1() + "m");
     
     Set<ConstraintViolation<FieldsMatchDto>> constraintViolations = validator.validate(dto);
@@ -56,7 +58,7 @@ public class FieldsValueMatchValidatorUnitTest {
   @Test
   public void whenFirstFieldNullAndSecondFieldNotNull_thenValidatorReturnsViolations() {
     final FieldsMatchDto dto = new FieldsMatchDto();
-    dto.setField2("a test");
+    dto.setField2(easyRandom.nextObject(String.class));
     
     Set<ConstraintViolation<FieldsMatchDto>> constraintViolations = validator.validate(dto);
     

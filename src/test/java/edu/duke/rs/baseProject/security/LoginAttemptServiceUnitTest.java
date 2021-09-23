@@ -14,9 +14,12 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -45,6 +48,7 @@ public class LoginAttemptServiceUnitTest {
   @Mock
   private ValueWrapper valueWrapper;
   private LoginAttemptServiceImpl loginAttemptService;
+  private EasyRandom easyRandom;
   
   @BeforeEach
   public void init() {
@@ -55,11 +59,13 @@ public class LoginAttemptServiceUnitTest {
     when(cacheManager.getCache(CacheConfig.BRUTE_FORCE_AUTHENTICATION_CACHE)).thenReturn(cache);
     when(httpServletRequest.getRemoteAddr()).thenReturn(IP_ADDRESS);
     loginAttemptService = new LoginAttemptServiceImpl(userRepository, httpServletRequest, cacheManager, securityProperties);
+    
+    easyRandom = new EasyRandom(new EasyRandomParameters().seed(new Random().nextLong()).stringLengthRange(10,10));
   }
   
   @Test
   public void whenLoginFailedUserNotFoundAndIpNotInCache_thenIpAddedToBruteForceCache() {
-    final String userName = "abc";
+    final String userName = easyRandom.nextObject(String.class);
     when(userRepository.findByUsernameIgnoreCase(userName)).thenReturn(Optional.empty());
     when(cache.get(IP_ADDRESS)).thenReturn(null);
     
@@ -74,7 +80,7 @@ public class LoginAttemptServiceUnitTest {
   
   @Test
   public void whenLoginFailedUserNotFoundAndIpInCache_thenCachedBruteForceIpCountIncremented() {
-    final String userName = "abc";
+    final String userName = easyRandom.nextObject(String.class);
     final Integer cacheValue = Integer.valueOf(1);
     when(userRepository.findByUsernameIgnoreCase(userName)).thenReturn(Optional.empty());
     when(cache.get(IP_ADDRESS)).thenReturn(valueWrapper);
@@ -91,7 +97,7 @@ public class LoginAttemptServiceUnitTest {
   
   @Test
   public void whenLoginFailedAndUserFoundAndNotBlocked_thenInvalidAttemptDataUpdated() throws Exception {
-    final String userName = "abc";
+    final String userName = easyRandom.nextObject(String.class);
     final User user = new User();
     when(userRepository.findByUsernameIgnoreCase(userName)).thenReturn(Optional.of(user));
     
@@ -121,7 +127,7 @@ public class LoginAttemptServiceUnitTest {
   
   @Test
   public void whenLoginFailedAndUserFoundAndBlocked_thenInvalidAttemptDataUpdated() {
-    final String userName = "abc";
+    final String userName = easyRandom.nextObject(String.class);
     final LocalDateTime previousLastInvalidLoginAttempt = LocalDateTime.now().minusSeconds(1);
     final User user = new User();
     user.setInvalidLoginAttempts(securityProperties.getNumberOfLoginAttemptFailuresBeforeTemporaryLock());
@@ -142,7 +148,7 @@ public class LoginAttemptServiceUnitTest {
   
   @Test
   public void whenLoginSucceedsAndUserNotFound_thenNothingIsDone() {
-    final String userName = "abc";
+    final String userName = easyRandom.nextObject(String.class);
     when(userRepository.findByUsernameIgnoreCase(userName)).thenReturn(Optional.empty());
     
     this.loginAttemptService.loginSucceeded(userName);
@@ -154,7 +160,7 @@ public class LoginAttemptServiceUnitTest {
   
   @Test
   public void whenLoginSucceedsAndUserFound_thenInvalidAttemptDataClearedAndLastLoginSet() {
-    final String userName = "abc";
+    final String userName = easyRandom.nextObject(String.class);
     final User user = new User();
     user.setLastInvalidLoginAttempt(LocalDateTime.now());
     user.setInvalidLoginAttempts(2);
@@ -201,7 +207,7 @@ public class LoginAttemptServiceUnitTest {
   
   @Test
   public void whenXForwardedForIsPresent_thenXForwaredIpUsed() {
-    final String userName = "abc";
+    final String userName = easyRandom.nextObject(String.class);
     final String xforwardedForIp = "2.2.2.2";
     when(userRepository.findByUsernameIgnoreCase(userName)).thenReturn(Optional.empty());
     when(httpServletRequest.getHeader("X-Forwarded-For")).thenReturn(xforwardedForIp);

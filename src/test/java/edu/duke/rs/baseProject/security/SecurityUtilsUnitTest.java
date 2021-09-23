@@ -17,9 +17,10 @@ import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import edu.duke.rs.baseProject.AbstractBaseTest;
 import edu.duke.rs.baseProject.role.RoleName;
 
-public class SecurityUtilsUnitTest {
+public class SecurityUtilsUnitTest extends AbstractBaseTest {
   @Mock
   private Authentication authentication;
   @Mock
@@ -51,8 +52,9 @@ public class SecurityUtilsUnitTest {
   
   @Test
   public void whenAnonymousUserIsAutheticated_thenUserAutheticatedIsFalse() {
-    when(securityContext.getAuthentication()).thenReturn(new AnonymousAuthenticationToken("GUEST","USERNAME", AuthorityUtils
-        .createAuthorityList("ROLE_ONE", "ROLE_TWO")));
+    when(securityContext.getAuthentication()).thenReturn(
+        new AnonymousAuthenticationToken(easyRandom.nextObject(String.class),easyRandom.nextObject(String.class), AuthorityUtils
+            .createAuthorityList("ROLE_" + easyRandom.nextObject(String.class), "ROLE_" + easyRandom.nextObject(String.class))));
     when(authentication.isAuthenticated()).thenReturn(true);
     
     assertThat(securityUtils.userIsAuthenticated(), is(false));
@@ -67,8 +69,9 @@ public class SecurityUtilsUnitTest {
   
   @Test
   public void whenAnonymousUserIsAuthenticated_thenHasRoleIsFalse() {
-    when(securityContext.getAuthentication()).thenReturn(new AnonymousAuthenticationToken("GUEST","USERNAME", AuthorityUtils
-        .createAuthorityList("ROLE_ONE", "ROLE_TWO")));
+    when(securityContext.getAuthentication()).thenReturn(
+        new AnonymousAuthenticationToken(easyRandom.nextObject(String.class),easyRandom.nextObject(String.class), AuthorityUtils
+            .createAuthorityList("ROLE_" + easyRandom.nextObject(String.class), "ROLE_" + easyRandom.nextObject(String.class))));
     
     assertThat(securityUtils.hasRole(RoleName.USER), is(false));
   }

@@ -11,13 +11,15 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.actuate.audit.AuditEvent;
 
-public class InMemoryAuditEventRepositoryUnitTest {
+import edu.duke.rs.baseProject.AbstractBaseTest;
+
+public class InMemoryAuditEventRepositoryUnitTest extends AbstractBaseTest {
   private static final String MGMT_USER = "mgmt_user";
   
   @Test
   public void whenIgnoredPrincipal_thenEventNotAddedToRepository() {
     final InMemoryAuditEventRepository listener = new InMemoryAuditEventRepository(MGMT_USER);
-    final AuditEvent event = new AuditEvent(Instant.now(), MGMT_USER, "type1", new HashMap<String, Object>());
+    final AuditEvent event = new AuditEvent(Instant.now(), MGMT_USER, easyRandom.nextObject(String.class), new HashMap<String, Object>());
     
     listener.add(event);
     
@@ -28,7 +30,7 @@ public class InMemoryAuditEventRepositoryUnitTest {
   public void whenNotIgnoredPrincipal_thenEventAddedToRepository() {
     final InMemoryAuditEventRepository listener = new InMemoryAuditEventRepository(MGMT_USER);
     final Instant now = Instant.now();
-    final AuditEvent event = new AuditEvent(now, "principal1", "type1", new HashMap<String, Object>());
+    final AuditEvent event = new AuditEvent(now, easyRandom.nextObject(String.class), easyRandom.nextObject(String.class), new HashMap<String, Object>());
     
     listener.add(event);
     
@@ -41,7 +43,7 @@ public class InMemoryAuditEventRepositoryUnitTest {
   public void whenEventFound_thenFindReturnsEvent() {
     final InMemoryAuditEventRepository listener = new InMemoryAuditEventRepository(MGMT_USER);
     final Instant now = Instant.now();
-    final AuditEvent event = new AuditEvent(now, "principal1", "type1", new HashMap<String, Object>());
+    final AuditEvent event = new AuditEvent(now, easyRandom.nextObject(String.class), easyRandom.nextObject(String.class), new HashMap<String, Object>());
     
     listener.add(event);
     
@@ -59,7 +61,7 @@ public class InMemoryAuditEventRepositoryUnitTest {
   public void whenEventNotFound_thenFindDoesntReturnEvent() {
     final InMemoryAuditEventRepository listener = new InMemoryAuditEventRepository(MGMT_USER);
     final Instant now = Instant.now();
-    final AuditEvent event = new AuditEvent(now, "principal1", "type1", new HashMap<String, Object>());
+    final AuditEvent event = new AuditEvent(now, easyRandom.nextObject(String.class), easyRandom.nextObject(String.class), new HashMap<String, Object>());
     
     listener.add(event);
     
@@ -72,7 +74,7 @@ public class InMemoryAuditEventRepositoryUnitTest {
   public void whenChangingCapacity_thenEventsAreCleared() {
     final InMemoryAuditEventRepository listener = new InMemoryAuditEventRepository(MGMT_USER);
     final Instant now = Instant.now();
-    final AuditEvent event = new AuditEvent(now, "principal1", "type1", new HashMap<String, Object>());
+    final AuditEvent event = new AuditEvent(now, easyRandom.nextObject(String.class), easyRandom.nextObject(String.class), new HashMap<String, Object>());
     
     listener.add(event);
     listener.setCapacity(10);

@@ -53,13 +53,13 @@ public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 	@Test
 	public void whenLoginAttemptBlocked_thenUsernameNotFoundExceptionThrown() {
 	  when(loginAttemptService.isClientIpBlocked()).thenReturn(true);
-	  assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername("abc"));
+	  assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername(easyRandom.nextObject(String.class)));
 	}
 	
 	@Test
 	public void whenUserNotFound_thenUsernameNotFoundExceptionThrown() {
-	  final String username = "abc";
-		when(userRepository.getByUsernameIgnoreCase(any(String.class)))
+	  final String username = easyRandom.nextObject(String.class);
+		when(userRepository.getByUsernameIgnoreCase(username))
 			.thenReturn(Optional.empty());
 		
 		assertThrows(UsernameNotFoundException.class, () -> userDetailsService.loadUserByUsername(username));
@@ -71,7 +71,8 @@ public class UserDetailsServiceUnitTest extends AbstractBaseTest {
 	
 	@Test
 	public void whenUserFound_thenUserDetailsReturned() {
-		final User user = userBuilder.build("johnsmith", "johnspassword", "John", "Smith","johnSmith@gmail.com", Set.of(RoleName.USER));
+		final User user = userBuilder.build(easyRandom.nextObject(String.class), easyRandom.nextObject(String.class), easyRandom.nextObject(String.class),
+		    easyRandom.nextObject(String.class),"johnSmith@gmail.com", Set.of(RoleName.USER));
 		
 		when(userRepository.getByUsernameIgnoreCase(user.getUsername()))
 			.thenReturn(Optional.of(user));

@@ -26,10 +26,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import org.jeasy.random.randomizers.EmailRandomizer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -52,9 +54,7 @@ import edu.duke.rs.baseProject.user.history.UserHistoryRepository;
 
 @WebMvcTest(UserController.class)
 public class UserControllerUnitTest extends AbstractWebUnitTest {
-  private static final String CHANGE_REASON = "Need to change";
-  private static final String CHANGE_PASSWORD = "abc123DEF";
-  private static final String EMAIL = "abc@123.com";
+  private static final EmailRandomizer EMAIL_RANDOMIZER = new EmailRandomizer(new Random().nextLong());
   @MockBean
   private UserService userService;
   @MockBean
@@ -82,7 +82,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
       if (roleName != RoleName.ADMINISTRATOR) {
         final MvcResult result = this.mockMvc.perform(post(UserController.USERS_MAPPING)
             .with(csrf())
-            .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(roleName))))
+            .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(roleName))))
             .param("email", expected.getEmail())
             .param("firstName", expected.getFirstName())
             .param("lastName", expected.getLastName())
@@ -101,7 +101,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   @Test
   public void whenAdministrator_thenUsersPagePresented() throws Exception {
     this.mockMvc.perform(get(UserController.USERS_MAPPING)
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR)))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR)))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USERS_VIEW));
   }
@@ -120,7 +120,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
       
       if (roleName != RoleName.ADMINISTRATOR) {
         final MvcResult result = this.mockMvc.perform(get(UserController.USER_MAPPING, 1L)
-            .with(user(userDetailsBuilder.build(1L, EMAIL, Set.of(roleName)))))
+            .with(user(userDetailsBuilder.build(1L, EMAIL_RANDOMIZER.getRandomValue(), Set.of(roleName)))))
         .andExpect(status().isFound())
         .andReturn();
     
@@ -135,7 +135,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     when(userService.getUser(userId)).thenThrow(new NotFoundException("error.principalNotFound", (Object[])null));
     
     this.mockMvc.perform(get(UserController.USER_MAPPING, userId)
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR)))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR)))))
       .andExpect(status().isOk())
       .andExpect(view().name(ExceptionController.EXCEPTION_ERROR_VIEW))
       .andExpect(model().attribute(ExceptionController.EXCEPTION_MESSAGE_ATTRIBUTE, notNullValue()));
@@ -152,7 +152,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     when(userService.getUser(user.getAlternateId())).thenReturn(user);
     
     this.mockMvc.perform(get(UserController.USER_MAPPING, user.getAlternateId())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR)))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR)))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USER_DETAILS_VIEW))
       .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, equalTo(user)));
@@ -170,7 +170,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     when(userService.getUser(user.getAlternateId())).thenThrow(new NotFoundException(errorMessage, (Object[])null));
     
     final MvcResult result = this.mockMvc.perform(get(UserController.USER_MAPPING, user.getAlternateId())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR)))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR)))))
       .andExpect(status().isOk())
       .andExpect(view().name(ExceptionController.EXCEPTION_ERROR_VIEW))
       .andReturn();
@@ -187,7 +187,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     when(userService.getUser(user.getAlternateId())).thenThrow(new NullPointerException());
     
     final MvcResult result = this.mockMvc.perform(get(UserController.USER_MAPPING, user.getAlternateId())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR)))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR)))))
       .andExpect(status().isOk())
       .andExpect(view().name(ExceptionController.EXCEPTION_ERROR_VIEW))
       .andReturn();
@@ -215,7 +215,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     when(userService.getUser(user.getAlternateId())).thenReturn(user);
     
     this.mockMvc.perform(get(UserController.USER_MAPPING, user.getAlternateId())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR))))
         .param(UserController.ACTION_REQUEST_PARAM, "new"))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.EDIT_USER_VIEW))
@@ -232,7 +232,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     
     this.mockMvc.perform(post(UserController.USERS_MAPPING)
         .with(csrf())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR))))
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
         .param("lastName", userDto.getLastName())
@@ -255,7 +255,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     
     this.mockMvc.perform(post(UserController.USERS_MAPPING)
         .with(csrf())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR))))
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
         .param("lastName", userDto.getLastName())
@@ -281,7 +281,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     
     final MvcResult result = this.mockMvc.perform(post(UserController.USERS_MAPPING)
         .with(csrf())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR))))
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
         .param("lastName", userDto.getLastName())
@@ -305,11 +305,11 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     userDto.setEmail(null);
     userDto.setId(UUID.randomUUID());
     
-    when(persistentSecurityUtils.currentUserPasswordMatches(CHANGE_PASSWORD)).thenReturn(true);
+    when(persistentSecurityUtils.currentUserPasswordMatches(easyRandom.nextObject(String.class))).thenReturn(true);
     
     this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
         .with(csrf())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR))))
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
         .param("id", userDto.getId().toString())
@@ -325,17 +325,18 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   }
   
   @Test
-  public void whenEditUserThrowsApplicationException_thenNewUserReturnsNewUserViewViewAndErrorMessagePresent() throws Exception{
+  public void whenEditUserThrowsApplicationException_thenNewUserReturnsNewUserViewViewAndErrorMessagePresent() throws Exception {
+    final String password = easyRandom.nextObject(String.class);
     final UserDto userDto = buildUserDto();
     userDto.setId(UUID.randomUUID());
     final String errorMessage = "not found";
     
-    when(persistentSecurityUtils.currentUserPasswordMatches(CHANGE_PASSWORD)).thenReturn(true);
+    when(persistentSecurityUtils.currentUserPasswordMatches(password)).thenReturn(true);
     when(userService.save(any(UserDto.class))).thenThrow(new NotFoundException(errorMessage, (Object[])null));
     
     this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
         .with(csrf())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR))))
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
         .param("id", userDto.getId().toString())
@@ -344,8 +345,8 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .param("roles", userDto.getRoles().get(0).name())
         .param("timeZone", userDto.getTimeZone().getID())
         .param("username", userDto.getUsername())
-        .param("reasonForChange", CHANGE_REASON)
-        .param("password", CHANGE_PASSWORD))
+        .param("reasonForChange", easyRandom.nextObject(String.class))
+        .param("password", password))
         .andExpect(view().name(UserController.EDIT_USER_VIEW))
         .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
         .andExpect(model().attribute(UserController.ROLES_MODEL_ATTRIBUTE, not(nullValue())))
@@ -355,17 +356,18 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   }
   
   @Test
-  public void whenEditUserUpdated_thenUserDetailsPagePresented() throws Exception{
+  public void whenEditUserUpdated_thenUserDetailsPagePresented() throws Exception {
+    final String password = easyRandom.nextObject(String.class);
     final User user = new User();
     final UserDto userDto = buildUserDto();
     userDto.setId(user.getAlternateId());
     
-    when(persistentSecurityUtils.currentUserPasswordMatches(CHANGE_PASSWORD)).thenReturn(true);
+    when(persistentSecurityUtils.currentUserPasswordMatches(password)).thenReturn(true);
     when(userService.save(any(UserDto.class))).thenReturn(user);
     
     final MvcResult result = this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
         .with(csrf())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR))))
         .param("id", userDto.getId().toString())
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
@@ -374,8 +376,8 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .param("roles", userDto.getRoles().get(0).name())
         .param("timeZone", userDto.getTimeZone().getID())
         .param("username", userDto.getUsername())
-        .param("reasonForChange", CHANGE_REASON)
-        .param("password", CHANGE_PASSWORD))
+        .param("reasonForChange", easyRandom.nextObject(String.class))
+        .param("password", password))
         .andExpect(flash().attribute(BaseWebController.FLASH_FEEDBACK_MESSAGE, not(nullValue())))
         .andReturn();
     
@@ -388,17 +390,18 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
   
   @Test
   void whenEditingUser_thenMustProvideReasonAndPassword() throws Exception {
+    final String password = easyRandom.nextObject(String.class);
     final User user = new User();
     final UserDto userDto = buildUserDto();
     userDto.setId(user.getAlternateId());
     
-    when(persistentSecurityUtils.currentUserPasswordMatches(CHANGE_PASSWORD)).thenReturn(true);
+    when(persistentSecurityUtils.currentUserPasswordMatches(password)).thenReturn(true);
     when(userService.save(any(UserDto.class))).thenReturn(user);
     
     // reason
     this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
         .with(csrf())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR))))
         .param("id", userDto.getId().toString())
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
@@ -407,7 +410,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .param("roles", userDto.getRoles().get(0).name())
         .param("timeZone", userDto.getTimeZone().getID())
         .param("username", userDto.getUsername())
-        .param("password", CHANGE_PASSWORD))
+        .param("password", password))
         .andExpect(status().isOk())
         .andExpect(view().name(UserController.EDIT_USER_VIEW))
         .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
@@ -416,7 +419,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     // password
     this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
         .with(csrf())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR))))
         .param("id", userDto.getId().toString())
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
@@ -425,17 +428,17 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .param("roles", userDto.getRoles().get(0).name())
         .param("timeZone", userDto.getTimeZone().getID())
         .param("username", userDto.getUsername())
-        .param("reasonForChange", CHANGE_REASON))
+        .param("reasonForChange", easyRandom.nextObject(String.class)))
         .andExpect(status().isOk())
         .andExpect(view().name(UserController.EDIT_USER_VIEW))
         .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
         .andExpect(model().attribute(BaseWebController.FLASH_ERROR_MESSAGE, equalTo("Please correct the errors below.")));
     
-    when(persistentSecurityUtils.currentUserPasswordMatches(CHANGE_PASSWORD)).thenReturn(false);
+    when(persistentSecurityUtils.currentUserPasswordMatches(password)).thenReturn(false);
     // incorrect password
     this.mockMvc.perform(put(UserController.USER_MAPPING, userDto.getId())
         .with(csrf())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR))))
         .param("id", userDto.getId().toString())
         .param("email", userDto.getEmail())
         .param("firstName", userDto.getFirstName())
@@ -444,8 +447,8 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
         .param("roles", userDto.getRoles().get(0).name())
         .param("timeZone", userDto.getTimeZone().getID())
         .param("username", userDto.getUsername())
-        .param("password", CHANGE_PASSWORD + "a")
-        .param("reasonForChange", CHANGE_REASON))
+        .param("password", password + "a")
+        .param("reasonForChange", easyRandom.nextObject(String.class)))
         .andExpect(status().isOk())
         .andExpect(view().name(UserController.EDIT_USER_VIEW))
         .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
@@ -466,7 +469,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
       
       if (roleName != RoleName.ADMINISTRATOR) {
         final MvcResult result = this.mockMvc.perform(get(UserController.USER_HISTORY_MAPPING, Long.valueOf(1))
-            .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(roleName)))))
+            .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(roleName)))))
             .andExpect(status().isFound())
             .andReturn();
         
@@ -486,7 +489,7 @@ public class UserControllerUnitTest extends AbstractWebUnitTest {
     when(userHistoryRepository.listUserRevisions(user.getId())).thenReturn(history);
     
     this.mockMvc.perform(get(UserController.USER_HISTORY_MAPPING, user.getAlternateId())
-        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL, Set.of(RoleName.ADMINISTRATOR)))))
+        .with(user(userDetailsBuilder.build(Long.valueOf(1), EMAIL_RANDOMIZER.getRandomValue(), Set.of(RoleName.ADMINISTRATOR)))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USER_HISTORY_VIEW))
       .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, equalTo(user)))

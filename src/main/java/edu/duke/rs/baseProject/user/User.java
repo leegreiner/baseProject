@@ -27,6 +27,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.NamedSubgraph;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
@@ -127,7 +128,7 @@ public class User extends BaseEntity implements Serializable {
 	@Column(length = 320, unique = true, nullable = false)
   @NonNull
   @NotBlank
-  @Size(max = 320)
+  @Email
   private String email;
 	
 	@Column(nullable = false)

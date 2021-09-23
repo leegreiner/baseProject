@@ -4,7 +4,11 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.util.List;
+import java.util.Random;
 
+import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -14,6 +18,13 @@ public class PasswordValidatorUnitTest {
   private static final org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder ENCODER = 
       new org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder();
   private PasswordEncoder NO_OP_PASSWORD_ENCODER = new NoOpPasswordEncoder();
+  private EasyRandom easyRandom;
+  
+  @BeforeEach
+  public void init() {
+    final EasyRandomParameters parameters = new EasyRandomParameters().seed(new Random().nextLong()).stringLengthRange(3,8);
+    easyRandom = new EasyRandom(parameters);
+  }
   
   @Test
   public void whenWhiteSpaceInPassword_thenValidationFails() {
@@ -30,7 +41,7 @@ public class PasswordValidatorUnitTest {
         new PasswordValidatorImpl(securityProperties, NO_OP_PASSWORD_ENCODER);
     
     for (final char whiteSpace : whiteSpaceChars) {
-      final String pwd = "abc " + whiteSpace + "defg";
+      final String pwd = easyRandom.nextObject(String.class) + whiteSpace + easyRandom.nextObject(String.class);
       assertThat(validator.isValid(pwd), equalTo(false));
     }
   }

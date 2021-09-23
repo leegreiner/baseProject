@@ -56,9 +56,9 @@ public class EmailServiceIntegrationTest extends AbstractWebIntegrationTest {
   
   @Test
   public void whenValidEmailPassed_thenEmailSent() throws Exception {
-    final String expectedContent = "This is a test";
+    final String expectedContent = easyRandom.nextObject(String.class);
     final String expectedTo = "abc@123.com";
-    final String expectedSubject = "Test subject";
+    final String expectedSubject = easyRandom.nextObject(String.class);
     final Map<String, Object> content = new HashMap<String, Object>();
     content.put("message", expectedContent);
     
@@ -76,9 +76,9 @@ public class EmailServiceIntegrationTest extends AbstractWebIntegrationTest {
   
   @Test
   public void whenValidEmailAndAttachmentPassed_thenEmailAndAttachmentSent() throws Exception {
-    final String expectedContent = "This is a test";
+    final String expectedContent = easyRandom.nextObject(String.class);
     final String expectedTo = "abc@123.com";
-    final String expectedSubject = "Test subject";
+    final String expectedSubject = easyRandom.nextObject(String.class);
     final List<File> attachments = List.of(ResourceUtils.getFile("classpath:files/twoXmlFiles.zip"));
     final Map<String, Object> content = new HashMap<String, Object>();
     content.put("message", expectedContent);
@@ -107,15 +107,15 @@ public class EmailServiceIntegrationTest extends AbstractWebIntegrationTest {
   public void whenUnableToSendEmail_thenEmailExceptionThrown() {
     smtpServer.stop();
     
-    assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, "abc@123", "Test subject", Collections.emptyMap(), null),
-        "error.unableToSendEmail");
+    assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, "abc@123", easyRandom.nextObject(String.class),
+        Collections.emptyMap(), null), "error.unableToSendEmail");
   }
   
   @Test
   public void whenValidEmailPassed_thenEmailSentLong() throws Exception {
-    final String expectedContent = "This is a test";
+    final String expectedContent = easyRandom.nextObject(String.class);
     final List<String> expectedTo = List.of("abc@123.com", "def.com");
-    final String expectedSubject = "Test subject";
+    final String expectedSubject = easyRandom.nextObject(String.class);
     final List<String> expectedCc = List.of("ghi@123.com", "jkl@123.com");
     final List<String> expectedBcc = List.of("mno@123.com", "pqr@123.com");
     final String expectedFrom = "stu@123.com";
@@ -151,6 +151,6 @@ public class EmailServiceIntegrationTest extends AbstractWebIntegrationTest {
     smtpServer.stop();
     
     assertThrows(EmailException.class, () -> emailService.send(MessageType.TEST, List.of("abc@123"), List.of("def@123.com"),
-        List.of("ghi@123.com"), "jkl@123.com", "Test subject", Collections.emptyMap(), null), "error.unableToSendEmail");
+        List.of("ghi@123.com"), "jkl@123.com", easyRandom.nextObject(String.class), Collections.emptyMap(), null), "error.unableToSendEmail");
   }
 }

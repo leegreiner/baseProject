@@ -17,10 +17,13 @@ import java.time.ZoneId;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 
+import org.jeasy.random.randomizers.EmailRandomizer;
+import org.jeasy.random.randomizers.time.TimeZoneRandomizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -31,6 +34,7 @@ import org.mockito.stubbing.Answer;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Sort;
 
+import edu.duke.rs.baseProject.AbstractBaseTest;
 import edu.duke.rs.baseProject.event.CreatedEvent;
 import edu.duke.rs.baseProject.event.UpdatedEvent;
 import edu.duke.rs.baseProject.exception.ConstraintViolationException;
@@ -44,9 +48,9 @@ import edu.duke.rs.baseProject.security.password.PasswordGenerator;
 import edu.duke.rs.baseProject.user.passwordReset.PasswordResetService;
 
 
-public class UserServiceUnitTest {
-  private static final String CHANGE_REASON = "Need to update";
-  private static final String CHANGE_PASSWORD = "abc123ABC";
+public class UserServiceUnitTest extends AbstractBaseTest {
+  private static final EmailRandomizer EMAIL_RANDOMIZER = new EmailRandomizer(new Random().nextLong());
+  private static final TimeZoneRandomizer TIMEZONE_RANDOMIZER = new TimeZoneRandomizer(new Random().nextLong());
   @Mock
   private AppPrincipal appPrincipal;
   @Mock
@@ -61,7 +65,6 @@ public class UserServiceUnitTest {
   private ApplicationEventPublisher eventPublisher;
   @Mock
   private PersistentSecurityUtils securityUtils;
-  
   private UserServiceImpl service;
   
   @BeforeEach
@@ -80,7 +83,7 @@ public class UserServiceUnitTest {
   
   @Test
   public void whenUserNotFound_thenGetUserProfileThrowsNotFoundException() {
-    when(appPrincipal.getUserId()).thenReturn(1L);
+    when(appPrincipal.getUserId()).thenReturn(easyRandom.nextLong());
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findById(appPrincipal.getUserId())).thenReturn(Optional.empty());
     
@@ -98,8 +101,8 @@ public class UserServiceUnitTest {
   @Test
   public void whenUserFound_thenUserAndUserProfileTimeZonesEqual() {
     final User user = new User();
-    user.setTimeZone(TimeZone.getTimeZone("GMT"));
-    when(appPrincipal.getUserId()).thenReturn(1L);
+    user.setTimeZone(TIMEZONE_RANDOMIZER.getRandomValue());
+    when(appPrincipal.getUserId()).thenReturn(easyRandom.nextLong());
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findById(appPrincipal.getUserId())).thenReturn(Optional.of(user));
     
@@ -113,18 +116,18 @@ public class UserServiceUnitTest {
   @Test
   public void whenNoCurrentUser_thenUpdateUserProfileThrowsIllegalArgumentExceptionThrown() {
     when(securityUtils.getPrincipal()).thenReturn(Optional.empty());
-    final UserProfile userProfile = new UserProfile(TimeZone.getTimeZone("GMT"));
+    final UserProfile userProfile = new UserProfile(TIMEZONE_RANDOMIZER.getRandomValue());
     
     assertThrows(IllegalArgumentException.class, () -> service.updateUserProfile(userProfile), "error.principalNotFound");
   }
   
   @Test
   public void whenUserNotFound_thenUpdateUserProfileThrowsNotFoundException() {
-    when(appPrincipal.getUserId()).thenReturn(1L);
+    when(appPrincipal.getUserId()).thenReturn(easyRandom.nextLong());
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findById(appPrincipal.getUserId())).thenReturn(Optional.empty());
     
-    final UserProfile userProfile = new UserProfile(TimeZone.getTimeZone("GMT"));
+    final UserProfile userProfile = new UserProfile(TIMEZONE_RANDOMIZER.getRandomValue());
     
     try {
       service.updateUserProfile(userProfile);
@@ -140,11 +143,11 @@ public class UserServiceUnitTest {
   @Test
   public void whenUserFound_thenUserTimeZoneEqualsUserProfileTimeZone() {
     final User user = new User();
-    when(appPrincipal.getUserId()).thenReturn(1L);
+    when(appPrincipal.getUserId()).thenReturn(easyRandom.nextLong());
     when(securityUtils.getPrincipal()).thenReturn(Optional.of(appPrincipal));
     when(userRepository.findById(appPrincipal.getUserId())).thenReturn(Optional.of(user));
     
-    final UserProfile userProfile = new UserProfile(TimeZone.getTimeZone("GMT"));
+    final UserProfile userProfile = new UserProfile(TIMEZONE_RANDOMIZER.getRandomValue());
     
     service.updateUserProfile(userProfile);
     
@@ -156,8 +159,8 @@ public class UserServiceUnitTest {
   @Test
   public void whenUserNotFound_thenGetUserThrowsNotFoundException() {
     final User user = new User();
-    user.setId(Long.valueOf(1));
-    user.setUsername("abc");
+    user.setId(easyRandom.nextLong());
+    user.setUsername(easyRandom.nextObject(String.class));
     when(userRepository.findById(user.getId())).thenReturn(Optional.empty());
     
     assertThrows(NotFoundException.class, () -> service.getUser(user.getAlternateId()), "error.userNotFound");
@@ -166,8 +169,8 @@ public class UserServiceUnitTest {
   @Test
   public void whenUserFound_thenGetUserReturnsUser() {
     final User user = new User();
-    user.setId(Long.valueOf(1));
-    user.setUsername("abc");
+    user.setId(easyRandom.nextLong());
+    user.setUsername(easyRandom.nextObject(String.class));
     when(userRepository.findByAlternateId(eq(user.getAlternateId()),
         org.mockito.ArgumentMatchers.any(String.class))).thenReturn(Optional.of(user));
     
@@ -194,13 +197,13 @@ public class UserServiceUnitTest {
   public void whenCreatingNewUserWithDuplicateUsername_thenConstraintViolationExceptionThrown() {
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
-        .email("abc@123.com")
-        .firstName("Joe")
-        .lastName("Smith")
+        .email(EMAIL_RANDOMIZER.getRandomValue())
+        .firstName(easyRandom.nextObject(String.class))
+        .lastName(easyRandom.nextObject(String.class))
         .middleInitial("M")
         .roles(List.of(RoleName.USER))
         .timeZone(TimeZone.getDefault())
-        .username("jsmith")
+        .username(easyRandom.nextObject(String.class))
         .build();
 
     when(userRepository.findByUsernameIgnoreCase(userDto.getUsername())).thenReturn(Optional.of(new User()));
@@ -212,13 +215,13 @@ public class UserServiceUnitTest {
   public void whenCreatingNewUserWithDuplicateEmail_thenConstraintViolationExceptionThrown() {
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
-        .email("abc@123.com")
-        .firstName("Joe")
-        .lastName("Smith")
+        .email(EMAIL_RANDOMIZER.getRandomValue())
+        .firstName(easyRandom.nextObject(String.class))
+        .lastName(easyRandom.nextObject(String.class))
         .middleInitial("M")
         .roles(List.of(RoleName.USER))
         .timeZone(TimeZone.getDefault())
-        .username("jsmith")
+        .username(easyRandom.nextObject(String.class))
         .build();
 
     when(userRepository.findByUsernameIgnoreCase(userDto.getUsername())).thenReturn(Optional.empty());
@@ -233,13 +236,13 @@ public class UserServiceUnitTest {
     final String password = "thepassword";
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
-        .email("abc@123.com")
-        .firstName("Joe")
-        .lastName("Smith")
+        .email(EMAIL_RANDOMIZER.getRandomValue())
+        .firstName(easyRandom.nextObject(String.class))
+        .lastName(easyRandom.nextObject(String.class))
         .middleInitial("M")
         .roles(List.of(role.getName()))
         .timeZone(TimeZone.getTimeZone(ZoneId.of("Brazil/East")))
-        .username("jsmith")
+        .username(easyRandom.nextObject(String.class))
         .build();
 
     when(userRepository.findByUsernameIgnoreCase(userDto.getUsername())).thenReturn(Optional.empty());
@@ -254,16 +257,16 @@ public class UserServiceUnitTest {
   public void whenCreatingUserWithValidInfo_thenUserIsCreated() {
     final Long userId = Long.valueOf(1);
     final Role role = new Role(RoleName.USER);
-    final String password = "thepassword";
+    final String password = easyRandom.nextObject(String.class);
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
-        .email("abc@123.com")
-        .firstName("Joe")
-        .lastName("Smith")
+        .email(EMAIL_RANDOMIZER.getRandomValue())
+        .firstName(easyRandom.nextObject(String.class))
+        .lastName(easyRandom.nextObject(String.class))
         .middleInitial("M")
         .roles(List.of(role.getName()))
         .timeZone(TimeZone.getTimeZone(ZoneId.of("Brazil/East")))
-        .username("jsmith")
+        .username(easyRandom.nextObject(String.class))
         .build();
 
     when(userRepository.findByUsernameIgnoreCase(userDto.getUsername())).thenReturn(Optional.empty());
@@ -311,15 +314,15 @@ public class UserServiceUnitTest {
   public void whenUpdatingOwnAccount_thenConstraintViolationExceptionThrown() {
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
-        .reasonForChange(CHANGE_REASON)
-        .email("abc@123.com")
-        .firstName("Joe")
-        .lastName("Smith")
+        .reasonForChange(easyRandom.nextObject(String.class))
+        .email(EMAIL_RANDOMIZER.getRandomValue())
+        .firstName(easyRandom.nextObject(String.class))
+        .lastName(easyRandom.nextObject(String.class))
         .middleInitial("M")
-        .password(CHANGE_PASSWORD)
+        .password(easyRandom.nextObject(String.class))
         .roles(List.of(RoleName.USER))
         .timeZone(TimeZone.getDefault())
-        .username("jsmith")
+        .username(easyRandom.nextObject(String.class))
         .id(UUID.randomUUID())
         .build();
 
@@ -336,15 +339,15 @@ public class UserServiceUnitTest {
   public void whenUpdatingUserWithDuplicateEmail_thenConstraintViolationExceptionThrown() {
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
-        .reasonForChange(CHANGE_REASON)
-        .email("abc@123.com")
-        .firstName("Joe")
-        .lastName("Smith")
+        .reasonForChange(easyRandom.nextObject(String.class))
+        .email(EMAIL_RANDOMIZER.getRandomValue())
+        .firstName(easyRandom.nextObject(String.class))
+        .lastName(easyRandom.nextObject(String.class))
         .middleInitial("M")
-        .password(CHANGE_PASSWORD)
+        .password(easyRandom.nextObject(String.class))
         .roles(List.of(RoleName.USER))
-        .timeZone(TimeZone.getDefault())
-        .username("jsmith")
+        .timeZone(TIMEZONE_RANDOMIZER.getRandomValue())
+        .username(easyRandom.nextObject(String.class))
         .id(UUID.randomUUID())
         .build();
 
@@ -365,15 +368,15 @@ public class UserServiceUnitTest {
   public void whenUpdatingUserAndUserNotFound_thenNotFoundExceptionThrown() {
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
-        .reasonForChange(CHANGE_REASON)
-        .email("abc@123.com")
-        .firstName("Joe")
-        .lastName("Smith")
+        .reasonForChange(easyRandom.nextObject(String.class))
+        .email(EMAIL_RANDOMIZER.getRandomValue())
+        .firstName(easyRandom.nextObject(String.class))
+        .lastName(easyRandom.nextObject(String.class))
         .middleInitial("M")
-        .password(CHANGE_PASSWORD)
+        .password(easyRandom.nextObject(String.class))
         .roles(List.of(RoleName.USER))
-        .timeZone(TimeZone.getDefault())
-        .username("jsmith")
+        .timeZone(TIMEZONE_RANDOMIZER.getRandomValue())
+        .username(easyRandom.nextObject(String.class))
         .id(UUID.randomUUID())
         .build();
 
@@ -394,33 +397,32 @@ public class UserServiceUnitTest {
   
   @Test
   public void whenUpdatingUserWithValidInfo_thenUserIsUpdated() {
-    final String password = "abcdef";
-    final String username = "jsmeith";
+    final String password = easyRandom.nextObject(String.class);
+    final String username = easyRandom.nextObject(String.class);
     final Role role = new Role(RoleName.USER);
     final Set<Role> roles = new HashSet<Role>();
     final Role currentRole = new Role(RoleName.ADMINISTRATOR);
     roles.add(currentRole);         //TODO need to update when > 1 role
     final User foundUser = new User();
-    foundUser.setId(Long.valueOf(1));
+    foundUser.setId(easyRandom.nextLong());
     foundUser.setAccountEnabled(true);
-    foundUser.setEmail("abc@123.com");
-    foundUser.setFirstName("Joe");
-    foundUser.setLastName("Smith");
+    foundUser.setEmail(EMAIL_RANDOMIZER.getRandomValue());
+    foundUser.setFirstName(easyRandom.nextObject(String.class));
+    foundUser.setLastName(easyRandom.nextObject(String.class));
     foundUser.setMiddleInitial("M");
     foundUser.setPassword(password);
     foundUser.setRoles(roles);
-    foundUser.setTimeZone(TimeZone.getDefault());
+    foundUser.setTimeZone(TIMEZONE_RANDOMIZER.getRandomValue());
     foundUser.setUsername(username);
     final UserDto userDto = UserDto.builder()
         .accountEnabled(true)
-        .reasonForChange(CHANGE_REASON)
+        .reasonForChange(easyRandom.nextObject(String.class))
         .email("a" + foundUser.getEmail())
         .firstName("a" + foundUser.getFirstName())
         .lastName("a" + foundUser.getLastName())
         .middleInitial(foundUser.getMiddleInitial() != null ? null : "M")
         .roles(List.of(role.getName()))
-        .timeZone(TimeZone.getDefault())
-        .username(username)
+        .timeZone(foundUser.getTimeZone())
         .id(UUID.randomUUID())
         .build();
 

@@ -6,8 +6,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 
+import org.jeasy.random.randomizers.EmailRandomizer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.test.context.support.WithMockUser;
@@ -27,6 +29,7 @@ import edu.duke.rs.baseProject.error.ApplicationErrorController;
 import edu.duke.rs.baseProject.role.RoleName;
 
 public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTest {
+  private static final EmailRandomizer EMAIL_RANDOMIZER = new EmailRandomizer(new Random().nextLong());
   @Autowired
   private PersistentUserBuilder persistentUserBuilder;
   
@@ -42,9 +45,12 @@ public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTes
         MockMvcRequestBuilders.get(API + UserController.USERS_MAPPING + "?" + params);
     final Set<RoleName> roles = Set.of(RoleName.USER);
     
-    final User user1 = persistentUserBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
-    final User user2 = persistentUserBuilder.build("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
-    final User user3 = persistentUserBuilder.build("jimmyjohnson", "password", "Jimmy", "Johnson","jimmyJohnson@gmail.com", roles);
+    final User user1 = persistentUserBuilder.build(easyRandom.nextObject(String.class), easyRandom.nextObject(String.class),
+        easyRandom.nextObject(String.class), "Stevens", EMAIL_RANDOMIZER.getRandomValue(), roles);
+    final User user2 = persistentUserBuilder.build(easyRandom.nextObject(String.class), easyRandom.nextObject(String.class),
+        easyRandom.nextObject(String.class), "Johnson", EMAIL_RANDOMIZER.getRandomValue(), roles);
+    final User user3 = persistentUserBuilder.build(easyRandom.nextObject(String.class), easyRandom.nextObject(String.class),
+        easyRandom.nextObject(String.class), "Johnson", EMAIL_RANDOMIZER.getRandomValue(), roles);
 
     final MvcResult result = mockMvc.perform(requestBuilder).andExpect(status().isOk()).andReturn();
     
@@ -78,9 +84,12 @@ public class UserRestControllerIntegrationTest extends AbstractWebIntegrationTes
         MockMvcRequestBuilders.get(API + UserController.USERS_MAPPING + "?" + params);
     final Set<RoleName> roles = Set.of(RoleName.USER);
     
-    persistentUserBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", roles);
-    final User user2 = persistentUserBuilder.build("simmyjohnson", "password", "Simmy", "Johnson","simmyJohnson@gmail.com", roles);
-    final User user3 = persistentUserBuilder.build("jimmyjohnson", "password", "Jimmy", "Johnson","jimmyJohnson@gmail.com", roles);
+    persistentUserBuilder.build(easyRandom.nextObject(String.class), easyRandom.nextObject(String.class),
+        easyRandom.nextObject(String.class), "Stevens", EMAIL_RANDOMIZER.getRandomValue(), roles);
+    final User user2 = persistentUserBuilder.build(easyRandom.nextObject(String.class), easyRandom.nextObject(String.class),
+        easyRandom.nextObject(String.class), "Johnson", EMAIL_RANDOMIZER.getRandomValue(), roles);
+    final User user3 = persistentUserBuilder.build(easyRandom.nextObject(String.class), easyRandom.nextObject(String.class),
+        easyRandom.nextObject(String.class), "Johnson", EMAIL_RANDOMIZER.getRandomValue(), roles);
 
     final MvcResult result = mockMvc.perform(requestBuilder).andExpect(status().isOk()).andReturn();
     

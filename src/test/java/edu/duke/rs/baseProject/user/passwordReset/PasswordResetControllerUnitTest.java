@@ -22,9 +22,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
 import java.util.Locale;
+import java.util.Random;
 import java.util.Set;
 import java.util.UUID;
 
+import org.jeasy.random.randomizers.EmailRandomizer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -45,7 +47,7 @@ import edu.duke.rs.baseProject.security.SecurityUtils;
 
 @WebMvcTest(PasswordResetController.class)
 public class PasswordResetControllerUnitTest extends AbstractWebUnitTest {
-  private static final String EMAIL = "abc@123.com";
+  private static final String EMAIL = new EmailRandomizer(new Random().nextLong()).getRandomValue();
   @MockBean
   private PasswordResetService passwordResetService;
   @MockBean

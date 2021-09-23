@@ -7,7 +7,9 @@ import java.time.LocalDateTime;
 import org.hibernate.envers.RevisionType;
 import org.junit.jupiter.api.Test;
 
-public class AuditQueryResultUtilsUnitTest {
+import edu.duke.rs.baseProject.AbstractBaseTest;
+
+public class AuditQueryResultUtilsUnitTest extends AbstractBaseTest { 
   @Test
   public void whenNullResultsPassedToGetAuditQueryResult_thenNullReturned() {
     assertThat(AuditQueryResultUtils.getAuditQueryResult(null, String.class)).isNull();
@@ -20,7 +22,7 @@ public class AuditQueryResultUtilsUnitTest {
   
   @Test
   public void whenTypeDoesntMatch_thenEntityIsNull() {
-    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(Long.valueOf(1), "John Smith", null);
+    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(easyRandom.nextLong(), easyRandom.nextObject(String.class), null);
     final Object[] item = new Object[] {LocalDateTime.now(), auditRevisionEntity, RevisionType.ADD};
     final AuditQueryResult<String> result = AuditQueryResultUtils.getAuditQueryResult(item, String.class);
     
@@ -31,7 +33,7 @@ public class AuditQueryResultUtilsUnitTest {
   
   @Test
   public void whenRevisionEntityDoesntMatch_thenRevisionIsNull() {
-    final Object[] item = new Object[] {"a test", new String("abc"), RevisionType.ADD};
+    final Object[] item = new Object[] {easyRandom.nextObject(String.class), easyRandom.nextObject(String.class), RevisionType.ADD};
     final AuditQueryResult<String> result = AuditQueryResultUtils.getAuditQueryResult(item, String.class);
     
     assertThat(result.getEntity()).isEqualTo(item[0]);
@@ -41,8 +43,8 @@ public class AuditQueryResultUtilsUnitTest {
   
   @Test
   public void whenRevisionTypeDoesntMatch_thenRevisionIsNull() {
-    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(Long.valueOf(1), "John Smith", null);
-    final Object[] item = new Object[] {"a test", auditRevisionEntity, new String("abc")};
+    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(easyRandom.nextLong(), easyRandom.nextObject(String.class), null);
+    final Object[] item = new Object[] {easyRandom.nextObject(String.class), auditRevisionEntity, easyRandom.nextObject(String.class)};
     final AuditQueryResult<String> result = AuditQueryResultUtils.getAuditQueryResult(item, String.class);
     
     assertThat(result.getEntity()).isEqualTo(item[0]);
@@ -52,8 +54,8 @@ public class AuditQueryResultUtilsUnitTest {
   
   @Test
   public void whenItemValueValid_thenAllFieldsPopulated() {
-    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(Long.valueOf(1), "John Smith", null);
-    final Object[] item = new Object[] {"a test", auditRevisionEntity, RevisionType.ADD};
+    final AuditRevisionEntity auditRevisionEntity = new AuditRevisionEntity(easyRandom.nextLong(), easyRandom.nextObject(String.class), null);
+    final Object[] item = new Object[] {easyRandom.nextObject(String.class), auditRevisionEntity, RevisionType.ADD};
     final AuditQueryResult<String> result = AuditQueryResultUtils.getAuditQueryResult(item, String.class);
     
     assertThat(result.getEntity()).isEqualTo(item[0]);

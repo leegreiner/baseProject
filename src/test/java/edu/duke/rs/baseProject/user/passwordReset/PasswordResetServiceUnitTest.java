@@ -13,8 +13,10 @@ import static org.mockito.Mockito.when;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
+import java.util.Random;
 import java.util.UUID;
 
+import org.jeasy.random.randomizers.EmailRandomizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Answers;
@@ -23,6 +25,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import edu.duke.rs.baseProject.AbstractBaseTest;
 import edu.duke.rs.baseProject.config.ApplicationProperties;
 import edu.duke.rs.baseProject.exception.ConstraintViolationException;
 import edu.duke.rs.baseProject.exception.NotFoundException;
@@ -32,7 +35,8 @@ import edu.duke.rs.baseProject.user.PasswordHistory;
 import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
 
-public class PasswordResetServiceUnitTest {
+public class PasswordResetServiceUnitTest extends AbstractBaseTest {
+  private static final EmailRandomizer EMAIL_RANDOMIZER = new EmailRandomizer(new Random().nextLong());
   private static final Long EXPIRATION_DAYS = Long.valueOf(2);
   private static final Integer PASSWORD_HISTORY_SIZE = 2;
   @Mock
@@ -308,17 +312,17 @@ public class PasswordResetServiceUnitTest {
   
   private static InitiatePasswordResetDto createInitiatePasswordResetDto() {
     final InitiatePasswordResetDto dto = new InitiatePasswordResetDto();
-    dto.setEmail("abc@123.com");
+    dto.setEmail(EMAIL_RANDOMIZER.getRandomValue());
  
     return dto;
   }
   
-  private static PasswordResetDto createPasswordResetDto() {
+  private PasswordResetDto createPasswordResetDto() {
     final PasswordResetDto dto = new PasswordResetDto();
-    dto.setConfirmPassword("abc123ABC");
+    dto.setConfirmPassword(easyRandom.nextObject(String.class));
     dto.setPassword(dto.getConfirmPassword());
     dto.setPasswordChangeId(UUID.randomUUID());
-    dto.setUsername("johnsmith");
+    dto.setUsername(easyRandom.nextObject(String.class));
     
     return dto;
   }

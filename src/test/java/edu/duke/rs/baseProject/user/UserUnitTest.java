@@ -5,13 +5,15 @@ import static org.hamcrest.Matchers.equalTo;
 
 import org.junit.jupiter.api.Test;
 
-public class UserUnitTest {
+import edu.duke.rs.baseProject.AbstractBaseTest;
+
+public class UserUnitTest extends AbstractBaseTest {
   @Test
   public void whenFirstAndLastNamePresent_displayNameShowsBoth() {
     final User user = new User();
     
-    user.setFirstName("John");
-    user.setLastName("Smith");
+    user.setFirstName(easyRandom.nextObject(String.class));
+    user.setLastName(easyRandom.nextObject(String.class));
     
     assertThat(user.getDisplayName(), equalTo(user.getFirstName() + " " + user.getLastName()));
   }
@@ -20,9 +22,9 @@ public class UserUnitTest {
   public void whenFirstNameMiddleInitialAndLastNamePresent_displayNameShowsAll() {
     final User user = new User();
     
-    user.setFirstName("John");
+    user.setFirstName(easyRandom.nextObject(String.class));
     user.setMiddleInitial("M");
-    user.setLastName("Smith");
+    user.setLastName(easyRandom.nextObject(String.class));
     
     assertThat(user.getDisplayName(), equalTo(user.getFirstName() + " " +user.getMiddleInitial() + " " + user.getLastName()));
   }

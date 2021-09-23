@@ -8,7 +8,10 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Locale;
+import java.util.Random;
 
+import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -22,26 +25,28 @@ import edu.duke.rs.baseProject.event.CreatedEvent;
 
 public class NewSamlUserCreatedEventProcessorUnitTest {
   private static final String URL = "https://localhost";
-  private static final String USER_NAME = "johnsmith";
   private static final String USER_EMAIL = "johnsmit@gmail.com";
   @Mock
   private EmailService emailService;
   @Mock
   private MessageSource messageSource;
   private NewSamlUserCreatedEventProcessor processor;
+  private EasyRandom easyRandom;
   
   @BeforeEach
   public void init() {
     MockitoAnnotations.openMocks(this);
     processor = new NewSamlUserCreatedEventProcessor(emailService, messageSource);
     processor.setApplicationUrl(URL);
+
+    easyRandom = new EasyRandom(new EasyRandomParameters().seed(new Random().nextLong()).stringLengthRange(8,10));
   }
   
   @Test
   public void whenEventTriggered_thenEmailIsSent() {
-    final String subject = "subject";
+    final String subject = easyRandom.nextObject(String.class);
     final User user = new User();
-    user.setUsername(USER_NAME);
+    user.setUsername(easyRandom.nextObject(String.class));
     user.setEmail(USER_EMAIL);
     
     when(messageSource.getMessage(eq(NewSamlUserCreatedEventProcessor.NEW_USER_SUBJECT_CODE), eq(null), any(Locale.class))).thenReturn(subject);

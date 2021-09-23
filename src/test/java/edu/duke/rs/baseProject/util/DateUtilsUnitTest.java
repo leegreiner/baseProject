@@ -8,8 +8,10 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
+import java.util.Random;
 import java.util.TimeZone;
 
+import org.jeasy.random.randomizers.time.TimeZoneRandomizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -24,7 +26,8 @@ import lombok.Setter;
 import lombok.ToString;
 
 public class DateUtilsUnitTest {
-  private static final ZoneId ZONE_ID = ZoneId.of("Africa/Accra");
+  private static final TimeZoneRandomizer TIMEZONE_RANDOMIZER = new TimeZoneRandomizer(new Random().nextLong());
+  private static final ZoneId ZONE_ID = TIMEZONE_RANDOMIZER.getRandomValue().toZoneId();
   @Mock
   private AppPrincipal appPrincipal;
   @Mock
@@ -107,8 +110,8 @@ public class DateUtilsUnitTest {
   
   @Test
   public void whenDifferentZonesPassed_thenLocalDateTimesConvertedToNewZone() {
-    final ZoneId fromZoneId = ZoneId.of("America/New_York");
-    final ZoneId toZoneId = ZoneId.of("America/Los_Angeles");
+    final ZoneId fromZoneId = TIMEZONE_RANDOMIZER.getRandomValue().toZoneId();
+    final ZoneId toZoneId = TIMEZONE_RANDOMIZER.getRandomValue().toZoneId();
     final LocalDateTime now = LocalDateTime.now();
     
     final ZonedDateTime from = ZonedDateTime.of(now, fromZoneId);
@@ -122,7 +125,7 @@ public class DateUtilsUnitTest {
   
   @Test
   public void whenSameZonesPassed_thenLocalDateTimesConvertedToNewZone() {
-    final ZoneId fromZoneId = ZoneId.of("America/Los_Angeles");
+    final ZoneId fromZoneId = TIMEZONE_RANDOMIZER.getRandomValue().toZoneId();
     final ZoneId toZoneId = fromZoneId;
     final LocalDateTime now = LocalDateTime.now();
     

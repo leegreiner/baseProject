@@ -8,8 +8,11 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.util.Locale;
+import java.util.Random;
 import java.util.UUID;
 
+import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
@@ -26,13 +29,13 @@ public class NewUserCreatedEventProcessorUnitTest {
   public static final String NEW_USER_SUBJECT_CODE = "email.newUser.subject";
   private static final String URL = "https://localhost";
   private static final Long RESET_PASSWORD_EXPIRATION_DAYS = Long.valueOf(2);
-  private static final String USER_NAME = "johnsmith";
   private static final String USER_EMAIL = "johnsmit@gmail.com";
   @Mock
   private EmailService emailService;
   @Mock
   private MessageSource messageSource;
   private NewUserCreatedEventProcessor processor;
+  private EasyRandom easyRandom;
   
   @BeforeEach
   public void init() {
@@ -41,13 +44,15 @@ public class NewUserCreatedEventProcessorUnitTest {
     applicationProperties.setUrl(URL);
     applicationProperties.getSecurity().getPassword().setResetPasswordExpirationDays(RESET_PASSWORD_EXPIRATION_DAYS);
     processor = new NewUserCreatedEventProcessor(emailService, messageSource, applicationProperties);
+    
+    easyRandom = new EasyRandom(new EasyRandomParameters().seed(new Random().nextLong()).stringLengthRange(8,10));
   }
   
   @Test
   public void whenEventTriggered_thenEmailIsSent() {
     final String subject = "subject";
     final User user = new User();
-    user.setUsername(USER_NAME);
+    user.setUsername(easyRandom.nextObject(String.class));
     user.setEmail(USER_EMAIL);
     user.setPasswordChangeId(UUID.randomUUID());
     

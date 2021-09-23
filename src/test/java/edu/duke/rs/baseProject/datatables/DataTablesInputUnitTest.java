@@ -10,12 +10,14 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-public class DataTablesInputUnitTest {
+import edu.duke.rs.baseProject.AbstractBaseTest;
+
+public class DataTablesInputUnitTest extends AbstractBaseTest {
   @Test
   public void whenColumnsExist_thenGetColumnsAsMapReturnsColumns() {
     final DataTablesInput input = new DataTablesInput();
-    final Column column1 = new Column("abc", "", true, true, new Search("d", false));
-    final Column column2 = new Column("efg", "", true, true, new Search("h", false));
+    final Column column1 = new Column(easyRandom.nextObject(String.class), "", true, true, new Search(easyRandom.nextObject(String.class), false));
+    final Column column2 = new Column(easyRandom.nextObject(String.class), "", true, true, new Search(easyRandom.nextObject(String.class), false));
     input.getColumns().add(column1);
     input.getColumns().add(column2);
     
@@ -29,8 +31,8 @@ public class DataTablesInputUnitTest {
   @Test
   public void whenColumnsExist_thenGetColumnReturnsColumn() {
     final DataTablesInput input = new DataTablesInput();
-    final Column column1 = new Column("abc", "", true, true, new Search("d", false));
-    final Column column2 = new Column("efg", "", true, true, new Search("h", false));
+    final Column column1 = new Column(easyRandom.nextObject(String.class), "", true, true, new Search(easyRandom.nextObject(String.class), false));
+    final Column column2 = new Column(easyRandom.nextObject(String.class), "", true, true, new Search(easyRandom.nextObject(String.class), false));
     input.getColumns().add(column1);
     input.getColumns().add(column2);
     
@@ -41,8 +43,8 @@ public class DataTablesInputUnitTest {
   @Test
   public void whenColumnsDoesntExist_thenGetColumnReturnsNull() {
     final DataTablesInput input = new DataTablesInput();
-    final Column column1 = new Column("abc", "", true, true, new Search("d", false));
-    final Column column2 = new Column("efg", "", true, true, new Search("h", false));
+    final Column column1 = new Column(easyRandom.nextObject(String.class), "", true, true, new Search(easyRandom.nextObject(String.class), false));
+    final Column column2 = new Column(easyRandom.nextObject(String.class), "", true, true, new Search(easyRandom.nextObject(String.class), false));
     input.getColumns().add(column1);
     input.getColumns().add(column2);
     
@@ -52,8 +54,8 @@ public class DataTablesInputUnitTest {
   @Test
   public void whenNullPassedToGetColumn_thenGetColumnReturnsNull() {
     final DataTablesInput input = new DataTablesInput();
-    final Column column1 = new Column("abc", "", true, true, new Search("d", false));
-    final Column column2 = new Column("efg", "", true, true, new Search("h", false));
+    final Column column1 = new Column(easyRandom.nextObject(String.class), "", true, true, new Search(easyRandom.nextObject(String.class), false));
+    final Column column2 = new Column(easyRandom.nextObject(String.class), "", true, true, new Search(easyRandom.nextObject(String.class), false));
     input.getColumns().add(column1);
     input.getColumns().add(column2);
     
@@ -63,8 +65,8 @@ public class DataTablesInputUnitTest {
   @Test
   public void whenParametersPassedToAddColumn_thenGetColumnIsAdded() {
     final DataTablesInput input = new DataTablesInput();
-    final Column column1 = new Column("abc", "", true, true, new Search("d", false));
-    final Column column2 = new Column("efg", "", true, true, new Search("h", false));
+    final Column column1 = new Column(easyRandom.nextObject(String.class), "", true, true, new Search(easyRandom.nextObject(String.class), false));
+    final Column column2 = new Column(easyRandom.nextObject(String.class), "", true, true, new Search(easyRandom.nextObject(String.class), false));
     input.addColumn(column1.getData(), column1.getSearchable(), column1.getOrderable(), column1.getSearch().getValue());
     input.getColumns().add(column2);
     
@@ -74,8 +76,8 @@ public class DataTablesInputUnitTest {
   @Test
   public void whenNullColumnNamePassed_thenAddOrderReturnsDoesNothing() {
     final DataTablesInput input = new DataTablesInput();
-    final Column column1 = new Column("abc", "", true, true, new Search("d", false));
-    final Column column2 = new Column("efg", "", true, true, new Search("h", false));
+    final Column column1 = new Column(easyRandom.nextObject(String.class), "", true, true, new Search(easyRandom.nextObject(String.class), false));
+    final Column column2 = new Column(easyRandom.nextObject(String.class), "", true, true, new Search(easyRandom.nextObject(String.class), false));
     input.getColumns().add(column1);
     input.getColumns().add(column2);
     
@@ -89,8 +91,8 @@ public class DataTablesInputUnitTest {
   @Test
   public void whenOrderPassed_thenAddOrderAddsOrder() {
     final DataTablesInput input = new DataTablesInput();
-    final Column column1 = new Column("abc", "", true, true, new Search("d", false));
-    final Column column2 = new Column("efg", "", true, true, new Search("h", false));
+    final Column column1 = new Column(easyRandom.nextObject(String.class), "", true, true, new Search(easyRandom.nextObject(String.class), false));
+    final Column column2 = new Column(easyRandom.nextObject(String.class), "", true, true, new Search(easyRandom.nextObject(String.class), false));
     input.getColumns().add(column1);
     input.getColumns().add(column2);
     final List<Order> beforeOrders = input.getOrder();

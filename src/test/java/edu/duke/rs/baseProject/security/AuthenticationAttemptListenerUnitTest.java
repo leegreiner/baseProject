@@ -9,7 +9,9 @@ import static org.mockito.Mockito.when;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
+import org.jeasy.random.randomizers.Ipv4AddressRandomizer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -18,7 +20,9 @@ import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.boot.actuate.audit.listener.AuditApplicationEvent;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
-public class AuthenticationAttemptListenerUnitTest {
+import edu.duke.rs.baseProject.AbstractBaseTest;
+
+public class AuthenticationAttemptListenerUnitTest extends AbstractBaseTest {
   private List<String> ignoredPrincipals = List.of("anonymousUser", "mgmt_user");
   private static final String DETAILS = "details";
   @Mock
@@ -59,13 +63,13 @@ public class AuthenticationAttemptListenerUnitTest {
     data.put(DETAILS, webAuthenticationDetails);
     
     when(auditApplicationEvent.getAuditEvent()).thenReturn(auditEvent);
-    when(auditEvent.getPrincipal()).thenReturn("princiapl");
-    when(auditEvent.getType()).thenReturn("type1");
+    when(auditEvent.getPrincipal()).thenReturn(easyRandom.nextObject(String.class));
+    when(auditEvent.getType()).thenReturn(easyRandom.nextObject(String.class));
     when(auditEvent.getData()).thenReturn(data);
-    when(webAuthenticationDetails.getRemoteAddress()).thenReturn("127.0.0.1");
+    when(webAuthenticationDetails.getRemoteAddress()).thenReturn(new Ipv4AddressRandomizer(new Random().nextLong()).getRandomValue());
     when(webAuthenticationDetails.getSessionId()).thenReturn("abc123");
     
-    final AuthenticationAttemptListener listener = new AuthenticationAttemptListener("principal");
+    final AuthenticationAttemptListener listener = new AuthenticationAttemptListener(easyRandom.nextObject(String.class));
     
     listener.authenticationAttempted(auditApplicationEvent);
     
@@ -87,13 +91,13 @@ public class AuthenticationAttemptListenerUnitTest {
   @Test
   public void whenNonIgnoredPrincipalEventWithNoDetails_thenEventIsLogged() {
     when(auditApplicationEvent.getAuditEvent()).thenReturn(auditEvent);
-    when(auditEvent.getPrincipal()).thenReturn("princiapl");
+    when(auditEvent.getPrincipal()).thenReturn(easyRandom.nextObject(String.class));
     when(auditEvent.getType()).thenReturn("type1");
     when(auditEvent.getData()).thenReturn(new HashMap<String, Object>());
-    when(webAuthenticationDetails.getRemoteAddress()).thenReturn("127.0.0.1");
-    when(webAuthenticationDetails.getSessionId()).thenReturn("abc123");
+    when(webAuthenticationDetails.getRemoteAddress()).thenReturn((new Ipv4AddressRandomizer(new Random().nextLong()).getRandomValue()));
+    when(webAuthenticationDetails.getSessionId()).thenReturn(easyRandom.nextObject(String.class));
     
-    final AuthenticationAttemptListener listener = new AuthenticationAttemptListener("principal");
+    final AuthenticationAttemptListener listener = new AuthenticationAttemptListener(easyRandom.nextObject(String.class));
     
     listener.authenticationAttempted(auditApplicationEvent);
     

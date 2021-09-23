@@ -150,6 +150,8 @@ spring:
             isClustered: true
           scheduler:
             instanceId: AUTO
+          threadPool:
+            threadCount: 5
   
   sql: 
     init:

@@ -21,6 +21,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -29,6 +30,9 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 import org.hibernate.envers.RevisionType;
+import org.jeasy.random.EasyRandom;
+import org.jeasy.random.EasyRandomParameters;
+import org.jeasy.random.randomizers.EmailRandomizer;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -49,9 +53,7 @@ import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.user.history.UserHistory;
 
 public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
-  private static final String CHANGE_REASON = "Need to change";
-  private static final String USER_NAME = "username1";
-  private static final String EMAIL = "abc@123.com";
+  private static final EmailRandomizer EMAIL_RANDOMIZER = new EmailRandomizer(new Random().nextLong());
   private GreenMail smtpServer;
   @Autowired
   private UserRepository userRepository;
@@ -59,11 +61,13 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   private PersistentUserDetailsBuilder persistentUserDetailsBuilder;
   @Autowired
   private PersistentUserBuilder persistentUserBuilder;
+  private EasyRandom easyRandom;
   
   @BeforeEach
   public void init() {
     smtpServer = new GreenMail(new ServerSetup(mailPort, null, "smtp"));
     smtpServer.start();
+    easyRandom = new EasyRandom(new EasyRandomParameters().seed(new Random().nextLong()).stringLengthRange(8,10));
   }
   
   @AfterEach
@@ -80,7 +84,8 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   @Test
   public void whenAdminitrator_thenUsersReturned() throws Exception {
     this.mockMvc.perform(get(UserController.USERS_MAPPING)
-        .with(user(persistentUserDetailsBuilder.build(USER_NAME, EMAIL, Set.of(RoleName.ADMINISTRATOR)))))
+        .with(user(persistentUserDetailsBuilder.build(easyRandom.nextObject(String.class), EMAIL_RANDOMIZER.getRandomValue(),
+            Set.of(RoleName.ADMINISTRATOR)))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USERS_VIEW));
   }
@@ -97,7 +102,8 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     final User user = persistentUserBuilder.build("jimmystevens", "password", "Jimmy", "Stevens","jimmyStevens@gmail.com", Set.of(RoleName.USER));
     
     this.mockMvc.perform(get(UserController.USER_MAPPING, user.getAlternateId())
-      .with(user(persistentUserDetailsBuilder.build(USER_NAME, EMAIL, Set.of(RoleName.ADMINISTRATOR)))))
+      .with(user(persistentUserDetailsBuilder.build(easyRandom.nextObject(String.class), EMAIL_RANDOMIZER.getRandomValue(),
+          Set.of(RoleName.ADMINISTRATOR)))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.USER_DETAILS_VIEW))
       .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, equalTo(user)));
@@ -115,7 +121,8 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   public void whenAdministrator_thenNewUserDisplayReturned() throws Exception {    
     this.mockMvc.perform(get(UserController.USERS_MAPPING)
         .param(UserController.ACTION_REQUEST_PARAM, "new")
-      .with(user(persistentUserDetailsBuilder.build(USER_NAME, EMAIL, Set.of(RoleName.ADMINISTRATOR)))))
+      .with(user(persistentUserDetailsBuilder.build(easyRandom.nextObject(String.class), EMAIL_RANDOMIZER.getRandomValue(),
+          Set.of(RoleName.ADMINISTRATOR)))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserController.NEW_USER_VIEW))
       .andExpect(model().attribute(UserController.USER_MODEL_ATTRIBUTE, not(nullValue())))
@@ -136,7 +143,8 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     
     final MvcResult result = this.mockMvc.perform(post(UserController.USERS_MAPPING)
         .with(csrf())
-        .with(user(persistentUserDetailsBuilder.build(USER_NAME, EMAIL, Set.of(RoleName.ADMINISTRATOR))))
+        .with(user(persistentUserDetailsBuilder.build(easyRandom.nextObject(String.class), EMAIL_RANDOMIZER.getRandomValue(),
+            Set.of(RoleName.ADMINISTRATOR))))
         .param("email", expected.getEmail())
         .param("firstName", expected.getFirstName())
         .param("lastName", expected.getLastName())
@@ -192,7 +200,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   
   @Test
   public void whenAdministrator_thenUpdateUserUpdatesUser() throws Exception {
-    final String password = "passworD1";
+    final String password = easyRandom.nextObject(String.class);
     final UserDto expected = buildUserDto();
     User user = persistentUserBuilder.build(expected.getUsername() + "A", password, expected.getFirstName() + "B", expected.getLastName() + "C",
          "D" + expected.getEmail(), Set.of(RoleName.USER));
@@ -203,7 +211,8 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     
     final MvcResult result = this.mockMvc.perform(put(UserController.USER_MAPPING, user.getAlternateId())
         .with(csrf())
-        .with(user(persistentUserDetailsBuilder.build(USER_NAME, EMAIL, Set.of(RoleName.ADMINISTRATOR))))
+        .with(user(persistentUserDetailsBuilder.build(easyRandom.nextObject(String.class), EMAIL_RANDOMIZER.getRandomValue(),
+            Set.of(RoleName.ADMINISTRATOR))))
         .param("email", expected.getEmail())
         .param("firstName", expected.getFirstName())
         .param("id", expected.getId().toString())
@@ -212,7 +221,7 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
         .param("roles", expected.getRoles().get(0).name())
         .param("timeZone", expected.getTimeZone().getID())
         .param("username", expected.getUsername())
-        .param("reasonForChange", CHANGE_REASON)
+        .param("reasonForChange", easyRandom.nextObject(String.class))
         .param("password", PersistentUserDetailsBuilder.PASSWORD))
         .andExpect(status().isFound())
         .andExpect(redirectedUrl(UriComponentsBuilder.fromPath(UserController.USER_MAPPING)
@@ -246,7 +255,9 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
   @Test
   public void whenUserCreated_thenRecordIsAddedToHistory() throws Exception {
     final UserDto expected = buildUserDto();
-    final AppPrincipal userDetails = (AppPrincipal) persistentUserDetailsBuilder.build(USER_NAME, EMAIL, Set.of(RoleName.ADMINISTRATOR));
+    final AppPrincipal userDetails = (AppPrincipal) persistentUserDetailsBuilder
+        .build(easyRandom.nextObject(String.class), EMAIL_RANDOMIZER.getRandomValue(),
+            Set.of(RoleName.ADMINISTRATOR));
     
     this.mockMvc.perform(post(UserController.USERS_MAPPING)
         .with(csrf())
@@ -301,12 +312,12 @@ public class UserControllerIntegrationTest extends AbstractWebIntegrationTest {
     final UserDto user = UserDto.builder()
         .accountEnabled(true)
         .email("jsmith@gmail.com")
-        .firstName("John")
-        .lastName("Smith")
+        .firstName(easyRandom.nextObject(String.class))
+        .lastName(easyRandom.nextObject(String.class))
         .middleInitial("M")
         .roles(List.of(RoleName.USER))
         .timeZone(TimeZone.getTimeZone("Brazil/East"))
-        .username("johnsmith")
+        .username(easyRandom.nextObject(String.class))
         .id(UUID.randomUUID())
         .build();
 

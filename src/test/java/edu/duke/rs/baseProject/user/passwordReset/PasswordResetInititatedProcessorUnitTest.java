@@ -14,16 +14,15 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import edu.duke.rs.baseProject.AbstractBaseTest;
 import edu.duke.rs.baseProject.config.ApplicationProperties;
 import edu.duke.rs.baseProject.email.EmailService;
 import edu.duke.rs.baseProject.email.MessageType;
 import edu.duke.rs.baseProject.user.User;
 
-public class PasswordResetInititatedProcessorUnitTest {
+public class PasswordResetInititatedProcessorUnitTest extends AbstractBaseTest {
   private static final String URL = "https://localhost";
   private static final Long RESET_PASSWORD_EXPIRATION_DAYS = Long.valueOf(2);
-  private static final String USER_NAME = "johnsmith";
-  private static final String USER_EMAIL = "johnsmit@gmail.com";
   @Mock
   private EmailService emailService;
   private PasswordResetInititatedProcessor processor;
@@ -40,8 +39,8 @@ public class PasswordResetInititatedProcessorUnitTest {
   @Test
   public void whenEventTriggered_thenEmailIsSent() {
     final User user = new User();
-    user.setUsername(USER_NAME);
-    user.setEmail(USER_EMAIL);
+    user.setUsername(easyRandom.nextObject(String.class));
+    user.setEmail(easyRandom.nextObject(String.class));
     user.setPasswordChangeId(UUID.randomUUID());
     
     processor.onPasswordResetInitiated(new PasswordResetInitiatedEvent(this, user));

@@ -13,9 +13,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
+import java.util.Random;
 import java.util.Set;
 import java.util.TimeZone;
 
+import org.jeasy.random.randomizers.EmailRandomizer;
+import org.jeasy.random.randomizers.time.TimeZoneRandomizer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -28,8 +31,8 @@ import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.security.AppPrincipal;
 
 public class UserProfileControllerIntegrationTest extends AbstractWebIntegrationTest {
-  private static final String USER_NAME = "username1";
-  private static final String EMAIL = "abc@123.com";
+  private static final EmailRandomizer EMAIL_RANDOMIZDR = new EmailRandomizer(new Random().nextLong());
+  private static final TimeZoneRandomizer TIMEZONE_RANDOMIZER = new TimeZoneRandomizer(new Random().nextLong());
   @Autowired
   private UserRepository userRepository;
   @Autowired
@@ -45,7 +48,8 @@ public class UserProfileControllerIntegrationTest extends AbstractWebIntegration
   @Test
   public void whenAuthenticated_thenUserProfileReturned() throws Exception {   
     this.mockMvc.perform(get(UserProfileController.USER_PROFILE_MAPPING)
-      .with(user(persistentUserDetailsBuilder.build(USER_NAME, EMAIL, Set.of(RoleName.USER)))))
+      .with(user(persistentUserDetailsBuilder.build(easyRandom.nextObject(String.class), EMAIL_RANDOMIZDR.getRandomValue(),
+          Set.of(RoleName.USER)))))
       .andExpect(status().isOk())
       .andExpect(view().name(UserProfileController.USER_PROFILE_VIEW))
       .andExpect(model().attribute(UserProfileController.USER_PROFILE_ATTRIBUTE, notNullValue()));
@@ -53,16 +57,18 @@ public class UserProfileControllerIntegrationTest extends AbstractWebIntegration
   
   @Test
   public void whenUserProfilePassed_thenUpdateUserProfileReturnsToHomeView() throws Exception {
-    final AppPrincipal appPrincipal = (AppPrincipal) persistentUserDetailsBuilder.build(USER_NAME, EMAIL, Set.of(RoleName.USER));
+    final AppPrincipal appPrincipal = (AppPrincipal) persistentUserDetailsBuilder.build(easyRandom.nextObject(String.class),
+        EMAIL_RANDOMIZDR.getRandomValue(), Set.of(RoleName.USER));
+    final TimeZone timeZone = TIMEZONE_RANDOMIZER.getRandomValue();
     
     this.mockMvc.perform(put(UserProfileController.USER_PROFILE_MAPPING)
         .with(user(appPrincipal))
         .with(csrf())
-        .param("timeZone", "GMT"))
+        .param("timeZone", timeZone.getID()))
         .andExpect(status().isFound())
         .andExpect(redirectedUrl(HomeController.HOME_MAPPING))
         .andExpect(flash().attribute(BaseWebController.FLASH_FEEDBACK_MESSAGE, "Your profile has been updated."));
     
-    assertThat(TimeZone.getTimeZone("GMT"), equalTo(userRepository.findById(appPrincipal.getUserId()).get().getTimeZone()));
+    assertThat(timeZone, equalTo(userRepository.findById(appPrincipal.getUserId()).get().getTimeZone()));
   }
 }

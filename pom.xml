@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.5.4</version>
+    <version>2.5.5</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>edu.duke.rs</groupId>
@@ -22,13 +22,14 @@
     <oracle.client.version>19.8.0.0</oracle.client.version>
     <oracle.ojdbc.artifactId>ojdbc10</oracle.ojdbc.artifactId>
 <!--      <splunk.version>1.8.0</splunk.version> uncomment to enable splunk -->
-    <spring.version>5.3.9</spring.version>
-    <spring.data.jpa.version>2.5.4</spring.data.jpa.version>
+    <spring.version>5.3.10</spring.version>
+    <spring.data.jpa.version>2.5.5</spring.data.jpa.version>
     <spring.security.saml.version>1.0.10.RELEASE</spring.security.saml.version>
     <springfox.version>3.0.0</springfox.version>
     <hazelcast.kubernetes.version>2.2.2</hazelcast.kubernetes.version>
     <passay.version>1.6.0</passay.version>
     <jacoco.version>0.8.5</jacoco.version>
+    <easyRandom.version>5.0.0</easyRandom.version>
   </properties>
 <!--  uncomment to enable splunk 
   <repositories>
@@ -163,10 +164,6 @@
       <groupId>org.thymeleaf.extras</groupId>
       <artifactId>thymeleaf-extras-springsecurity5</artifactId>
     </dependency>
-    <dependency>  
-      <groupId>org.quartz-scheduler</groupId>
-      <artifactId>quartz</artifactId>
-    </dependency>  
     <dependency>
       <groupId>org.hibernate</groupId>
       <artifactId>hibernate-envers</artifactId>
@@ -329,6 +326,32 @@
       <version>1.5</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.jeasy</groupId>
+      <artifactId>easy-random-core</artifactId>
+      <version>${easyRandom.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jeasy</groupId>
+      <artifactId>easy-random-bean-validation</artifactId>
+      <version>${easyRandom.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jeasy</groupId>
+      <artifactId>easy-random-randomizers</artifactId>
+      <version>${easyRandom.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.github.glytching</groupId>
+      <artifactId>junit-extensions</artifactId>
+      <version>2.5.0</version>
+      <scope>test</scope>
+    </dependency>
+    
+    
   </dependencies>
 
   <build>
