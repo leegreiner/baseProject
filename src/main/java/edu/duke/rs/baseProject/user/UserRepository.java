@@ -9,11 +9,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.query.Param;
-import org.springframework.stereotype.Repository;
 
 import edu.duke.rs.baseProject.repository.ExtendedJpaRepository;
 
-@Repository
 public interface UserRepository extends ExtendedJpaRepository<User, Long> {
 	Page<UserListItem> findByLastNameStartingWithIgnoreCase(String lastName, Pageable pageable);
 	Page<UserListItem> findAllBy(Pageable pageable);
