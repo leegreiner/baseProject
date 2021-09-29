@@ -22,7 +22,7 @@
             
             <div class="panel-container show">
               <div class="panel-content">
-	              <form id="userForm" th:action="@{'/users/' + ${user.id}}" th:object="${user}" th:method="put" class="needs-validation" novalidate autocomplete="off">
+	              <form id="userForm" th:action="@{/users/{id}(id=${user.id})}" th:object="${user}" th:method="put" class="needs-validation" novalidate autocomplete="off">
 	                <input type="hidden" th:field="*{id}"/>
 	                <input type="hidden" th:field="*{username}"/>
 	                
