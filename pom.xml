@@ -18,7 +18,7 @@
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <java.version>11</java.version>
+    <java.version>17</java.version>
     <oracle.client.version>19.12.0.0</oracle.client.version>
     <oracle.ojdbc.artifactId>ojdbc10</oracle.ojdbc.artifactId>
 <!--      <splunk.version>1.8.0</splunk.version> uncomment to enable splunk -->
@@ -461,7 +461,7 @@
       <plugin>
         <groupId>com.github.spotbugs</groupId>
         <artifactId>spotbugs-maven-plugin</artifactId>
-        <version>4.1.4</version>
+        <version>4.4.1</version>
         <configuration>
           <threshold>Low</threshold>
           <effort>Max</effort>

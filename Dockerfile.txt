@@ -1,5 +1,5 @@
 # Start with a base image containing Java runtime
-FROM leegreiner/11-jre-alpine:latest
+leegreiner/oracleclient-openjdk17:latest
 
 # Add Maintainer Info
 LABEL maintainer="lee.greiner@duke.edu"

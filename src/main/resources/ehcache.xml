@@ -35,7 +35,14 @@
     <expiry>
       <none/>
     </expiry>
-    <heap>100</heap>
+    <heap>20</heap>
+  </cache>
+  
+  <cache alias="edu.duke.rs.baseProject.role.Privilege" uses-template="defaultTemplate">
+    <expiry>
+      <none/>
+    </expiry>
+    <heap>200</heap>
   </cache>
   
   <cache alias="noExpireQueryResultsRegion" uses-template="defaultTemplate">
