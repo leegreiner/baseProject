@@ -14,7 +14,7 @@ variables:
   SPRING_PROFILES_ACTIVE: test
 
 maven-test:
-  image: maven:3-jdk-11-slim
+  image: maven:3-openjdk-17-slim
   stage: test
   script:
     - mvn -DENCRYPT_KEY=$ENCRYPT_KEY package -B

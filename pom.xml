@@ -500,7 +500,7 @@
                   <message>Invalid Maven version. It should, at least, be 3.0</message>
                 </requireMavenVersion>
                 <requireJavaVersion>
-                  <version>11</version>
+                  <version>17</version>
                   <message>Invalid Java version. It should, at least, be 11</message>
                 </requireJavaVersion>
               </rules>
