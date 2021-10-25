@@ -169,9 +169,6 @@ spring:
           content:
             enabled: true
             paths: /**
-             
-springfox:
-  documentation:    enabled: false
  
 app:
   datasource:
@@ -263,10 +260,6 @@ logging:
     
   web:
     resources:      cache:        cachecontrol:          no-cache: true
-
-springfox:
-  documentation:
-    enabled: true
     
 app:
   google:
