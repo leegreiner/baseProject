@@ -65,7 +65,7 @@ spring:
   datasource:
     url: jdbc:oracle:thin:@//192.168.1.33:1521/ORCLPDB1
     username: baseapp
-    password: '{cipher}21440176662071cd263deee51a446a45431434181576d82c2911baeeca774af1'
+    password: '{cipher}13f656d075e684af047cf04b19305c4bacc89da868a78565b850dd19f7d526ed'
     hikari:      auto-commit: false
       connection-test-query: select 1 from dual
       connection-timeout: 30000
