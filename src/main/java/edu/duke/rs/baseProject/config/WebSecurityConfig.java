@@ -24,6 +24,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -132,6 +133,8 @@ public class WebSecurityConfig {
     private static final String LOGIN_PAGE = "/login";
     @Value("${server.ssl.enabled:false}")
     private boolean sslEnabled;
+    @Value("${spring.security.debug:false}")
+    boolean securityDebug;
     @Autowired
     private UserDetailsService userDetailsService;
     
@@ -140,6 +143,11 @@ public class WebSecurityConfig {
       auth
         .userDetailsService(userDetailsService)
         .passwordEncoder(passwordEncoder());
+    }
+    
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.debug(securityDebug);
     }
     
     @Override
