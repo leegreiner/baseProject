@@ -53,7 +53,7 @@ server:
           
 spring:
   application:    name: "@project.name@"
-
+      
   cloud:
     config:
       enabled: 'false'
@@ -209,6 +209,16 @@ app:
       expirationDays: 90
       resetPasswordExpirationDays: 2
       historySize: 10
+
+javamelody:
+  # Initialization parameters for JavaMelody
+  # See: https://github.com/javamelody/javamelody/wiki/UserGuide#6-optional-parameters
+  init-parameters:
+    disable: false
+    log: false
+    url-exclude-pattern: (/css/.*|/js/.*|/img/.*|/webfonts/.*|/i18n/.*|/webjars/.*)
+    warning-threshold-millis: 1000
+    severe-threshold-millis: 2000
       
 ---
 spring:

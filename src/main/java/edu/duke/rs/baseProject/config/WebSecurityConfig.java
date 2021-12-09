@@ -63,6 +63,7 @@ import edu.duke.rs.baseProject.error.ApplicationErrorController;
 import edu.duke.rs.baseProject.home.HomeController;
 import edu.duke.rs.baseProject.index.IndexController;
 import edu.duke.rs.baseProject.role.PrivilegeName;
+import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.security.AjaxAwareAccessDeniedHandler;
 import edu.duke.rs.baseProject.security.AjaxAwareExceptionMappingAuthenticationHandler;
 import edu.duke.rs.baseProject.security.AjaxAwareLoginUrlAuthenticationEntryPoint;
@@ -172,6 +173,7 @@ public class WebSecurityConfig {
           .authorizeRequests()
             .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
             .antMatchers("/", "/error/**", "/webfonts/**", "/img/**", "/login", "/users/pwdreset", "/i18n/**").permitAll()
+            .antMatchers("/monitoring").hasRole(RoleName.ADMINISTRATOR.name())
             .antMatchers(UserRestController.USERS_MAPPING).hasAuthority(PrivilegeName.VIEW_USERS.name())
             .antMatchers(UserController.USERS_MAPPING + "/**").hasAuthority(PrivilegeName.EDIT_USERS.name())
             .antMatchers(HttpMethod.GET, UserController.USERS_MAPPING).hasAuthority(PrivilegeName.VIEW_USERS.name())
@@ -318,6 +320,7 @@ public class WebSecurityConfig {
         .authorizeRequests()
           .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
           .antMatchers("/", "/error/**", "/webfonts/**", "/img/**", "/login", "/users/pwdreset", "/i18n/**").permitAll()
+          .antMatchers("/monitoring").hasRole(RoleName.ADMINISTRATOR.name())
           .antMatchers(UserRestController.USERS_MAPPING).hasAuthority(PrivilegeName.VIEW_USERS.name())
           .antMatchers(UserController.USERS_MAPPING + "/**").hasAuthority(PrivilegeName.EDIT_USERS.name())
           .antMatchers(HttpMethod.GET, UserController.USERS_MAPPING).hasAuthority(PrivilegeName.VIEW_USERS.name())

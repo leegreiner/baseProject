@@ -46,7 +46,15 @@
            </li>
          </ul>
        </li>
+       
+       <li sec:authorize="hasRole('ADMINISTRATOR')">
+         <a th:href="@{/monitoring}" th:title="#{monitoring}" id="monitoringMenuOption" th:target="_blank">
+           <i class="fal fa-medkit"></i>
+           <span th:text="#{monitoring}" class="nav-link-text">Monitoring</span>
+         </a>
+      </li>
 	    </ul>
+	    
 	    <div class="filter-message js-filter-message bg-success-600"></div>
 	  </nav>
 	  
