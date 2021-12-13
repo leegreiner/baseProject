@@ -218,6 +218,12 @@
       <groupId>org.liquibase</groupId>
       <artifactId>liquibase-core</artifactId>
     </dependency> 
+    <dependency>
+      <groupId>com.github.gavlyukovskiy</groupId>
+      <artifactId>datasource-proxy-spring-boot-starter</artifactId>
+      <version>1.7.1</version>
+    </dependency>
+    
 <!-- uncomment to enable splunk
     <dependency>
       <groupId>com.splunk.logging</groupId>

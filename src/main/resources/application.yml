@@ -76,7 +76,6 @@ spring:
       pool-name: baseapphikaripool
     
   jpa:
-    show-sql: false
     hibernate:
       ddl-auto: none
     open-in-view: true # needed for audit history
@@ -108,7 +107,6 @@ spring:
 #            non_contextual_creation: true
         query:
           in_clause_parameter_padding: true
-        show_sql: false
       javax:
         persistence:
           sharedCache:
@@ -219,7 +217,11 @@ javamelody:
     url-exclude-pattern: (/css/.*|/js/.*|/img/.*|/webfonts/.*|/i18n/.*|/webjars/.*)
     warning-threshold-millis: 1000
     severe-threshold-millis: 2000
-      
+
+decorator:
+  datasource:
+    enabled: false
+          
 ---
 spring:
   config:
@@ -244,6 +246,7 @@ logging:
 #    org.hibernate.type.descriptor.sql: trace
 #    com.hazelcast: debug
     edu.duke.rs.baseProject: debug
+    net.ttddyy.dsproxy: debug
 #    org.springframework.cache: trace
 #    org.hibernate.stat: debug
 #    org.springframework.cache: trace
@@ -253,7 +256,7 @@ logging:
   config:
     activate:      on-profile:      - local   
      
-  jpa:    show-sql: true
+  jpa:
     hibernate:      ddl-auto: create-drop
     open-in-view: true # needed for audit history
     properties:      hibernate:
@@ -261,7 +264,6 @@ logging:
 #        generate_statistics: true
         hbm2ddl:
           import_files: dbdata/importSchemaChanges.sql,dbdata/importRolesPrivileges.sql,dbdata/importUsers.sql
-        show_sql: true
         
   mail:
     default-encoding: UTF-8
@@ -275,7 +277,15 @@ app:
   google:
     analysicsTrackingId: UA-143586895-1
   url: 'https://localhost:8080'
-  
+
+decorator:  datasource:
+    enabled: true    datasource-proxy:
+      multiline: true
+      query:        enable-logging: true
+        log-level: debug
+      slow-query:        enable-logging: true
+        log-level: warn
+        threshold: 3
 ---
 
 spring:
