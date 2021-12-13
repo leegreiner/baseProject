@@ -30,6 +30,7 @@
     <springdoc.version>1.5.13</springdoc.version>
     <jacoco.version>0.8.7</jacoco.version>
     <easyRandom.version>5.0.0</easyRandom.version>
+    <log4j2.version>2.15.0</log4j2.version> <!--  for log4j vulnerability - remove when include by Spring boot -->
   </properties>
 <!--  uncomment to enable splunk 
   <repositories>
