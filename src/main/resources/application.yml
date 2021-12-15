@@ -50,9 +50,10 @@ server:
       suffix: .log
     mbeanregistry:
       enabled : true
-          
+
 spring:
-  application:    name: "@project.name@"
+  application:
+    name: "@project.name@"
       
   cloud:
     config:
@@ -66,12 +67,13 @@ spring:
     url: jdbc:oracle:thin:@//192.168.1.33:1521/ORCLPDB1
     username: baseapp
     password: '{cipher}13f656d075e684af047cf04b19305c4bacc89da868a78565b850dd19f7d526ed'
-    hikari:      auto-commit: false
+    hikari:
+      auto-commit: false
       connection-test-query: select 1 from dual
       connection-timeout: 30000
       idle-timeout: 600000
       max-lifetime: 1800000
-      maximum-pool-size: 8
+      maximum-pool-size: 20
       initialization-fail-timeout: -1
       pool-name: baseapphikaripool
     
@@ -79,7 +81,8 @@ spring:
     hibernate:
       ddl-auto: none
     open-in-view: true # needed for audit history
-    properties:      hibernate:
+    properties:
+      hibernate:
         cache:
           use_second_level_cache: true
           use_query_cache: true
@@ -107,6 +110,7 @@ spring:
 #            non_contextual_creation: true
         query:
           in_clause_parameter_padding: true
+        generate_statistics: false
       javax:
         persistence:
           sharedCache:
@@ -136,11 +140,13 @@ spring:
       filter:
         enabled: true
         
-  quartz:    job-store-type: jdbc
+  quartz:
+    job-store-type: jdbc
     overwrite-existing-jobs: true
     scheduler-name: baseProjectScheduler
     startup-delay: 20
-    properties:      org:
+    properties:
+      org:
         quartz:
           jobStore:
             clusterCheckinInterval: 20000
@@ -247,43 +253,59 @@ logging:
 #    com.hazelcast: debug
     edu.duke.rs.baseProject: debug
     net.ttddyy.dsproxy: debug
-#    org.springframework.cache: trace
+#    org.hibernate.cache: debug
+#    org.hibernate.SQL: debug
 #    org.hibernate.stat: debug
+#    org.springframework.cache: trace
 #    org.springframework.cache: trace
 #    org.springframework.security: debug
 #    org.springframework.web.servlet.mvc.method.annotation: trace
-spring:   
+spring:
   config:
-    activate:      on-profile:      - local   
-     
+    activate:
+      on-profile:
+      - local   
+
   jpa:
-    hibernate:      ddl-auto: create-drop
-    open-in-view: true # needed for audit history
-    properties:      hibernate:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false # for dev only to prevent unknown queries when pages rendered
+    properties:
+      hibernate:
         format_sql: true
 #        generate_statistics: true
         hbm2ddl:
           import_files: dbdata/importSchemaChanges.sql,dbdata/importRolesPrivileges.sql,dbdata/importUsers.sql
-        
+        session:
+          events:
+            log:
+              LOG_QUERIES_SLOWER_THAN_MS: 2000
   mail:
     default-encoding: UTF-8
     host: 192.168.1.33
     port: 1025
     
   web:
-    resources:      cache:        cachecontrol:          no-cache: true
+    resources:
+      cache:
+        cachecontrol:
+          no-cache: true   
     
 app:
   google:
     analysicsTrackingId: UA-143586895-1
   url: 'https://localhost:8080'
 
-decorator:  datasource:
-    enabled: true    datasource-proxy:
+decorator:
+  datasource:
+    enabled: true
+    datasource-proxy:
       multiline: true
-      query:        enable-logging: true
+      query:
+        enable-logging: true
         log-level: debug
-      slow-query:        enable-logging: true
+      slow-query:
+        enable-logging: true
         log-level: warn
         threshold: 3
 ---
@@ -297,8 +319,10 @@ spring:
       on-profile:
       - test
         
-  quartz:    jdbc:
-      # let liquibase initialize quartz tables      initialize-schema: never
+  quartz:
+    jdbc:
+      # let liquibase initialize quartz tables
+      initialize-schema: never
     
   datasource:
     url: jdbc:h2:mem:test;DB_CLOSE_ON_EXIT=FALSE;MODE=Oracle
