@@ -17,11 +17,12 @@ maven-test:
   image: maven:3-openjdk-17-slim
   stage: test
   script:
-    - mvn -DENCRYPT_KEY=$ENCRYPT_KEY package -B
+    - mvn -DENCRYPT_KEY=$ENCRYPT_KEY package -B > build.log
     - cat target/site/jacoco/index.html | grep -o 'Total[^%]*%' | sed -e 's/Total/Jacoco-Test-Coverage:/g'
   artifacts:
     paths:
       - target/*.jar
+      - build.log
     reports:
       junit: target/surefire-reports/TEST-*.xml
 
