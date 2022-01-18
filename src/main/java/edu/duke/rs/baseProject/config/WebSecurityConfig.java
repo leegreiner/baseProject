@@ -153,11 +153,17 @@ public class WebSecurityConfig {
     
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+      http.headers()
+        .xssProtection()
+        .and()
+        .contentSecurityPolicy("form-action 'self';default-src 'self'");
+
       if (sslEnabled) {
         http.headers()
           .httpStrictTransportSecurity()
             .includeSubDomains(true)
             .maxAgeInSeconds(HSTS_AGE_SECONDS);
+          
     
         http.requiresChannel()
           .anyRequest().requiresSecure();
@@ -291,6 +297,11 @@ public class WebSecurityConfig {
     
     @Override
     public void configure(HttpSecurity http) throws Exception {
+      http.headers()
+        .xssProtection()
+        .and()
+        .contentSecurityPolicy("form-action 'self';default-src 'self'");
+
       if (sslEnabled) {
         http.headers()
           .httpStrictTransportSecurity()
