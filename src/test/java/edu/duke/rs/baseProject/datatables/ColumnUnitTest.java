@@ -16,7 +16,6 @@ public class ColumnUnitTest extends AbstractBaseTest {
     column.setSearchValue("updatedSearch");
     
     assertThat("updatedSearch", equalTo(column.getSearch().getValue()));
-    
   }
   
   @Test

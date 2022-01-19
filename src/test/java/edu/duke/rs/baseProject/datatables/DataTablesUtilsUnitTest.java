@@ -18,7 +18,7 @@ import org.springframework.data.domain.Sort;
 
 import edu.duke.rs.baseProject.AbstractBaseTest;
 
-public class DataTablesUtilsTest extends AbstractBaseTest {
+public class DataTablesUtilsUnitTest extends AbstractBaseTest {
   @Test
   public void whenInputtOnlyHasStartAndLength_thenResultIsUnsorted() {
     final DataTablesInput input = new DataTablesInput();

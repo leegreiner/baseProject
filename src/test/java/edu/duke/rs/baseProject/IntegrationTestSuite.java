@@ -1,12 +1,11 @@
 package edu.duke.rs.baseProject;
 
-import org.junit.platform.runner.JUnitPlatform;
 import org.junit.platform.suite.api.IncludeClassNamePatterns;
 import org.junit.platform.suite.api.SelectPackages;
-import org.junit.runner.RunWith;
+import org.junit.platform.suite.api.Suite;
 
-@RunWith(JUnitPlatform.class)
+@Suite
 @SelectPackages("edu.duke.rs.baseProject")
 @IncludeClassNamePatterns({"^.*IntegrationTest?$"})
-public class IntegrationTests {
+public class IntegrationTestSuite {
 }
