@@ -166,7 +166,7 @@ public class WebSecurityConfig {
       http.headers()
         .xssProtection()
         .and()
-        .contentSecurityPolicy("form-action 'self';default-src 'self';style-src 'self' fonts.googleapis.com; font-src 'self' fonts.googleapis.com fonts.gstatic.com; img-src 'self' fonts.gstatic.com; connect-src 'self' fonts.googleapis.com fonts.gstatic.com");
+        .contentSecurityPolicy("form-action 'self';default-src 'self';style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.googleapis.com fonts.gstatic.com; img-src 'self' data: fonts.gstatic.com; connect-src 'self' fonts.googleapis.com fonts.gstatic.com");      
      
       http
         .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
@@ -296,11 +296,6 @@ public class WebSecurityConfig {
     
     @Override
     public void configure(HttpSecurity http) throws Exception {
-      http.headers()
-        .xssProtection()
-        .and()
-        .contentSecurityPolicy("form-action 'self';default-src 'self'");
-
       if (sslEnabled) {
         http.headers()
           .httpStrictTransportSecurity()
@@ -310,6 +305,11 @@ public class WebSecurityConfig {
         http.requiresChannel()
           .anyRequest().requiresSecure();
       }
+      
+      http.headers()
+        .xssProtection()
+        .and()
+        .contentSecurityPolicy("form-action 'self';default-src 'self';style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.googleapis.com fonts.gstatic.com; img-src 'self' data: fonts.gstatic.com; connect-src 'self' fonts.googleapis.com fonts.gstatic.com");      
       
       http
         .httpBasic()
