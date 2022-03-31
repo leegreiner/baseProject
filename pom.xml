@@ -22,7 +22,7 @@
     <oracle.client.version>21.3.0.0</oracle.client.version>
     <oracle.ojdbc.artifactId>ojdbc11</oracle.ojdbc.artifactId>
 <!--      <splunk.version>1.8.0</splunk.version> uncomment to enable splunk -->
-    <spring.version>5.3.15</spring.version>
+    <spring.version>5.3.18</spring.version>
     <spring.data.jpa.version>2.6.1</spring.data.jpa.version>
     <spring.security.saml.version>1.0.10.RELEASE</spring.security.saml.version>
     <hazelcast.kubernetes.version>2.2.3</hazelcast.kubernetes.version>
