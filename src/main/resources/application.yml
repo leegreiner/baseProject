@@ -64,7 +64,7 @@ spring:
           enabled: 'false'
           
   datasource:
-    url: jdbc:oracle:thin:@//192.168.1.33:1521/ORCLPDB1
+    url: jdbc:oracle:thin:@//localhost:1521/ORCLPDB1
     username: baseapp
     password: '{cipher}13f656d075e684af047cf04b19305c4bacc89da868a78565b850dd19f7d526ed'
     hikari:
@@ -282,7 +282,7 @@ logging:
 #              LOG_QUERIES_SLOWER_THAN_MS: 2000
   mail:
     default-encoding: UTF-8
-    host: 192.168.1.33
+    host: localhost
     port: 1025
     
   web:
