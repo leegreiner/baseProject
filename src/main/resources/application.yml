@@ -325,7 +325,7 @@ spring:
       initialize-schema: never
     
   datasource:
-    url: jdbc:h2:mem:test;DB_CLOSE_ON_EXIT=FALSE;MODE=Oracle
+    url: jdbc:h2:mem:test;DB_CLOSE_ON_EXIT=FALSE;MODE=Oracle;DEFAULT_NULL_ORDERING=HIGH
     username: sa
     password: 
     
