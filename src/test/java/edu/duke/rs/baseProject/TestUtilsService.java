@@ -24,6 +24,8 @@ public class TestUtilsService {
   public TestUtilsService(final EntityManager entityManager, @Nullable final CacheManager cacheManager) {
     this.entityManager = entityManager;
     this.cacheManager = cacheManager;
+    org.h2.engine.Mode mode = org.h2.engine.Mode.getInstance("ORACLE");
+    mode.limit = true;
   }
 
   @Transactional
@@ -60,7 +62,7 @@ public class TestUtilsService {
       @Override
       public List<String> execute(final Connection connection) throws SQLException {
         final ResultSet tableRefs = connection.getMetaData()
-            .getTables(connection.getCatalog(), null,null, List.of("TABLE").toArray(new String[0]));
+            .getTables(connection.getCatalog(), "PUBLIC", null, List.of("TABLE").toArray(new String[0]));
         final List<String> tableNames = new ArrayList<String>();
         
         while(tableRefs.next()) {
