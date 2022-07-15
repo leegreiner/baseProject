@@ -130,6 +130,7 @@ spring:
     host: smtpgw.duhs.duke.edu
   
   main:
+    allow-circular-references: true
     banner-mode: 'off'
   
   messages:
@@ -294,7 +295,7 @@ logging:
 app:
   google:
     analysicsTrackingId: UA-143586895-1
-  url: 'https://localhost:8080'
+  url: 'http://localhost:8080'
 
 decorator:
   datasource:

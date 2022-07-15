@@ -23,12 +23,12 @@ import org.springframework.security.authentication.CredentialsExpiredException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -77,8 +77,7 @@ public class WebSecurityConfig {
   private static final long HSTS_AGE_SECONDS = 31536000;
   
   @Configuration
-	@Order(1)
-	public static class ManagementConfigurationAdapter extends WebSecurityConfigurerAdapter {
+	public static class ManagementConfigurationAdapter {
 		@Value("${app.management.userName}")
 		private String managementUserName;
 		@Value("${app.management.password}")
@@ -86,23 +85,25 @@ public class WebSecurityConfig {
 		@Value("${server.ssl.enabled:false}")
     private boolean sslEnabled;
 		
-		@Override
-		protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-			final InMemoryUserDetailsManager manager = new InMemoryUserDetailsManager();
-	        
-	    manager.createUser(User.withUsername(managementUserName)
-    		.password(passwordEncoder().encode(managementPassword))
-    		.authorities("MANAGEMENT").build());
-	        
-			 auth
-			 	.userDetailsService(manager)
-	        	.passwordEncoder(passwordEncoder());
+		@Bean
+		public InMemoryUserDetailsManager userDetailsManager() {
+      final UserDetails user = User.withUsername(managementUserName)
+        .password(managementPassword)
+        .authorities("MANAGEMENT").passwordEncoder(passwordEncoder()::encode).build();
+	 
+      return new InMemoryUserDetailsManager(user);          
 		}
-		
-		@Override
-    protected void configure(final HttpSecurity http) throws Exception {
+
+		@Bean
+		@Order(1)
+		public SecurityFilterChain managementFilterChain(final HttpSecurity http) throws Exception {
+		  final AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+      authenticationManagerBuilder
+        .userDetailsService(userDetailsManager())
+        .passwordEncoder(passwordEncoder());
+      
 		  if (sslEnabled) {
-		    http.headers()
+        http.headers()
           .httpStrictTransportSecurity()
             .includeSubDomains(true)
             .maxAgeInSeconds(HSTS_AGE_SECONDS);
@@ -111,27 +112,27 @@ public class WebSecurityConfig {
           .anyRequest().requiresSecure();
       }
       
-			http
-  			.requestMatcher(EndpointRequest.toAnyEndpoint())
-  			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
-				.and()
-  				.exceptionHandling()
+      http
+        .requestMatcher(EndpointRequest.toAnyEndpoint())
+        .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER)
+        .and()
+          .exceptionHandling()
             .accessDeniedHandler(accessDeniedHandler())
-				.and()
-					.csrf().disable()
-					.authorizeRequests().anyRequest().hasAuthority("MANAGEMENT")
-				.and()
-					.httpBasic()
-						.authenticationEntryPoint(restAuthenticationEntryPoint());
-						
+        .and()
+          .csrf().disable()
+          .authorizeRequests().anyRequest().hasAuthority("MANAGEMENT")
+        .and()
+          .httpBasic()
+            .authenticationEntryPoint(restAuthenticationEntryPoint());
+      
+      return http.build();
 		}
 	}
   
   @Profile("!samlSecurity")
   @Configuration
   @EnableWebSecurity
-  @Order(2)
-  public static class ApplicationConfigurationAdapter extends WebSecurityConfigurerAdapter {
+  public static class ApplicationConfigurationAdapter {
     private static final String LOGIN_PAGE = "/login";
     @Value("${server.ssl.enabled:false}")
     private boolean sslEnabled;
@@ -140,20 +141,14 @@ public class WebSecurityConfig {
     @Autowired
     private UserDetailsService userDetailsService;
     
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-      auth
+    @Bean
+    @Order(2)
+    public SecurityFilterChain appFilterChain(final HttpSecurity http) throws Exception {
+      final AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+      authenticationManagerBuilder
         .userDetailsService(userDetailsService)
         .passwordEncoder(passwordEncoder());
-    }
-    
-    @Override
-    public void configure(WebSecurity web) throws Exception {
-        web.debug(securityDebug);
-    }
-    
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
+      
       if (sslEnabled) {
         http.headers()
           .httpStrictTransportSecurity()
@@ -200,8 +195,10 @@ public class WebSecurityConfig {
             .permitAll()
             .deleteCookies("SESSION")
             .invalidateHttpSession(true);
+      
+      return http.build();
     }
-    
+
     @Bean
     public static AuthenticationEntryPoint loginUrlAuthenticationEntryPoint() {
       return new AjaxAwareLoginUrlAuthenticationEntryPoint(LOGIN_PAGE);
@@ -225,9 +222,8 @@ public class WebSecurityConfig {
   }
   
   @Profile("samlSecurity")
-  @Order(2)
   @Configuration
-  public static class SamlWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+  public static class SamlWebSecurityConfigurerAdapter {
     @Value("${server.ssl.enabled:false}")
     private boolean sslEnabled;
     @Value("${saml.sp}")
@@ -263,18 +259,18 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    public SAMLProcessingFilter samlWebSSOProcessingFilter() throws Exception {
+    public SAMLProcessingFilter samlWebSSOProcessingFilter(final AuthenticationConfiguration authenticationConfiguration) throws Exception {
       SAMLProcessingFilter samlWebSSOProcessingFilter = new SAMLProcessingFilter();
-      samlWebSSOProcessingFilter.setAuthenticationManager(authenticationManager());
+      samlWebSSOProcessingFilter.setAuthenticationManager(authenticationManager(authenticationConfiguration));
       samlWebSSOProcessingFilter.setAuthenticationSuccessHandler(samlAuthSuccessHandler);
       samlWebSSOProcessingFilter.setAuthenticationFailureHandler(samlAuthFailureHandler);
       return samlWebSSOProcessingFilter;
     }
 
     @Bean
-    public FilterChainProxy samlFilter() throws Exception {
+    public FilterChainProxy samlFilter(final AuthenticationConfiguration authenticationConfiguration) throws Exception {
       List<SecurityFilterChain> chains = new ArrayList<>();
-      chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SSO/**"), samlWebSSOProcessingFilter()));
+      chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SSO/**"), samlWebSSOProcessingFilter(authenticationConfiguration)));
       chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/discovery/**"), samlDiscovery));
       chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/login/**"), samlEntryPoint));
       chains.add(new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/logout/**"), samlLogoutFilter));
@@ -282,11 +278,10 @@ public class WebSecurityConfig {
           new DefaultSecurityFilterChain(new AntPathRequestMatcher("/saml/SingleLogout/**"), samlLogoutProcessingFilter));
       return new FilterChainProxy(chains);
     }
-
+    
     @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-      return super.authenticationManagerBean();
+    public AuthenticationManager authenticationManager(final AuthenticationConfiguration authenticationConfiguration) throws Exception {
+      return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
@@ -294,13 +289,13 @@ public class WebSecurityConfig {
       return new MetadataGeneratorFilter(metadataGenerator());
     }
     
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-      auth.authenticationProvider(samlAuthenticationProvider);
-    }
-    
-    @Override
-    public void configure(HttpSecurity http) throws Exception {
+    @Bean
+    @Order(2)
+    public SecurityFilterChain appFilterChain(final HttpSecurity http, final AuthenticationConfiguration authenticationConfiguration) throws Exception {
+      final AuthenticationManagerBuilder authenticationManagerBuilder = http.getSharedObject(AuthenticationManagerBuilder.class);
+      authenticationManagerBuilder
+        .authenticationProvider(samlAuthenticationProvider);
+      
       if (sslEnabled) {
         http.headers()
           .httpStrictTransportSecurity()
@@ -314,7 +309,7 @@ public class WebSecurityConfig {
       http.headers()
         .xssProtection()
         .and()
-        .contentSecurityPolicy("form-action 'self';default-src 'self'; script-src 'self' https://www.google-analytics.com data: 'unsafe-inline';style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.googleapis.com fonts.gstatic.com; img-src 'self' data: fonts.gstatic.com https://www.google-analytics.com; connect-src 'self' fonts.googleapis.com fonts.gstatic.com https://www.google-analytics.com");      
+        .contentSecurityPolicy("form-action 'self' https://shib.oit.duke.edu;default-src 'self'; script-src 'self' https://www.google-analytics.com data: 'unsafe-inline';style-src 'self' 'unsafe-inline' fonts.googleapis.com; font-src 'self' fonts.googleapis.com fonts.gstatic.com; img-src 'self' data: fonts.gstatic.com https://www.google-analytics.com; connect-src 'self' fonts.googleapis.com fonts.gstatic.com https://www.google-analytics.com");      
         
       http
         .httpBasic()
@@ -328,8 +323,8 @@ public class WebSecurityConfig {
           .authenticationEntryPoint(samlEntryPoint);
 
       http.addFilterBefore(metadataGeneratorFilter(), ChannelProcessingFilter.class)
-          .addFilterAfter(samlFilter(), BasicAuthenticationFilter.class)
-          .addFilterBefore(samlFilter(), CsrfFilter.class);
+          .addFilterAfter(samlFilter(authenticationConfiguration), BasicAuthenticationFilter.class)
+          .addFilterBefore(samlFilter(authenticationConfiguration), CsrfFilter.class);
 
       http
         .authorizeRequests()
@@ -348,6 +343,8 @@ public class WebSecurityConfig {
           e.printStackTrace();
         }
       });
+      
+      return http.build();
     }
   }
 	
