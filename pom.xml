@@ -6,7 +6,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.7.1</version>
+    <version>2.7.2</version>
     <relativePath /> <!-- lookup parent from repository -->
   </parent>
   <groupId>edu.duke.rs</groupId>
@@ -22,7 +22,7 @@
     <oracle.client.version>21.6.0.0.1</oracle.client.version>
     <oracle.ojdbc.artifactId>ojdbc11</oracle.ojdbc.artifactId>
 <!--      <splunk.version>1.8.0</splunk.version> uncomment to enable splunk -->
-    <spring.data.jpa.version>2.7.1</spring.data.jpa.version>
+    <spring.data.jpa.version>2.7.2</spring.data.jpa.version>
     <spring.security.saml.version>1.0.10.RELEASE</spring.security.saml.version>
     <hazelcast.kubernetes.version>2.2.3</hazelcast.kubernetes.version>
     <passay.version>1.6.1</passay.version>
