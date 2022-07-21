@@ -22,6 +22,7 @@
     <oracle.client.version>21.6.0.0.1</oracle.client.version>
     <oracle.ojdbc.artifactId>ojdbc11</oracle.ojdbc.artifactId>
 <!--      <splunk.version>1.8.0</splunk.version> uncomment to enable splunk -->
+    <spring.cloud.version>2021.0.3</spring.cloud.version>
     <spring.data.jpa.version>2.7.2</spring.data.jpa.version>
     <spring.security.saml.version>1.0.10.RELEASE</spring.security.saml.version>
     <hazelcast.kubernetes.version>2.2.3</hazelcast.kubernetes.version>
@@ -45,7 +46,7 @@
       <dependency>
         <groupId>org.springframework.cloud</groupId>
         <artifactId>spring-cloud-dependencies</artifactId>
-        <version>2021.0.3</version>
+        <version>${spring.cloud.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
