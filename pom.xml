@@ -19,15 +19,15 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <java.version>17</java.version>
-    <oracle.client.version>21.6.0.0.1</oracle.client.version>
+    <oracle.client.version>21.7.0.0</oracle.client.version>
     <oracle.ojdbc.artifactId>ojdbc11</oracle.ojdbc.artifactId>
 <!--      <splunk.version>1.8.0</splunk.version> uncomment to enable splunk -->
-    <spring.cloud.version>2021.0.3</spring.cloud.version>
+    <spring.cloud.version>2021.0.5</spring.cloud.version>
     <spring.data.jpa.version>2.7.5</spring.data.jpa.version>
     <spring.security.saml.version>1.0.10.RELEASE</spring.security.saml.version>
     <hazelcast.kubernetes.version>2.2.3</hazelcast.kubernetes.version>
-    <passay.version>1.6.1</passay.version>
-    <springdoc.version>1.6.8</springdoc.version>
+    <passay.version>1.6.2</passay.version>
+    <springdoc.version>1.6.12</springdoc.version>
     <jacoco.version>0.8.7</jacoco.version>
     <easyRandom.version>5.0.0</easyRandom.version>
   </properties>
@@ -317,7 +317,7 @@
     <dependency>
       <groupId>com.jcabi</groupId>
       <artifactId>jcabi-matchers</artifactId>
-      <version>1.5.3</version>
+      <version>1.6.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -397,7 +397,7 @@
           <dependency>
             <groupId>org.liquibase.ext</groupId>
             <artifactId>liquibase-hibernate5</artifactId>
-            <version>4.17.1</version>
+            <version>4.17.2</version>
           </dependency>
           <dependency>
             <groupId>org.springframework</groupId>
