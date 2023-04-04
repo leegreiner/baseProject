@@ -1,11 +1,9 @@
 package edu.duke.rs.baseProject.model;
 
-import javax.persistence.Column;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.PreRemove;
-
-import org.hibernate.annotations.Type;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.MappedSuperclass;
+import jakarta.persistence.PreRemove;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
@@ -26,7 +24,7 @@ import lombok.ToString;
 //You may also want to index the deleted field if many entities exist
 public class SoftDeleteBaseEntity extends BaseEntity {
   @Column(name = "deleted", nullable = true)
-  @Type(type = "yes_no")
+  @Convert(converter = org.hibernate.type.TrueFalseConverter.class)
   private Boolean deleted;
   
   public void undelete() {

@@ -16,8 +16,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.Random;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.jeasy.random.EasyRandom;
 import org.jeasy.random.EasyRandomParameters;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +29,7 @@ import org.springframework.cache.CacheManager;
 import edu.duke.rs.baseProject.config.CacheConfig;
 import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 
 public class LoginAttemptServiceUnitTest {
   private static final String IP_ADDRESS = "1.1.1.1";

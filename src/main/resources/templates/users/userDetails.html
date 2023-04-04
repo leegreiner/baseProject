@@ -29,7 +29,7 @@
                     </dl>
                     <dl class="row">
                       <dt class="col-sm-3" th:text="#{timeZone}">time zone</dt>
-                      <dd class="col-sm-9" th:text="${user.timeZone.iD}">GMT</dd>
+                      <dd class="col-sm-9" th:text="${T(edu.duke.rs.baseProject.util.TimeZoneDisplay).getDisplayableTimeZone(user.timeZone)}">GMT</dd>
                     </dl>
 		              </div>
 		              <div class="col-sm-6">

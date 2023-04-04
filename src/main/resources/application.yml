@@ -62,7 +62,7 @@ spring:
       client:
         composite-indicator:
           enabled: 'false'
-          
+      
   datasource:
     url: jdbc:oracle:thin:@//localhost:1521/ORCLPDB1
     username: baseapp
@@ -190,8 +190,6 @@ app:
   hazelcast:
     instanceName: baseProject-hazelcast-instance
     multicastPort: 5702
-    bruteForceTtlSeconds: 86400
-    bruteForceSize: 10000
   kubernetes:
     hazelcastDiscoveryService: baseProject-hazelcast-service
     namespace: baseProject
@@ -214,6 +212,7 @@ app:
       expirationDays: 90
       resetPasswordExpirationDays: 2
       historySize: 10
+  url: 'http://localhost:8080'
 
 javamelody:
   # Initialization parameters for JavaMelody
@@ -228,23 +227,6 @@ javamelody:
 decorator:
   datasource:
     enabled: false
-          
----
-spring:
-  config:
-    activate:
-      on-profile:
-      - samlSecurity   
-  
-saml:
-  keystore:
-    location: classpath:saml/samlKeystore.jks
-    password: '{cipher}ec8a0cc266ceb9c74273d2bbe6562840bcd9aca45bf9924cc61f45e2007245a1'
-    alias: duke
-  idp: https://shib.oit.duke.edu/shibboleth-idp
-  sp: http://samltest.drc.duke.edu
-# needed for Duke SAML logout
-  logoutRedirectUrl: https://shib.oit.duke.edu/cgi-bin/logout.pl?logoutWithoutPrompt=1&returnto=http://www.duke.edu
   
 ---
 
@@ -312,8 +294,8 @@ decorator:
 ---
 
 spring:
-  autoconfigure:
-    exclude: net.bull.javamelody.JavaMelodyAutoConfiguration
+#  autoconfigure:
+#    exclude: net.bull.javamelody.JavaMelodyAutoConfiguration
     
   config:
     activate:

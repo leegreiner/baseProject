@@ -1,12 +1,11 @@
 package edu.duke.rs.baseProject.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
 import edu.duke.rs.baseProject.validator.CurrentUsersPassword;
 import edu.duke.rs.baseProject.validator.groups.Create;
 import edu.duke.rs.baseProject.validator.groups.Delete;
 import edu.duke.rs.baseProject.validator.groups.Update;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;

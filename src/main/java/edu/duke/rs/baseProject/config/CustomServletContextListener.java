@@ -6,9 +6,6 @@ import java.sql.SQLException;
 import java.util.Enumeration;
 import java.util.Map;
 
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.annotation.WebListener;
 import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Profile;
@@ -18,6 +15,9 @@ import org.springframework.web.context.support.WebApplicationContextUtils;
 import com.hazelcast.core.HazelcastInstance;
 import com.zaxxer.hikari.HikariDataSource;
 
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.annotation.WebListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 

@@ -3,14 +3,13 @@ package edu.duke.rs.baseProject.error;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
 
-import javax.servlet.RequestDispatcher;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import edu.duke.rs.baseProject.AbstractWebUnitTest;
+import jakarta.servlet.RequestDispatcher;
 
 @WebMvcTest(ApplicationErrorController.class)
 public class ApplicationErrorControllerUnitTest extends AbstractWebUnitTest {

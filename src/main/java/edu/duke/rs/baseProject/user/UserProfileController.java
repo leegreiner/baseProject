@@ -1,8 +1,5 @@
 package edu.duke.rs.baseProject.user;
 
-import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -17,6 +14,8 @@ import edu.duke.rs.baseProject.security.AppPrincipal;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.util.HttpUtils;
 import io.micrometer.core.annotation.Timed;
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 

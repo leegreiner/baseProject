@@ -2,8 +2,6 @@ package edu.duke.rs.baseProject.user.passwordReset;
 
 import java.util.UUID;
 
-import javax.validation.Valid;
-
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,6 +21,7 @@ import edu.duke.rs.baseProject.home.HomeController;
 import edu.duke.rs.baseProject.index.IndexController;
 import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.user.UserController;
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2

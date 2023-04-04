@@ -3,21 +3,21 @@ package edu.duke.rs.baseProject.role;
 import java.util.List;
 import java.util.Optional;
 
-import javax.persistence.QueryHint;
-
+import org.hibernate.jpa.AvailableHints;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.QueryHints;
 
 import edu.duke.rs.baseProject.repository.ReadOnlyRepository;
+import jakarta.persistence.QueryHint;
 
 public interface RoleRepository extends ReadOnlyRepository<Role, Long> {
-  @QueryHints({@QueryHint(name = org.hibernate.annotations.QueryHints.CACHEABLE, value = "true"),
-    @QueryHint(name = org.hibernate.annotations.QueryHints.CACHE_REGION, value = "noExpireQueryResultsRegion")
+  @QueryHints({@QueryHint(name = AvailableHints.HINT_CACHEABLE, value = "true"),
+    @QueryHint(name = AvailableHints.HINT_CACHE_REGION, value = "noExpireQueryResultsRegion")
   })
   List<Role> findAll(Sort sort);
-  @QueryHints({@QueryHint(name = org.hibernate.annotations.QueryHints.CACHEABLE, value = "true"),
-    @QueryHint(name = org.hibernate.annotations.QueryHints.CACHE_REGION, value = "noExpireQueryResultsRegion")
+  @QueryHints({@QueryHint(name = AvailableHints.HINT_CACHEABLE, value = "true"),
+    @QueryHint(name = AvailableHints.HINT_CACHE_REGION, value = "noExpireQueryResultsRegion")
   })
 	Optional<Role> findByName(RoleName name);
 

@@ -8,39 +8,38 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.UUID;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Index;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedAttributeNode;
-import javax.persistence.NamedEntityGraph;
-import javax.persistence.NamedEntityGraphs;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.NamedSubgraph;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-import org.hibernate.annotations.Type;
 import org.hibernate.envers.Audited;
+import org.springframework.util.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import edu.duke.rs.baseProject.model.BaseEntity;
 import edu.duke.rs.baseProject.role.Role;
-import io.micrometer.core.instrument.util.StringUtils;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Index;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.NamedAttributeNode;
+import jakarta.persistence.NamedEntityGraph;
+import jakarta.persistence.NamedEntityGraphs;
+import jakarta.persistence.NamedQueries;
+import jakarta.persistence.NamedQuery;
+import jakarta.persistence.NamedSubgraph;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -132,7 +131,7 @@ public class User extends BaseEntity implements Serializable {
   private String email;
 	
 	@Column(nullable = false)
-	@Type(type = "yes_no")
+	@Convert(converter = org.hibernate.type.TrueFalseConverter.class)
 	private boolean accountEnabled = true;
 	
 	@Column(length = 100, nullable = false)
@@ -172,15 +171,15 @@ public class User extends BaseEntity implements Serializable {
 	public String getDisplayName() {
 	  final StringBuffer buf = new StringBuffer();
 	  
-	  if (StringUtils.isNotBlank(firstName)) {
+	  if (StringUtils.hasLength(firstName)) {
 	    buf.append(firstName + " ");
 	  }
 	  
-	  if (StringUtils.isNotBlank(middleInitial)) {
+	  if (StringUtils.hasLength(middleInitial)) {
       buf.append(middleInitial + " ");
     }
 	  
-	  if (StringUtils.isNotBlank(lastName)) {
+	  if (StringUtils.hasLength(lastName)) {
       buf.append(lastName);
     }
 	  

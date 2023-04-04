@@ -1,11 +1,10 @@
 package edu.duke.rs.baseProject.config;
 
-import javax.persistence.EntityManagerFactory;
-
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 
 import edu.duke.rs.baseProject.audit.AuditContextHolder;
+import jakarta.persistence.EntityManagerFactory;
 
 @SuppressWarnings("serial")
 public class AuditingJpaTransactionManager extends JpaTransactionManager {

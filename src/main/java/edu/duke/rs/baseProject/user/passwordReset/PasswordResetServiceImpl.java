@@ -4,9 +4,6 @@ import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.transaction.Transactional;
-import javax.validation.Valid;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Profile;
@@ -21,6 +18,8 @@ import edu.duke.rs.baseProject.security.SecurityUtils;
 import edu.duke.rs.baseProject.user.PasswordHistory;
 import edu.duke.rs.baseProject.user.User;
 import edu.duke.rs.baseProject.user.UserRepository;
+import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 
 @Service
 @Profile("!samlSecurity")

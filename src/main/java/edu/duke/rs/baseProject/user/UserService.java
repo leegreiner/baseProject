@@ -3,12 +3,11 @@ package edu.duke.rs.baseProject.user;
 import java.util.List;
 import java.util.UUID;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
 import org.springframework.validation.annotation.Validated;
 
 import edu.duke.rs.baseProject.role.Role;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 
 @Validated
 public interface UserService {

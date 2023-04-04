@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import javax.validation.Valid;
-import javax.validation.groups.Default;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +27,8 @@ import edu.duke.rs.baseProject.role.RoleName;
 import edu.duke.rs.baseProject.user.UserDto.UserDtoBuilder;
 import edu.duke.rs.baseProject.user.history.UserHistoryRepository;
 import edu.duke.rs.baseProject.validator.groups.Update;
+import jakarta.validation.Valid;
+import jakarta.validation.groups.Default;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 

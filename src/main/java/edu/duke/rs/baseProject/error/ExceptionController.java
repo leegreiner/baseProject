@@ -1,8 +1,5 @@
 package edu.duke.rs.baseProject.error;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.propertyeditors.StringTrimmerEditor;
 import org.springframework.context.MessageSource;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -14,6 +11,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import edu.duke.rs.baseProject.BaseWebController;
 import edu.duke.rs.baseProject.exception.ApplicationException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 

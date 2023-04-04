@@ -1,10 +1,10 @@
 package edu.duke.rs.baseProject.util;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 public class HttpUtils {
   public static final String ACCEPT_HEADER = "Accept";

@@ -2,13 +2,12 @@ package edu.duke.rs.baseProject.security.password;
 
 import java.time.LocalDateTime;
 
-import javax.validation.constraints.NotNull;
-
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import edu.duke.rs.baseProject.config.ApplicationProperties;
 import edu.duke.rs.baseProject.user.User;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

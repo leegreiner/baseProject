@@ -10,15 +10,15 @@ import static org.mockito.Mockito.when;
 
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 
 public class HttpUtilsUnitTest {
   @Mock

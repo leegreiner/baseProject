@@ -1,8 +1,7 @@
 package edu.duke.rs.baseProject.user.passwordReset;
 
-import javax.validation.Valid;
-
 import edu.duke.rs.baseProject.user.User;
+import jakarta.validation.Valid;
 
 public class DoNothingPasswordResetService implements PasswordResetService {
   @Override

@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class RestBasicAuthenticationEntryPoint extends BasicAuthenticationEntryPoint {
   private ObjectMapper mapper = new ObjectMapper();

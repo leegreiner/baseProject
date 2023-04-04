@@ -1,11 +1,10 @@
 package edu.duke.rs.baseProject.security;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-
 import org.springframework.validation.annotation.Validated;
 
 import edu.duke.rs.baseProject.user.User;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 @Validated
 public interface LoginAttemptService {

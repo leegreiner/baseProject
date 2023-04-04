@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.hibernate.envers.query.AuditQuery;
 
+
 public class AuditQueryUtils {
   private AuditQueryUtils() {}
 

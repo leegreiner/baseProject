@@ -7,7 +7,7 @@
 	<head>
 		<title th:text="${@environment.getProperty('info.app.name')}|">Title</title>
 
-		<meta th:replace="layout/fragments/head :: head"/>
+		<meta th:replace="~{layout/fragments/head :: head}"/>
 		<meta th:replace="${customCss}"/>
 	</head>
 	
@@ -16,10 +16,10 @@
 	
     <div class="page-wrapper">
       <div class="page-inner">
-        <div th:replace="layout/fragments/navigation :: navigation">Navigation goes here</div>
+        <div th:replace="~{layout/fragments/navigation :: navigation}">Navigation goes here</div>
 	   
 		    <div class="page-content-wrapper">
-          <div th:replace="layout/fragments/header :: header">Header goes here</div>
+          <div th:replace="~{layout/fragments/header :: header}">Header goes here</div>
             <main id="js-page-content" role="main" class="page-content">
 
               <ol class="breadcrumb page-breadcrumb">
@@ -27,21 +27,21 @@
                 <li class="position-absolute pos-top pos-right d-none d-sm-block"><span class="js-get-date"></span>
               </ol>
               
-              <div th:replace="layout/fragments/messages :: messages">Messages goes here</div>
+              <div th:replace="~{layout/fragments/messages :: messages}">Messages goes here</div>
                
 							<span th:replace="${content}">Content</span>
             </main>
             
             <div class="page-content-overlay" data-action="toggle" data-class="mobile-nav-on"></div>
             
-            <div th:replace="layout/fragments/footer :: footer" th:remove="tag">Footer goes here</div>
+            <div th:replace="~{layout/fragments/footer :: footer}" th:remove="tag">Footer goes here</div>
             
-            <div th:replace="layout/fragments/color-profile :: color-profile">Smartadmin util</div>
+            <div th:replace="~{layout/fragments/color-profile :: color-profile}">Smartadmin util</div>
 		    </div>
 		 </div>
 	 </div>
 	 
-	 <div th:replace="layout/fragments/js :: js">Javascript goes here</div>
+	 <div th:replace="~{layout/fragments/js :: js}">Javascript goes here</div>
 	 
    <div th:replace="${customJs}"></div>
 	</body>

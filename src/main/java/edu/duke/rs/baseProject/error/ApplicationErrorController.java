@@ -1,15 +1,14 @@
 package edu.duke.rs.baseProject.error;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import edu.duke.rs.baseProject.BaseWebController;
-import io.micrometer.core.instrument.util.StringUtils;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2
@@ -30,7 +29,7 @@ public class ApplicationErrorController extends BaseWebController implements Err
 		  //  custom AuthenticationFailureHandler
 		  final String error = request.getParameter(ERROR_VIEW_PARAM);
       
-      if (StringUtils.isNotBlank(error)) {
+      if (StringUtils.hasLength(error)) {
         result = "/" + error;
       }
 		} else {

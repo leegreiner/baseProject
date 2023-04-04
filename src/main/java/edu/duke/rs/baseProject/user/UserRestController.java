@@ -3,8 +3,6 @@ package edu.duke.rs.baseProject.user;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.validation.Valid;
-
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.util.StringUtils;
@@ -18,6 +16,7 @@ import edu.duke.rs.baseProject.datatables.DataTablesUtils;
 import io.micrometer.core.annotation.Timed;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.extern.log4j.Log4j2;
 
 @Log4j2

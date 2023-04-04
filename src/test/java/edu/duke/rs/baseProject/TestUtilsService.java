@@ -6,14 +6,14 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.EntityManager;
-
 import org.hibernate.Session;
 import org.hibernate.jdbc.ReturningWork;
 import org.springframework.cache.CacheManager;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import jakarta.persistence.EntityManager;
 
 @Service
 public class TestUtilsService {

@@ -4,11 +4,11 @@ import java.io.File;
 import java.util.Collection;
 import java.util.Map;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-
 import org.springframework.validation.annotation.Validated;
+
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 
 @Validated
 public interface EmailService {

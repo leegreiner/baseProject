@@ -1,10 +1,9 @@
 package edu.duke.rs.baseProject.user.passwordReset;
 
-import javax.validation.Valid;
-
 import org.springframework.validation.annotation.Validated;
 
 import edu.duke.rs.baseProject.user.User;
+import jakarta.validation.Valid;
 
 @Validated
 public interface PasswordResetService {

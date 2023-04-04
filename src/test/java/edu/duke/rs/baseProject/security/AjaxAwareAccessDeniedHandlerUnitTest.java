@@ -7,9 +7,6 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -22,6 +19,8 @@ import org.springframework.security.web.csrf.MissingCsrfTokenException;
 
 import edu.duke.rs.baseProject.StubServletOutputStream;
 import edu.duke.rs.baseProject.util.HttpUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 public class AjaxAwareAccessDeniedHandlerUnitTest {
   @Mock

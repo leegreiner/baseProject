@@ -6,9 +6,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.mail.MessagingException;
-
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
@@ -16,6 +13,8 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
+
+import jakarta.mail.MessagingException;
 
 @Service
 public class EmailServiceImpl implements EmailService {
@@ -46,10 +45,10 @@ public class EmailServiceImpl implements EmailService {
       messageHelper.setFrom(StringUtils.isBlank(from) ? defaultEmailFrom : from);
       messageHelper.setTo(to.stream().toArray(String[]::new));
       
-      if (CollectionUtils.isNotEmpty(cc)) {
+      if (cc != null && cc.size() > 0) {
         messageHelper.setCc(cc.stream().toArray(String[]::new));
       }
-      if (CollectionUtils.isNotEmpty(bcc)) {
+      if (bcc != null && bcc.size() > 0) {
         messageHelper.setBcc(bcc.stream().toArray(String[]::new));
       }
       messageHelper.setSubject(subject);

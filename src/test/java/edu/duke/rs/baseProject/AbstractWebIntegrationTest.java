@@ -1,5 +1,6 @@
 package edu.duke.rs.baseProject;
 
+
 import javax.mail.internet.MimeMessage;
 
 import org.junit.jupiter.api.AfterEach;
@@ -11,6 +12,7 @@ import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.web.servlet.MockMvc;
 
 import com.icegreen.greenmail.util.GreenMail;
+
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
   properties = {"spring.cloud.config.enabled=false"})
@@ -37,7 +39,7 @@ public abstract class AbstractWebIntegrationTest extends AbstractWebTest {
     
     for (int i = 0; i < EMAIL_POLL_ATTEMPTS; i++) {
       receivedMessages = smtpServer.getReceivedMessages();
-      
+    
       if (receivedMessages.length == 0) {
         try {
           Thread.sleep(1100);

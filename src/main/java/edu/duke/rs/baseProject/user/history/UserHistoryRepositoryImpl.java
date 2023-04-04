@@ -3,8 +3,6 @@ package edu.duke.rs.baseProject.user.history;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityManager;
-
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
 import org.hibernate.envers.query.AuditEntity;
@@ -15,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import edu.duke.rs.baseProject.audit.AuditQueryResult;
 import edu.duke.rs.baseProject.audit.AuditQueryUtils;
 import edu.duke.rs.baseProject.user.User;
+import jakarta.persistence.EntityManager;
 
 @Repository
 public class UserHistoryRepositoryImpl implements UserHistoryRepository {

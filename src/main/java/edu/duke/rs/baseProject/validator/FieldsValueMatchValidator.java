@@ -1,9 +1,9 @@
 package edu.duke.rs.baseProject.validator;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
 import org.springframework.beans.BeanWrapperImpl;
+
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 
 public class FieldsValueMatchValidator implements ConstraintValidator<FieldsValueMatch, Object> {
   private String field;

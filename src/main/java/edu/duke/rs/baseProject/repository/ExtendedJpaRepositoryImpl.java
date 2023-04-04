@@ -4,19 +4,18 @@ import java.io.Serializable;
 import java.util.Optional;
 import java.util.UUID;
 
-import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Root;
-
-import org.hibernate.jpa.QueryHints;
+import org.hibernate.jpa.AvailableHints;
 import org.springframework.data.jpa.repository.support.JpaEntityInformation;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 
 import edu.duke.rs.baseProject.model.BaseEntity;
 import edu.duke.rs.baseProject.model.BaseEntity_;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 public class ExtendedJpaRepositoryImpl<T extends BaseEntity, ID extends Serializable> extends SimpleJpaRepository<T, ID>
     implements ExtendedJpaRepository<T, ID> {
@@ -48,7 +47,7 @@ public class ExtendedJpaRepositoryImpl<T extends BaseEntity, ID extends Serializ
     final TypedQuery<T> typedQuery = entityManager.createQuery(query);
     
     if (entityGraphName != null && ! entityGraphName.isEmpty()) {
-      typedQuery.setHint(QueryHints.HINT_LOADGRAPH, entityManager.getEntityGraph(entityGraphName));
+      typedQuery.setHint(AvailableHints.HINT_SPEC_LOAD_GRAPH, entityManager.getEntityGraph(entityGraphName));
     }
     
     try {

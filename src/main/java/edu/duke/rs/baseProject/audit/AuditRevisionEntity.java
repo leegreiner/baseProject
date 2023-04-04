@@ -1,10 +1,10 @@
 package edu.duke.rs.baseProject.audit;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 
 import org.hibernate.envers.RevisionEntity;
 
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

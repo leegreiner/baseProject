@@ -19,6 +19,10 @@ public class TimeZoneDisplay {
       .collect(Collectors.toList());
   }
   
+  public static String getDisplayableTimeZone(final TimeZone timezone) {
+    return timezone.getID();
+  }
+  
   private static String getOffset(LocalDateTime dateTime, ZoneId id) {
     return dateTime
       .atZone(id)

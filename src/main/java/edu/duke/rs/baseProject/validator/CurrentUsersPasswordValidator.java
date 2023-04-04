@@ -1,9 +1,8 @@
 package edu.duke.rs.baseProject.validator;
 
-import javax.validation.ConstraintValidator;
-import javax.validation.ConstraintValidatorContext;
-
 import edu.duke.rs.baseProject.security.PersistentSecurityUtils;
+import jakarta.validation.ConstraintValidator;
+import jakarta.validation.ConstraintValidatorContext;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
